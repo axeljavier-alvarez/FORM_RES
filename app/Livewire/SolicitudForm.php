@@ -26,19 +26,39 @@ class SolicitudForm extends Component
 
     // luego mostrar toast de alpine
     public $toast = null;
-    protected $rules = [
+    public function rules (){
+
+        return [
         'nombre' => 'required|string|max:60',
         'apellido' => 'required|string|max:60',
-        'email' => 'required|email|max:45',
+        'email' => [
+            'required',
+            'email',
+            'max:45',
+            Rule::unique('solicitudes', 'email')
+        ],
+        
+
         'telefono' => 'required|string|max:20',
-        'cui' => 'required|string|size:13',
+        'cui' => [
+            'required',
+            'string',
+            'size:13',
+            Rule::unique('solicitudes', 'cui')
+        ],
         'domicilio' => 'required|string|max:255',
         'observaciones' => 'nullable|string|max:255'
     ];
+      
+    }
+        
+   
 
     protected $messages = [
         'cui.size' => 'El cui debe tener 13 caracteres.',
-        'email.email' => 'El email no tiene formato válido'
+        'email.email' => 'El email no tiene formato válido',
+        'email.unique' => 'Ya existe una solicitud con el correo :input',
+        'cui.unique' => 'Ya existe una solicitud con el cui :input'
     ];
 
     public function mount()
@@ -53,11 +73,11 @@ class SolicitudForm extends Component
 
     public function submit()
     {
-        $validated = $this->validate();
+        $validated = $this->validate($this->rules());
 
         $validated['anio'] = now()->year;
 
-        dd($validated);
+        // dd($validated);
 
         DB::beginTransaction();
         try{
