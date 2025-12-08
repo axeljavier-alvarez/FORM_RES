@@ -24,5 +24,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ZonaSeeder::class);
         $this->call(EstadoSeeder::class);
+        $this->call(TramiteSeeder::class);
+        $this->call(RequisitoSeeder::class);
     }
 }

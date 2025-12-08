@@ -164,7 +164,7 @@ class SolicitudForm extends Component
 
         $this->validate([
             'telefono' => [
-                'required', function($attribute, $value, $fail){
+                'required', function($value, $fail){
                     $codigo = $this->codigo_pais;
 
                     if(isset($this->reglasTelefonos[$codigo])){
@@ -177,7 +177,7 @@ class SolicitudForm extends Component
                 }
             ]
         ]);
-        
+
 
         $this->dispatch('abrir-modal-confirmacion');
     }
