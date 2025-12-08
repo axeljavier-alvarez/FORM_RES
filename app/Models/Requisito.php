@@ -10,4 +10,8 @@ class Requisito extends Model
     use HasFactory;
     protected $fillable = ['nombre'];
 
+    public function tramites()
+    {
+        return $this->belongsToMany(Tramite::class);
+    }
 }

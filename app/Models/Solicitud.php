@@ -3,6 +3,7 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\requisitosTramites;
 
 class Solicitud extends Model
 {
@@ -36,5 +37,24 @@ class Solicitud extends Model
     {
         return $this->belongsTo(Estado::class, 'estado_id');
     }
+
+    // muchos a muchos con requisitostramites
+public function requisitosTramites()
+{
+    return $this->belongsToMany(
+        RequisitoTramite::class, 
+        'solicitudes_has_requisitos_tramites', 
+        'solicitud_id', 
+        'requisito_tramite_id'
+    );
+}
+
+// relacion con detalle solicitud
+public function detalles()
+{
+    return $this->hasMany(
+        DetalleSolicitud::class, 'solicitud_id'
+    );
+}
 
 }

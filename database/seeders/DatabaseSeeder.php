@@ -26,5 +26,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EstadoSeeder::class);
         $this->call(TramiteSeeder::class);
         $this->call(RequisitoSeeder::class);
+        $this->call(RequisitoTramiteSeeder::class);
     }
 }
