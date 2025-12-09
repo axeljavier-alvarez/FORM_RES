@@ -33,6 +33,51 @@ p-8 rounded-xl"
     </p>
 
 
+    <!-- Indicadores de pasos -->
+<div class="flex justify-center gap-4 my-6">
+
+    <!-- Paso 1 -->
+    <div 
+        @click="paso = 1"
+        class="w-8 h-8 rounded-full cursor-pointer flex items-center justify-center border-2"
+        :class="paso === 1 ? 'bg-black text-white border-black' : 'bg-white text-black border-black'"
+    >
+        1
+    </div>
+
+    <!-- Paso 2 -->
+        <div 
+            @click="
+                $wire.validarPaso(1)
+                    .then(valid => {
+                        if (valid) {
+                            paso = 2;
+                        }
+                    })
+            "
+            class="w-8 h-8 rounded-full cursor-pointer flex items-center justify-center border-2"
+            :class="paso === 2 ? 'bg-black text-white border-black' : 'bg-white text-black border-black'"
+        >
+            2
+        </div>
+
+
+    <!-- Paso 3 -->
+    <div 
+        @click="
+            $wire.validarPaso(2).then(valid => {
+                if (valid) paso = 3;
+            })
+        "
+        class="w-8 h-8 rounded-full cursor-pointer flex items-center justify-center border-2"
+        :class="paso === 3 ? 'bg-black text-white border-black' : 'bg-white text-black border-black'"
+    >
+        3
+    </div>
+
+</div>
+
+
 
     <template x-if="toast">
         <div>
@@ -78,20 +123,21 @@ p-8 rounded-xl"
 
             <div class="flex justify-end gap-3 mt-4">
 
-                <button
-                @click="mostrarConfirmacion = false"
-                class="px-4 py-2 rounded bg-gray-200 text-[#03192B] hover:bg-gray-300"
-                >
-                Cancelar
+                <!-- Cancelar (gris oscuro como Atrás) -->
+                <button @click="mostrarConfirmacion = false" class="px-4 py-2 rounded bg-gray-200 text-[#03192B] hover:bg-gray-300" > 
+                    Cancelar 
                 </button>
 
+                <!-- Enviar (negro como Siguiente) -->
                 <button
-                @click="$wire.submit(); mostrarConfirmacion = false"
-                class="px-4 py-2 rounded bg-[#9AD700] text-white hover:bg-[#83b800]"
+                    @click="$wire.submit(); mostrarConfirmacion = false"
+                    class="px-4 py-2 rounded bg-black text-white hover:bg-gray-800"
                 >
-                Enviar
+                    Enviar
                 </button>
+
             </div>
+
 
         </div>
 
@@ -195,11 +241,21 @@ p-8 rounded-xl"
             <x-input type="text" placeholder="Ingresa la dirección de tu domicilio" wire:model.defer="domicilio" class="placeholder-[#797775] border rounded px-3 py-2 w-full" />
         </div>
 
-        <button type="button"
+        {{-- <button type="button"
         @click="$wire.validarPaso(1).then(valid => valid ? siguientePaso() : null)"
         class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-bl">
             Siguiente
-        </button>
+        </button> --}}
+
+        <div class="mt-4 flex justify-end">
+            <button type="button"
+                @click="$wire.validarPaso(1).then(valid => valid ? siguientePaso() : null)"
+                class="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded">
+                Siguiente
+            </button>
+        </div>
+
+        
 
     </div>
 
@@ -237,26 +293,29 @@ p-8 rounded-xl"
             </div>
             @endif
 
-                    <button type="button"
+                    {{-- <button type="button"
                 @click="pasoAnterior()"
                 class="mt-4 px-4 py-2 bg-gray-400 text-white rounded">
                 Atrás
-            </button>
+            </button> --}}
 
             
-                    <button type="button"
+                    {{-- <button type="button"
                 wire:click="verRequisitos"
                 class="mt-3 px-4 py-2 bg-black text-white rounded hover:bg-gray-800">
                 Ver Requisitos
-            </button>
+            </button> --}}
 
         
+            <div class="mt-4 flex justify-end">
             <button type="button"
                 @click="$wire.validarPaso(2).then(valid => valid ? siguientePaso() : null)"
-                class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-bl"
+                class="mt-4 px-4 py-2 bg-black hover:bg-gray-800 text-white rounded"
                 >
                 Siguiente
             </button>
+            </div>
+            
 
 
     </div>
@@ -269,11 +328,11 @@ p-8 rounded-xl"
             <x-textarea wire:model.defer="observaciones" class="border rounded px-3 py-2 w-full" rows="3"></x-textarea>
         </div>
 
-        <button type="button"
+        {{-- <button type="button"
                 @click="pasoAnterior()"
                 class="mt-4 px-4 py-2 bg-gray-400 text-white rounded">
                 Atrás
-        </button>
+        </button> --}}
 
 
 

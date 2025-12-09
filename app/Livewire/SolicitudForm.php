@@ -8,6 +8,7 @@ use App\Models\Solicitud;
 use App\Models\Zona;
 use App\Models\Requisito;
 use App\Models\Estado;
+use App\Models\RequisitoTramite;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -119,56 +120,67 @@ class SolicitudForm extends Component
     // }
 
     public function submit()
-    {
-        $validated = $this->validate($this->rules());
+{
+    $validated = $this->validate($this->rules());
 
-        $validated['anio'] = now()->year;
+    $validated['anio'] = now()->year;
 
-        // campo estado
-        $validated['estado_id'] = 1;
+    // campo estado
+    $validated['estado_id'] = 1;
 
-        // validacion por pais
-        $this->validate([
-            'telefono' => [
-                'required', function($attribute, $value, $fail){
-                    $codigo = $this->codigo_pais;
+    // validación por país
+    $this->validate([
+        'telefono' => [
+            'required', function($attribute, $value, $fail){
+                $codigo = $this->codigo_pais;
 
-                    if(isset($this->reglasTelefonos[$codigo])){
-                        $longitudRequerida = $this->reglasTelefonos[$codigo];
+                if(isset($this->reglasTelefonos[$codigo])){
+                    $longitudRequerida = $this->reglasTelefonos[$codigo];
 
-                        if(strlen($value) != $longitudRequerida) {
+                    if(strlen($value) != $longitudRequerida) {
                         $fail("Este número debe tener {$longitudRequerida} dígitos.");
-                        }
                     }
                 }
-            ]
-        ]);
-        // telefono completo
+            }
+        ]
+    ]);
 
-        $validated['telefono'] = '+' . $this->codigo_pais . $this->telefono;
+    // teléfono completo
+    $validated['telefono'] = '+' . $this->codigo_pais . $this->telefono;
 
-        // dd($validated);
+    DB::beginTransaction();
 
-        DB::beginTransaction();
-        try{
-            $solicitud = Solicitud::create($validated);
-            $solicitud->no_solicitud = $solicitud->id . '-' . $solicitud->anio;
-            $solicitud->save();
-            DB::commit();
-            $this->resetExcept('anio');
+    try {
+        // crear solicitud
+        $solicitud = Solicitud::create($validated);
 
-            // cargar zonas despues de reset
-            $this->zonas = Zona::all();
-            $this->toast=[
-                'type' => 'success',
-                'message' => 'Solicitud enviada correctamente'
-            ];
-        }catch(\Throwable $e){
-            DB::rollBack();
+        // generar no_solicitud
+        $solicitud->no_solicitud = $solicitud->id . '-' . $solicitud->anio;
+        $solicitud->save();
 
-            dd($e->getMessage());
-        }
+        // OBTENER IDs DE requisito_tramite para el tramite seleccionado
+        $requisitosTramiteIDs = RequisitoTramite::where('tramite_id', $this->tramite_id)
+            ->pluck('id')
+            ->toArray();
+
+        // GUARDAR EN LA TABLA PIVOTE
+        $solicitud->requisitosTramites()->sync($requisitosTramiteIDs);
+
+        DB::commit();
+
+        $this->resetExcept('anio');        
+        $this->zonas = Zona::all();
+
+        $this->toast=[
+            'type' => 'success',
+            'message' => 'Solicitud enviada correctamente'
+        ];
+
+    } catch(\Throwable $e){
+        DB::rollBack();
+        dd($e->getMessage());
     }
+}
 
 
 
