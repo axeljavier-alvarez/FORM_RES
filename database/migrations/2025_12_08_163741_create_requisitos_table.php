@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('requisitos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 255);
-            $table->timestamps();
         });
     }
 

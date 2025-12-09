@@ -56,4 +56,6 @@ ORDER BY t.id;
 
 
 
+DELETE FROM solicitudes_has_requisitos_tramites
 
+DELETE FROM solicitudes

@@ -1,3 +1,5 @@
+{{-- intl-tel-input --}}
+
 <div
 x-data="{
 paso: 1,

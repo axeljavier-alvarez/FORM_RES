@@ -8,6 +8,9 @@ class Requisito extends Model
 {
 
     use HasFactory;
+
+    public $timestamps = false;
+    
     protected $fillable = ['nombre'];
 
     public function tramites()

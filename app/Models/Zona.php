@@ -9,6 +9,8 @@ class Zona extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = ['nombre'];
 
     // zona que tiene varias solicitudes
