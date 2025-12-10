@@ -39,22 +39,26 @@ class Solicitud extends Model
     }
 
     // muchos a muchos con requisitostramites
-public function requisitosTramites()
-{
-    return $this->belongsToMany(
-        RequisitoTramite::class, 
-        'solicitudes_has_requisitos_tramites', 
-        'solicitud_id', 
-        'requisito_tramite_id'
-    );
-}
+    public function requisitosTramites()
+    {
+        return $this->belongsToMany(
+            RequisitoTramite::class, 
+            'solicitudes_has_requisitos_tramites', 
+            'solicitud_id', 
+            'requisito_tramite_id'
+        );
+    }
 
-// relacion con detalle solicitud
-public function detalles()
-{
-    return $this->hasMany(
-        DetalleSolicitud::class, 'solicitud_id'
-    );
-}
+    // relacion con detalle solicitud
+    public function detalles()
+    {
+        return $this->hasMany(
+            DetalleSolicitud::class, 'solicitud_id'
+        );
+    }
+
+   public function dependientes(){
+    return $this->hasMany(Dependiente::class, 'solicitud_id');
+   }
 
 }

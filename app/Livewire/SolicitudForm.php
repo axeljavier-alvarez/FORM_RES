@@ -17,6 +17,12 @@ use Illuminate\Validation\ValidationException;
 use App\Models\Tramite;
 
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotificacionSolicitud;
+
+
+
+
 class SolicitudForm extends Component
 {
 
@@ -158,6 +164,8 @@ class SolicitudForm extends Component
         $solicitud->no_solicitud = $solicitud->id . '-' . $solicitud->anio;
         $solicitud->save();
 
+        //
+
         // OBTENER IDs DE requisito_tramite para el tramite seleccionado
         $requisitosTramiteIDs = RequisitoTramite::where('tramite_id', $this->tramite_id)
             ->pluck('id')
@@ -166,6 +174,14 @@ class SolicitudForm extends Component
         // GUARDAR EN LA TABLA PIVOTE
         $solicitud->requisitosTramites()->sync($requisitosTramiteIDs);
 
+        // ENVIAR CORREO AL EMAIL REGISTRADO
+        Mail::to($solicitud->email)
+        ->send(new NotificacionSolicitud(
+            "Tu solicitud con número {$solicitud->no_solicitud} fue registrada correctamente."
+        ));
+
+
+        
         DB::commit();
 
         $this->resetExcept('anio');        
@@ -226,28 +242,28 @@ class SolicitudForm extends Component
         {
             try {
                 if($paso == 1){
-                    $this->validate([
-                        'nombre' => 'required|string|max:60',
-                        'apellido' => 'required|string|max:60',
-                        'email' => [
-                            'required',
-                            'email',
-                            'max:45',
-                            Rule::unique('solicitudes', 'email')
-                        ],
+                    // $this->validate([
+                    //     'nombre' => 'required|string|max:60',
+                    //     'apellido' => 'required|string|max:60',
+                    //     'email' => [
+                    //         'required',
+                    //         'email',
+                    //         'max:45',
+                    //         Rule::unique('solicitudes', 'email')
+                    //     ],
 
-                        'telefono' => $this->reglasTelefonoPorPais(),
+                    //     'telefono' => $this->reglasTelefonoPorPais(),
 
-                        'codigo_pais' => 'required',
-                        'cui' => [
-                            'required',
-                            'string',
-                            'size:13',
-                            Rule::unique('solicitudes', 'cui')
-                        ],
-                        'domicilio' => 'required|string|max:255',
-                        'zona_id' => 'required|exists:zonas,id',
-                    ]);
+                    //     'codigo_pais' => 'required',
+                    //     'cui' => [
+                    //         'required',
+                    //         'string',
+                    //         'size:13',
+                    //         Rule::unique('solicitudes', 'cui')
+                    //     ],
+                    //     'domicilio' => 'required|string|max:255',
+                    //     'zona_id' => 'required|exists:zonas,id',
+                    // ]);
                 }
                 if($paso == 2){
                     $this->validate([

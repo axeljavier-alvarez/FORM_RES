@@ -180,7 +180,7 @@ p-8 rounded-xl"
 
             <div>
                 <x-label class="mb-1 font-bold text-[#03192B]">Email</x-label>
-                <x-input type="email" placeholder="Ingresa tu email" wire:model.defer="email" class="placeholder-[#797775] border rounded px-3 py-2 w-full" />
+                <x-input type="text" placeholder="Ingresa tu email" wire:model.defer="email" class="placeholder-[#797775] border rounded px-3 py-2 w-full" />
 
             </div>
 
@@ -188,8 +188,6 @@ p-8 rounded-xl"
                 <x-label class="mb-1 font-bold text-[#03192B]">Teléfono</x-label>
                 <x-input type="number" placeholder="Ingresa tu número telefónico" wire:model.defer="telefono" class="placeholder-[#797775] border rounded px-3 py-2 w-full" />
             </div> --}}
-
-
             <div class="col-span-1 md:col-span-1" x-data x-init="
                 const input = document.querySelector('#telefono');
                 const iti = window.intlTelInput(input, {
