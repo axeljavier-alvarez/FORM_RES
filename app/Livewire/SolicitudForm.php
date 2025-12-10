@@ -19,9 +19,7 @@ use App\Models\Tramite;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NotificacionSolicitud;
-
-
-
+use App\Mail\NuevaSolicitudAdmin;
 
 class SolicitudForm extends Component
 {
@@ -174,11 +172,16 @@ class SolicitudForm extends Component
         // GUARDAR EN LA TABLA PIVOTE
         $solicitud->requisitosTramites()->sync($requisitosTramiteIDs);
 
-        // ENVIAR CORREO AL EMAIL REGISTRADO
+        // ENVIAR CORREO AL EMAIL DEL USUARIO
         Mail::to($solicitud->email)
         ->send(new NotificacionSolicitud(
             "Tu solicitud con número {$solicitud->no_solicitud} fue registrada correctamente."
         ));
+
+        // ENVIAR CORREO AL ADMINISTRADO
+        Mail::to('axel5javier536@gmail.com')
+        ->send(new NuevaSolicitudAdmin($solicitud));
+
 
 
 

@@ -27,6 +27,7 @@ class NotificacionSolicitud extends Mailable
     public function build()
     {
         return $this->subject('Nueva solicitud registrada')
+        ->replyTo('no-reply@muniguate.com', 'No responder')
         ->view('emails.notificacion');
     }
 
