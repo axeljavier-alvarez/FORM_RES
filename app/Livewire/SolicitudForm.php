@@ -73,6 +73,9 @@ class SolicitudForm extends Component
     // para mostrar el numero de solicitud
     public $ultimoNoSolicitud;
 
+    // enmascarar email
+    public $emailEnmascarado;
+
 
      public function mount()
     {
@@ -202,6 +205,9 @@ class SolicitudForm extends Component
         // $this->ultimoNoSolicitud = $solicitud->no_solicitud;
 
         DB::commit();
+
+        // enmascarando el email
+        $this->emailEnmascarado = $this->enmascararEmail($solicitud->email);
 
         // $this->resetExcept('anio');        
         $this->zonas = Zona::all();
@@ -351,6 +357,25 @@ public function verRequisitos()
     $tramite = Tramite::with('requisitos')->find($this->tramite_id);
 
     dd($tramite->requisitos);
+}
+
+
+// enmascarar email
+
+public function enmascararEmail($email)
+{
+    // dividiendo el email
+    [$usuario, $dominio] = explode('@', $email);
+
+    // primeras 3 letras
+    $primeras = substr($usuario, 0, 3);
+
+    // mascara
+    $mascara = str_repeat('*', max(strlen($usuario) -3, 0));
+
+    return $primeras . $mascara . '@' . $dominio;
+
+
 }
 
 

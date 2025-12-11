@@ -177,9 +177,15 @@ p-8 rounded-xl"
 
                 </p>
 
+                <p class="mb-4">
+                    Se envió un correo a: <strong>{{ $emailEnmascarado }}</strong>
+                </p>
+
                 <button 
 
-                    @click="$wire.set('mostrarExito', false)" 
+                    @click="$wire.set('mostrarExito', false);
+                    paso =1;
+                    " 
 
                     class="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
 
