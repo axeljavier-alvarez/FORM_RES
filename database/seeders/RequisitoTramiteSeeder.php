@@ -15,12 +15,12 @@ class RequisitoTramiteSeeder extends Seeder
     public function run(): void
     {
         // asignar a cada tramite los requisitos necesarios
-        Tramite::find(1)->requisitos()->sync([1,2,3,4,5,6]);
-        Tramite::find(2)->requisitos()->sync([1,8,2,3]);
-        Tramite::find(3)->requisitos()->sync([1,4,2,3,9,3]); 
-        Tramite::find(4)->requisitos()->sync([1,10,2,3]);
-        Tramite::find(5)->requisitos()->sync([1,4,2,3,6,8,10]);
-        Tramite::find(6)->requisitos()->sync([1,4,11,2,3,12,8]);
+        Tramite::find(1)->requisitos()->sync([1,2,3,4,5]);
+        Tramite::find(2)->requisitos()->sync([7,1,2]);
+        Tramite::find(3)->requisitos()->sync([3,1,2,8,2]); 
+        Tramite::find(4)->requisitos()->sync([9,1,2]);
+        Tramite::find(5)->requisitos()->sync([3,1,2,5,7,9]);
+        Tramite::find(6)->requisitos()->sync([3,10,1,2,11,7]);
 
     }
 }

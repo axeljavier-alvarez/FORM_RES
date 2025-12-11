@@ -13,7 +13,6 @@ class RequisitoSeeder extends Seeder
     public function run(): void
     {
         $requisitos = [
-            'Nombre completo',
             'Fotocopia del boleto de ornato',
             'Fotocopia de recibo agua, luz o teléfono del lugar de su residencia',
             'Fotocopia simple de su Documento Personal de Identificación',

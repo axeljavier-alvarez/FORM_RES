@@ -25,7 +25,7 @@
         @livewireStyles
 </head>
 
-<body class="bg-[#F9F9F9]">
+<body class="bg-[#C0C0C0]">
 
 
     
