@@ -276,9 +276,10 @@ p-8 rounded-xl"
             <div class="col-span-1 md:col-span-1" x-data="{ valor: ''}" x-on:form-reset.window="valor = ''" x-init="
                 const input = document.querySelector('#telefono');
                 const iti = window.intlTelInput(input, {
-                    initialCountry: 'gt',
+                    {{-- initialCountry: 'gt', --}}
+                    onlyCountries: ['gt'],
                     separateDialCode: true,
-                    preferredCountries: ['gt', 'mx', 'us', 'sv', 'hn'],
+                    {{-- preferredCountries: ['gt', 'mx', 'us', 'sv', 'hn'], --}}
                 });
 
                 $wire.set('codigo_pais', iti.getSelectedCountryData().dialCode);
@@ -293,11 +294,16 @@ p-8 rounded-xl"
                 </x-label>
                 <input
                     id="telefono"
-                    type="tel"
+                    type="text"
                     class="border rounded px-3 py-2 w-full box-border"
                     placeholder="Ingresa tu número"
                     x-model="valor"
-                    x-on:input="$wire.set('telefono', $event.target.value)"
+                    {{-- x-on:input="$wire.set('telefono', $event.target.value)" --}}
+                    x-on:input="
+                    valor = $event.target.value.replace(/\D/g, '').slice(0, 8);
+                    $wire.set('telefono', valor);
+                    "
+                    maxlength="8"
                 />
             </div>
 
@@ -312,7 +318,8 @@ p-8 rounded-xl"
                 wire:model.defer="cui" 
                 class="placeholder-[#797775] border rounded px-3 py-2 w-full" 
                 x-model="valor"
-                maxlength="13" />
+                maxlength="13"
+                x-on:input="$event.target.value = $event.target.value.replace(/[^0-9]/g, '')" />
             </div>
 
             <div x-data="{ valor: ''}" x-on:form-reset.window="valor = ''">

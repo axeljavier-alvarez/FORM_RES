@@ -22,6 +22,12 @@ class ZonaSeeder extends Seeder
         // }
 
         for($i = 1; $i <= 25; $i++){
+
+            // excluyendo las zonas 20, 22 y 23
+            if(in_array($i, [20, 22, 23])){
+                continue;
+            }
+            
             Zona::create([
                 'nombre' => 'Zona ' . $i
             ]);
