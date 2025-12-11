@@ -378,6 +378,27 @@ public function enmascararEmail($email)
 
 }
 
+// resetear formulario al estar en el paso 1
+public function resetFormulario()
+{
+    $this->reset([
+        'nombre',
+        'apellido',
+        'email',
+        'telefono',
+        'codigo_pais',
+        'cui',
+        'domicilio',
+        'observaciones',
+        'zona_id',
+        'tramite_id',
+        'requisitos',
+        'emailEnmascarado',
+    ]);
+
+    
+}
+
 
 
 }

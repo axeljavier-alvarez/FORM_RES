@@ -183,14 +183,15 @@ p-8 rounded-xl"
 
                 <button 
 
-                    @click="$wire.set('mostrarExito', false);
-                    paso =1;
+                    @click="
+                    $wire.resetFormulario();
+                    $wire.set('mostrarExito', false);
+                    paso = 1;
                     " 
 
                     class="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
 
                 >
-
                     Cerrar
 
                 </button>
