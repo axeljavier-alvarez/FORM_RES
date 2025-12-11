@@ -38,7 +38,7 @@ class SolicitudForm extends Component
     public $zonas;
     public $zona_id;
     // luego mostrar toast de alpine
-    public $toast = null;
+    // public $toast = null;
 
 
     /* para la parte del telefono */
@@ -65,6 +65,13 @@ class SolicitudForm extends Component
 
     // requisitos
     public $requisitos=[];
+
+
+    // mostrar modal de exito
+    // controla el model de solicitud enviada
+    public $mostrarExito = false;
+    // para mostrar el numero de solicitud
+    public $ultimoNoSolicitud;
 
 
      public function mount()
@@ -159,10 +166,17 @@ class SolicitudForm extends Component
         $solicitud = Solicitud::create($validated);
 
         // generar no_solicitud
-        $solicitud->no_solicitud = $solicitud->id . '-' . $solicitud->anio;
-        $solicitud->save();
+        $no_solicitud = $solicitud->id . '-' . $solicitud->anio;
 
-        //
+
+        // actualizar la propiedad directamente en la solicitud
+        $solicitud->update(['no_solicitud'=> $no_solicitud]);
+        // lo guardo para mostrarlo en el modal
+        $this->ultimoNoSolicitud=$no_solicitud;
+        // establecer propiedad para alpine
+        $this->mostrarExito=true;
+
+
 
         // OBTENER IDs DE requisito_tramite para el tramite seleccionado
         $requisitosTramiteIDs = RequisitoTramite::where('tramite_id', $this->tramite_id)
@@ -183,23 +197,27 @@ class SolicitudForm extends Component
         ->send(new NuevaSolicitudAdmin($solicitud));
 
 
-
+        // MOSTRAR MENSAJE DE ALPINE
+        // $this->mostrarExito = true;
+        // $this->ultimoNoSolicitud = $solicitud->no_solicitud;
 
         DB::commit();
 
-        $this->resetExcept('anio');        
+        // $this->resetExcept('anio');        
         $this->zonas = Zona::all();
 
-        $this->toast=[
-            'type' => 'success',
-            'message' => 'Solicitud enviada correctamente'
-        ];
+        // $this->toast=[
+        //     'type' => 'success',
+        //     'message' => 'Solicitud enviada correctamente'
+        // ];
 
     } catch(\Throwable $e){
         DB::rollBack();
         dd($e->getMessage());
     }
 }
+
+
 
 
 

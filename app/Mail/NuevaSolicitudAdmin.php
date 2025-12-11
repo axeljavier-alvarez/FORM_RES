@@ -25,6 +25,7 @@ class NuevaSolicitudAdmin extends Mailable
     {
         return $this->subject("Nueva solicitud registrada: 
         {$this->solicitud->no_solicitud}")
+        ->replyTo('no-reply@muniguate.com', 'No responder')
         ->view('emails.nueva-solicitud-admin');
     }
 

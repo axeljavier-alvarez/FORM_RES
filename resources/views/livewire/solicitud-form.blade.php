@@ -3,7 +3,7 @@
 <div
 x-data="{
 paso: 1,
-toast: @entangle('toast'),
+{{-- toast: @entangle('toast'), --}}
 mostrarConfirmacion: false,
 confirmarEnvio() {
    this.mostrarConfirmacion = true;
@@ -80,7 +80,7 @@ p-8 rounded-xl"
 </div>
 
 
-
+{{-- 
     <template x-if="toast">
         <div>
             <x-toast x-bind:type="toast.type">
@@ -89,7 +89,7 @@ p-8 rounded-xl"
                 </span>
             </x-toast>
         </div>
-    </template>
+    </template> --}}
 
 
             @if ($errors->any())
@@ -132,11 +132,17 @@ p-8 rounded-xl"
 
                 <!-- Enviar (negro como Siguiente) -->
                 <button
-                    @click="$wire.submit(); mostrarConfirmacion = false"
-                    class="px-4 py-2 rounded bg-black text-white hover:bg-gray-800"
-                >
-                    Enviar
+                @click="
+                    $wire.submit().then(() => {
+                        mostrarConfirmacion = false; 
+                        {{-- $wire.set('mostrarExito', true) --}}
+                    })
+                "
+                class="px-4 py-2 rounded bg-black text-white hover:bg-gray-800"
+            >
+                Enviar
                 </button>
+
 
             </div>
 
@@ -144,6 +150,51 @@ p-8 rounded-xl"
         </div>
 
         </div>
+
+
+       <!-- Modal de Éxito -->
+        <!-- Modal de Éxito -->
+
+       <div 
+
+            x-show="$wire.mostrarExito" 
+
+            x-transition
+
+            wire:key="modal-exito-{{ $ultimoNoSolicitud }}"
+
+            class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+
+        >
+
+            <div class="bg-white p-6 rounded-xl w-full max-w-md shadow-lg text-center">
+
+                <h2 class="text-xl font-bold text-green-700 mb-2">¡Solicitud enviada correctamente!</h2>
+
+                <p class="mb-4">
+
+                    Tu número de solicitud es: <strong>{{ $ultimoNoSolicitud }}</strong>
+
+                </p>
+
+                <button 
+
+                    @click="$wire.set('mostrarExito', false)" 
+
+                    class="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+
+                >
+
+                    Cerrar
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+      
 
 
 
