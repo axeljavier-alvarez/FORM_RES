@@ -478,6 +478,7 @@ p-8 rounded-xl"
                                 </tr>
 
                                 @endif
+
                             @endforeach
                         </tbody>
 
@@ -498,18 +499,157 @@ p-8 rounded-xl"
 
                     <div class="flex items-center justify-center gap-8 text-[#03192B]">
                         <label class="flex items-center gap-1">
-                            <input type="radio" wire:model="agregarCargas" value="si">
+                            <input type="radio" wire:model.live="agregarCargas" value="si">
                             Sí
                         </label> 
 
                         <label class="flex items-center gap-1">
-                            <input type="radio" wire:model="agregarCargas" value="no">
+                            <input type="radio" wire:model.live="agregarCargas" value="no">
                             No
                         </label>
                     </div>
                 </div>
                 @endif
 
+
+                @if($agregarCargas == 'si')
+
+                <div wire:key="bloque-cargas">
+
+
+                     <div class="mt-6 mb-2 text-center text-sm text-[#03192B]">
+                    Puede agregar hasta <strong> 4 cargas familiares </strong> .
+                    ({{ count($cargas) }} / 4)
+                </div>
+
+                <div class="mt-6 mb-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
+                    <h3 class="text-lg font-bold text-[#03192B] mb-3 text-center">
+                        Carga familiar
+                    </h3>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left bg-white rounded shadow">
+                            <thead>
+                                <tr class="border-b" style="border-color:#83BD3F">
+                                    <th class="px-4 py-3 font-bold text-[#03192B]">#</th>
+                                    <th class="px-4 py-3 font-bold text-[#03192B]">Nombres</th>
+                                    <th class="px-4 py-3 font-bold text-[#03192B]">Apellidos</th>
+                                    <th class="px-4 py-3 font-bold text-[#03192B] text-center">
+                                        Subir Documento
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach ($cargas as $index => $carga )
+                                <tr wire:key="carga-{{ $index }}">
+                                    
+
+                                  <tr class="border-b" style="border-color:#83BD3F;">
+                                    <td class="px-4 py-3 font-semibold text-[#03192B]">
+                                        Carga  {{ $index + 1 }}
+                                    </td>
+                                    <td class="px-4 py-3 text-[#03192B]">
+                                        <input type="text"
+                                        wire:model.defer="cargas.{{ $index }}.nombres"
+                                        placeholder="Nombres"+
+                                        class="border rounded px-3 py-2 w-full">
+                                    </td>
+                                    <td class="px-4 py-3 text-[#03192B]">
+                                        <input type="text"
+                                        wire:model.defer="cargas.{{ $index }}.apellidos"
+                                        placeholder="Apellidos"
+                                        class="border rounded px-3 py-2 w-full"
+                                        >
+                                    </td>
+                                    <td class="px-4 py-3 text-center">
+                                        <label class="cursor-pointer inline-flex 
+                                        items-center gap-2 bg-[#83BD3F] text-white px-4
+                                        py-2 rounded hover:bg-green-700 transition">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" 
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M4 12l7-8m0 0l7 8m-7-8v12" />
+                                        </svg>
+
+                                        <span>Subir carga</span>
+
+                                        <input type="file"
+                                        class="hidden"
+                                        wire:model.defer="cargas.{{ $index }}.archivo
+                                        accept="application/pdf,image/jpeg">
+                                        </label>
+                                    </td>
+
+
+                                    <td class="px-4 py-3 text-center">
+                                        @if($index > 0)
+                                        <button
+                                        type="button"
+                                        wire:click="eliminarCarga({{ $index }})"
+                                        class="text-red-600 font-bold text-lg hover:text-red-800"
+                                        title="Eliminar carga"
+                                        >
+
+                                         ✕
+                                        </button>
+                                        @endif
+                                    </td>
+                                 </tr>
+
+                                
+
+
+
+
+
+                                @endforeach
+                              
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+
+                <!-- agregar cargas boton -->
+                 <!-- boton para agregar otra carga-->
+                                 @if(count($cargas) < 4)
+                                 <div class="mt-4 flex justify-center">
+                                    <button
+    type="button"
+    wire:click="agregarCarga"
+    class="flex items-center gap-2 bg-blue-600 text-white
+    px-4 py-2 rounded hover:bg-blue-700 transition mb-5"
+>
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="h-5 w-5 text-white"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke="currentColor"
+         stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 4v16m8-8H4"/>
+    </svg>
+    Agregar otra carga
+</button>
+
+
+
+                                 </div>
+                                 @endif
+
+
+                </div>
+
+               
+                
+                @endif
+
+
+                <!-- Agregarlo en caso de cargas familiares -->
                 
                 
             @endif

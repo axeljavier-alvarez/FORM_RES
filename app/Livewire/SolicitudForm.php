@@ -80,6 +80,10 @@ class SolicitudForm extends Component
     public $tieneCargasFamiliares = false;
     public $agregarCargas = null;
 
+    // inicializar carga 1
+    public $cargas = [];
+    public $maxCargas= 4;
+
 
      public function mount()
     {
@@ -243,8 +247,8 @@ class SolicitudForm extends Component
     {
 
         // quitar esto para probar el enviar
-        $this->tramites = Tramite::all();
-        $this->zonas = Zona::all();
+        // $this->tramites = Tramite::all();
+        // $this->zonas = Zona::all();
 
         return view('livewire.solicitud-form');
     }
@@ -281,34 +285,34 @@ class SolicitudForm extends Component
         {
             try {
                 if($paso == 1){
-                    $this->validate([
-                        'nombres' => 'required|string|max:60',
-                        'apellidos' => 'required|string|max:60',
-                        'email' => [
-                            'required',
-                            'email',
-                            'max:45',
-                            Rule::unique('solicitudes', 'email')
-                        ],
+                    // $this->validate([
+                    //     'nombres' => 'required|string|max:60',
+                    //     'apellidos' => 'required|string|max:60',
+                    //     'email' => [
+                    //         'required',
+                    //         'email',
+                    //         'max:45',
+                    //         Rule::unique('solicitudes', 'email')
+                    //     ],
 
-                        'telefono' => $this->reglasTelefonoPorPais(),
+                    //     'telefono' => $this->reglasTelefonoPorPais(),
 
-                        'codigo_pais' => 'required',
-                        'cui' => [
-                            'required',
-                            'string',
-                            'size:13',
-                            Rule::unique('solicitudes', 'cui'),
-                            // regla validacion cui
-                            function ($attribute, $value, $fail){
-                                if(!$this->cuiEsValido($value)){
-                                    $fail('El DPI ingresado no es válido');
-                                }
-                            }
-                        ],
-                        'domicilio' => 'required|string|max:255',
-                        'zona_id' => 'required|exists:zonas,id',
-                    ]);
+                    //     'codigo_pais' => 'required',
+                    //     'cui' => [
+                    //         'required',
+                    //         'string',
+                    //         'size:13',
+                    //         Rule::unique('solicitudes', 'cui'),
+                    //         // regla validacion cui
+                    //         function ($attribute, $value, $fail){
+                    //             if(!$this->cuiEsValido($value)){
+                    //                 $fail('El DPI ingresado no es válido');
+                    //             }
+                    //         }
+                    //     ],
+                    //     'domicilio' => 'required|string|max:255',
+                    //     'zona_id' => 'required|exists:zonas,id',
+                    // ]);
                 }
                 if($paso == 2){
                     $this->validate([
@@ -471,6 +475,46 @@ private function cuiEsValido(string $cui): bool
     $digitoCalculado = $total % 11;
 
     return $digitoCalculado === $verificador;
+}
+
+// función para cargas
+// inicializar carga
+public function updatedAgregarCargas($value)
+{
+    if ($value === 'si') {
+        // siempre crear carga 1 limpia
+        $this->cargas = [
+            [
+                'nombres' => '',
+                'apellidos' => '',
+                'archivo' => null,
+            ]
+        ];
+    } else {
+        // si es "no", limpiar todo
+        $this->cargas = [];
+    }
+}
+
+
+
+public function agregarCarga()
+{
+    if(count($this->cargas) < $this->maxCargas){
+        $this->cargas[] = [
+            'nombres' => '',
+            'apellidos' => '',
+            'archivo' => null
+        ];
+    }
+}
+
+public function eliminarCarga($index)
+{
+    // no borrar la carga 1
+    if($index === 0) return;
+    unset($this->cargas[$index]);
+    $this->cargas = array_values($this->cargas);
 }
 
 }
