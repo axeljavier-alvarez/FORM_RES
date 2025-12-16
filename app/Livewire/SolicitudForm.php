@@ -147,7 +147,13 @@ class SolicitudForm extends Component
         'cui.size' => 'El DPI debe tener 13 caracteres.',
         'email.email' => 'El email no tiene formato válido',
         'email.unique' => 'Ya existe una solicitud con el correo :input',
-        'cui.unique' => 'Ya existe una solicitud con el cui :input'
+        'cui.unique' => 'Ya existe una solicitud con el cui :input',
+        'requisitos.*.archivo.required' => 'Debe subir este requisito.',
+        'requisitos.*.archivo.mimes' => 'Solo se permiten archivos PDF o JPG.',
+        'requisitos.*.archivo.max' => 'El archivo no debe superar 2MB',
+        'tramite_id.required' => 'Debe seleccionar un trámite.',
+        'tramite_id.exists' => 'Debe seleccionar un trámite válido',
+
     ];
 
 
@@ -368,21 +374,42 @@ class SolicitudForm extends Component
                     //     'zona_id' => 'required|exists:zonas,id',
                     // ]);
                 }
-                if($paso == 2){
-                    $this->validate([
-                        'tramite_id' => 'required|exists:tramites,id',
-                        'requisitos.*.archivo' => 'nullable|file|mimes:pdf,jpg,jpeg|max:2048',
-                    ]);
 
-                    if ($this->tieneCargasFamiliares && $this->agregarCargas === 'si'){
+                if ($paso == 2) {
+
                         $this->validate([
-                             'cargas.*.nombres'   => 'required|string|max:45',
-                             'cargas.*.apellidos' => 'required|string|max:45',
-                             'archivoCarga'       => 'required|file|mimes:pdf,jpg,jpeg|max:2048',
+                            'tramite_id' => 'required|exists:tramites,id',
                         ]);
+
+                        // 🔹 SOLO requisitos visibles en la tabla (excluye Cargas familiares)
+                        $requisitosTabla = collect($this->requisitos)
+                            ->filter(fn ($req) => $req['nombre'] !== 'Cargas familiares')
+                            ->values();
+
+                        $errores = [];
+
+                        foreach ($requisitosTabla as $index => $req) {
+                            if (empty($req['archivo'])) {
+                                $errores["requisitos.$index.archivo"] =
+                                    "Debe subir el requisito: {$req['nombre']}";
+                            }
+                        }
+
+                        if (!empty($errores)) {
+                            throw ValidationException::withMessages($errores);
+                        }
+
+                        // 🔹 Validar cargas familiares SOLO si aplica
+                        if ($this->tieneCargasFamiliares && $this->agregarCargas === 'si') {
+                            $this->validate([
+                                'cargas.*.nombres'   => 'required|string|max:45',
+                                'cargas.*.apellidos' => 'required|string|max:45',
+                                'archivoCarga'       => 'required|file|mimes:pdf,jpg,jpeg|max:2048',
+                            ]);
+                        }
                     }
 
-                }
+
                 if($paso == 3){
                     $this->validate([
                         'observaciones' => 'nullable|string|max:255',
@@ -393,6 +420,7 @@ class SolicitudForm extends Component
             } catch (ValidationException $e) {
                 // $this->dispatch('validation-error');
                 $this->setErrorBag($e->validator->errors());
+
                 return false; // hay errores
             }
         }

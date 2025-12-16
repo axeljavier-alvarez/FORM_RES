@@ -408,7 +408,6 @@ p-8 rounded-xl"
 
 
 
-
             <!-- Requisitos por tramite -->
              @if(!empty($requisitos) && count($requisitos) > 0)
 
