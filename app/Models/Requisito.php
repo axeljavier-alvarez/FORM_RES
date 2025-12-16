@@ -11,7 +11,7 @@ class Requisito extends Model
 
     public $timestamps = false;
     
-    protected $fillable = ['nombre'];
+    protected $fillable = ['nombre', 'slug'];
 
     public function tramites()
     {

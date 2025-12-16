@@ -489,7 +489,7 @@ p-8 rounded-xl"
                         <tbody>
                             @foreach($requisitos as $index => $requisito)
                                 {{-- @if ($requisito['nombre'] !== 'Cargas familiares') --}}
-                                @if($requisito['nombre'] && $requisito['nombre'] !== 'Cargas familiares')
+                                @if($requisito['slug'] && $requisito['slug'] !== 'cargas-familiares')
 
                                 <tr class="border-b-2" style="border-color:#83BD3F;">
                                     <td class="px-4 py-3 text-[#03192B]">

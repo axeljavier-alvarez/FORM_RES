@@ -273,7 +273,7 @@ class SolicitudForm extends Component
         if($this->archivoCarga){
             $requisitoCarga = RequisitoTramite::where('tramite_id', $this->tramite_id)
                 ->whereHas('requisito', function($q){
-                    $q->where('nombre', 'Cargas familiares');
+                    $q->where('slug', 'cargas-familiares');
                 })->first();
 
             if($requisitoCarga){
@@ -405,8 +405,8 @@ class SolicitudForm extends Component
                     // Requisitos de la tabla (excluye Cargas familiares)
                     $requisitosTabla = collect($this->requisitos)
                     ->filter(fn ($req) =>
-                        $req['nombre'] !== 'Cargas familiares' &&
-                        $req['nombre'] !== 'Fotocopia del boleto de ornato'
+                        $req['slug'] !== 'cargas-familiares' &&
+                        $req['slug'] !== 'fotocopia-del-boleto-de-ornato'
                     )
                     ->values();
 
@@ -525,12 +525,13 @@ public function updatedTramiteId($value)
             return [
                 'id' => $req->id,
                 'nombre' => $req->nombre,
+                'slug' => $req->slug,
                 'archivo' => null
             ];
         })->toArray(): [];
         // detectar si hay cargas familiares
         $this->tieneCargasFamiliares = $tramite
-        ? $tramite->requisitos->contains('nombre', 'Cargas familiares')
+        ? $tramite->requisitos->contains('slug', 'cargas-familiares')
         : false;
     } else {
         // si el usuario borra seleccion se borra lista

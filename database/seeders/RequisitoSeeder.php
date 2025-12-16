@@ -4,6 +4,7 @@ namespace Database\Seeders;
 use App\Models\Requisito;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class RequisitoSeeder extends Seeder
 {
@@ -27,7 +28,22 @@ class RequisitoSeeder extends Seeder
         ];
 
         foreach($requisitos as $nombre){
-            Requisito::create(['nombre' => $nombre]);
+            // crear slug
+            $slugBase = Str::slug($nombre);
+            $slug = $slugBase;
+            $contador = 1;
+
+            //verificar si existe uno igual
+
+            while(Requisito::where('slug', $slug)->exists()){
+                 $slug = $slugBase . '-' . $contador;
+                 $contador++;
+            }
+
+            Requisito::create([
+                'nombre' => $nombre,
+                'slug' => $slug
+            ]);
         }
     }
 }
