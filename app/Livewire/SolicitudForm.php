@@ -202,6 +202,34 @@ class SolicitudForm extends Component
         // GUARDAR EN LA TABLA PIVOTE
         $solicitud->requisitosTramites()->sync($requisitosTramiteIDs);
 
+        // SUBIR ARCHIVOS DE LOS REQUISITOS (NO CARGAS FAMILIARES)
+        foreach($this->requisitos as $req){
+            // no subieron nada saltar
+            if(empty($req['archivo'])){
+                continue;
+            }
+
+            // buscar el requisito_tramite correcto
+            $requisitoTramite = RequisitoTramite::where('tramite_id', $this->tramite_id)
+            ->where('requisito_id', $req['id'])
+            ->first();
+
+            if(!$requisitoTramite){
+                continue;
+            }
+
+            // guardar archivo en nueva carpeta
+            $path = $req['archivo']->store('requisitos_tramite', 'public');
+
+            // registrar en detalle_solicitud
+            DetalleSolicitud::create([
+                'path' => $path,
+                'solicitud_id' => $solicitud->id,
+                'requisito_tramite_id' => $requisitoTramite->id
+            ]);
+
+
+        }
         // GUARDAR CARGAS FAMILIARES
         if($this->agregarCargas === 'si' && count($this->cargas) > 0){
             foreach($this->cargas as $carga) {
@@ -343,6 +371,7 @@ class SolicitudForm extends Component
                 if($paso == 2){
                     $this->validate([
                         'tramite_id' => 'required|exists:tramites,id',
+                        'requisitos.*.archivo' => 'nullable|file|mimes:pdf,jpg,jpeg|max:2048',
                     ]);
 
                     if ($this->tieneCargasFamiliares && $this->agregarCargas === 'si'){
@@ -397,8 +426,17 @@ public function updatedTramiteId($value)
         // buscar tramite
         $tramite = Tramite::with('requisitos')->find($value);
         // pone requisitios en propiedad publica $requisitos
-        $this->requisitos = $tramite ? $tramite->requisitos->toArray() : [];
+        // $this->requisitos = $tramite ? $tramite->requisitos->toArray() : [];
 
+        // REQUISITOS PARA RECIBIR ARCHIVO
+        $this->requisitos = $tramite
+        ? $tramite->requisitos->map(function($req){
+            return [
+                'id' => $req->id,
+                'nombre' => $req->nombre,
+                'archivo' => null
+            ];
+        })->toArray(): [];
         // detectar si hay cargas familiares
         $this->tieneCargasFamiliares = $tramite
         ? $tramite->requisitos->contains('nombre', 'Cargas familiares')
@@ -408,7 +446,7 @@ public function updatedTramiteId($value)
         $this->requisitos = [];
         $this->tieneCargasFamiliares;
 
-   
+
     }
 }
 
@@ -461,7 +499,7 @@ public function resetFormulario()
         'emailEnmascarado',
     ]);
 
-    
+
 }
 
 // logica del CUI
@@ -475,7 +513,7 @@ private function cuiEsValido(string $cui): bool
            }
     // 3. extraer partes
     // substr $cadena original, $posicion_inicial y $longitud a extraer;
-    // primeros 8 digitos 
+    // primeros 8 digitos
     $numero = substr($cui, 0, 8);
     // 9no digitio (Digito de control)
     $verificador = (int)substr($cui, 8, 1);
@@ -483,12 +521,12 @@ private function cuiEsValido(string $cui): bool
     $depto = (int) substr($cui, 9, 2);
     //12mo y 13mo digito (Codigo de municipio)
     $muni = (int) substr($cui, 11, 2);
- 
+
     // 3. Validación de códigos de departamento y municipio
     // Array de municipios por departamento (índice 0 = depto 1, índice 21 = depto 22)
 
-    $munisPorDepto = [17, 8, 16, 16, 13, 14, 19, 8, 
-    24, 21, 9, 30, 32, 21, 8, 
+    $munisPorDepto = [17, 8, 16, 16, 13, 14, 19, 8,
+    24, 21, 9, 30, 32, 21, 8,
     17, 14, 5, 11, 11, 7, 17];
 
     // verificar que el codigo departamentos este entre 1 y 22
@@ -496,7 +534,7 @@ private function cuiEsValido(string $cui): bool
     // restarle 1 al depto para verificar sus municipios por ejemplo
     // 02-1 = 1 entonces 8 es el numero de municipios del departamento 02
     $muni < 1 || $muni > $munisPorDepto[$depto - 1]){
-        return false; 
+        return false;
     }
 
     // 4. validación del digitio verificador (Módulo 11)
@@ -504,7 +542,7 @@ private function cuiEsValido(string $cui): bool
     for($i = 0; $i < 8; $i ++){
         $dig = (int)$numero[$i];
         // multiplicadores: 2,3,4,5,6,7,8,9
-        $total += $dig * ($i + 2); 
+        $total += $dig * ($i + 2);
     }
 
     $digitoCalculado = $total % 11;
