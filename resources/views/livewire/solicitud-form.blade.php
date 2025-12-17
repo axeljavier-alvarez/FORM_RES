@@ -236,7 +236,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
             </h2>
             <p class="text-[#03192B]"> ¿Esta seguro de que desea enviar la solicitud?
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;Por favor revise sus datos antes de continuar
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Por favor revise sus datos antes de continuar
             </p>
 
 
@@ -384,7 +384,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                 </x-label>
                 <x-input type="email"
                 placeholder="Ingrese su email"
-                wire:model.defer="email"
+                wire:model.live="email"
                 x-model="valor"
                 class="placeholder-[#797775] border rounded px-3 py-2 w-full" />
 
@@ -436,7 +436,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                 </x-label>
                 <x-input type="text"
                 placeholder="Ingrese su dpi"
-                wire:model.defer="cui"
+                wire:model.live="cui"
                 class="placeholder-[#797775] border rounded px-3 py-2 w-full"
                 x-model="valor"
                 maxlength="13"
@@ -450,7 +450,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                 </x-label>
 
                 <select
-                wire:model.defer="zona_id"
+                wire:model.live="zona_id"
                 class="border rounded px-3 py-2 w-full"
                 x-model="valor"
                 >
@@ -476,7 +476,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
             </x-label>
             <x-input type="text"
             placeholder="Ingrese la dirección de su domicilio"
-            wire:model.defer="domicilio"
+            wire:model.live="domicilio"
             class="placeholder-[#797775] border rounded px-3 py-2 w-full"
             x-model="valor" />
         </div>
@@ -788,6 +788,8 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 class="hidden"
     wire:model="cargas.{{ $index }}.archivo"
     >
+
+    
 
 
 

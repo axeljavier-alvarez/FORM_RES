@@ -92,6 +92,14 @@ class SolicitudForm extends Component
     public $archivoCarga;
 
 
+    protected array $noAutoClearErrors = [
+    'email',
+    'telefono',
+    'cui',
+];
+
+
+
     // para subir archivos
         use WithFileUploads;
 
@@ -126,14 +134,12 @@ class SolicitudForm extends Component
         'cui' => [
             'required',
             'string',
-            'size:13',
             Rule::unique('solicitudes', 'cui'),
 
             // Regla de validación lógica del cui
             function ($attribute, $value, $fail){
                 if(!$this->cuiEsValido($value)){
-                    $fail('El cui no es válido según su estructura de dígito verificador
-                    y códigos geográficos');
+                    $fail('El DPI/CUI no es válido');
                 }
             }
         ],
@@ -177,10 +183,17 @@ class SolicitudForm extends Component
 
 public function updated($property)
 {
-    if ($this->paso == 2) {
-        $this->resetErrorBag($property);
+    // si es email, telefono o cui → NO limpiar aquí
+    foreach ($this->noAutoClearErrors as $campo) {
+        if ($property === $campo || str_starts_with($property, $campo . '.')) {
+            return;
+        }
     }
+
+    // para todo lo demás (inputs normales, cargas, requisitos)
+    $this->resetErrorBag($property);
 }
+
 
 
 
@@ -245,8 +258,14 @@ public function updated($property)
                 continue;
             }
 
+            // generando nombre con no_solicitud
+            $extension = $req['archivo']->getClientOriginalExtension();
+            $nombreArchivo = $no_solicitud . '-' . Str::random(20) . '.' . $extension;
+
             // guardar archivo en nueva carpeta
-            $path = $req['archivo']->store('requisitos_tramite', 'public');
+            // $path = $req['archivo']->store('requisitos_tramite', 'public');
+
+            $path = $req['archivo']->storeAs('requisitos_tramite', $nombreArchivo, 'public');
 
             // registrar en detalle_solicitud
             DetalleSolicitud::create([
@@ -280,7 +299,14 @@ if($this->agregarCargas === 'si' && count($this->cargas) > 0){
                 })->first();
 
             if($requisitoCarga){
-                $path = $carga['archivo']->store('cargas_familiares', 'public');
+
+                // generando nombre del archivo
+                $extension = $carga['archivo']->getClientOriginalExtension();
+                $nombreArchivo = $no_solicitud  . '-' . Str::random(20) . '.' . $extension;
+                // $path = $carga['archivo']->store('cargas_familiares', 'public');
+
+                // nueva ruta
+                $path = $carga['archivo']->storeAs('cargas_familiares', $nombreArchivo, 'public');
 
                 DetalleSolicitud::create([
                     'path' => $path,
@@ -513,8 +539,33 @@ if($this->agregarCargas === 'si' && count($this->cargas) > 0){
 
 public function updatedCargas($value, $key)
 {
-    // $key vendrá con un formato tipo: "0.nombres" o "1.archivo"
-    // Esto limpia el error de ese campo específico mientras el usuario escribe
+    if(!str_ends_with($key, '.archivo')){
+        $this->resetErrorBag("cargas.$key");
+        return;
+    }
+
+    $parts = explode('.', $key);
+    $index = $parts[0];
+    $num = $index + 1;
+
+    try {
+        $this->validateOnly(
+            "cargas.$key",
+            [
+                "cargas.$key" => 'nullable|file|mimes:pdf,jpg,jpeg|max:2048',
+            ],
+            [
+                "cargas.$key.mimes" =>
+                    "La carga familiar {$num} solo permite archivos PDF o JPG.",
+                "cargas.$key.max" =>
+                    "El archivo de la carga familiar {$num} no debe superar 2MB.",
+            ]
+        );
+    } catch (\Exception $e) {
+        $this->cargas[$index]['archivo'] = null;
+        throw $e;
+    }
+
     $this->resetErrorBag('cargas.' . $key);
 }
 
@@ -585,6 +636,7 @@ public function enmascararEmail($email)
 public function resetFormulario()
 {
     $this->reset([
+        // paso 1
         'nombres',
         'apellidos',
         'email',
@@ -597,6 +649,16 @@ public function resetFormulario()
         'tramite_id',
         'requisitos',
         'emailEnmascarado',
+
+        // paso 2
+        'tramite_id',
+        'requisitos',
+        'tieneCargasFamiliares',
+        'agregarCargas',
+        'cargas',
+
+        // paso 3
+        'observaciones',
     ]);
 
 
@@ -649,6 +711,45 @@ private function cuiEsValido(string $cui): bool
 
     return $digitoCalculado === $verificador;
 }
+
+// validacion tiempo real telefono
+public function updatedTelefono($value)
+{
+    if (strlen($value) === 8) {
+        $this->validateOnly('telefono');
+    }
+}
+
+// validacion tiempo real email
+public function updatedEmail($value)
+{
+    if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        $this->validateOnly('email');
+    }
+}
+
+// validacion tiempo real cui
+public function updatedCui($value)
+{
+    // limpiar no numéricos
+    $value = preg_replace('/\D/', '', $value);
+    $this->cui = $value;
+
+    // mientras no llegue a 13 → NO validar nada
+    if (strlen($value) < 13) {
+        $this->resetErrorBag('cui');
+        return;
+    }
+
+
+    try {
+        $this->validateOnly('cui');
+        $this->resetErrorBag('cui'); 
+    } catch (ValidationException $e) {
+        $this->setErrorBag($e->validator->errors());
+    }
+}
+
 
 // función para cargas
 // inicializar carga

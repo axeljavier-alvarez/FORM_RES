@@ -1,4 +1,5 @@
 SELECT * FROM solicitudes;
+SELECT * FROM estados;
 SELECT * FROM tramites;
 SELECT * FROM requisitos;
 SELECT * FROM dependientes;
@@ -59,7 +60,11 @@ LEFT JOIN tramites t
 LEFT JOIN dependientes d 
        ON d.solicitud_id = s.id
 
-WHERE s.no_solicitud = '3-2025'
+/* WHERE s.no_solicitud = '2-2025' */
+
+
+WHERE s.no_solicitud IN ('1-2025','2-2025','3-2025')
+
 
 GROUP BY 
     s.id, s.no_solicitud, s.nombres, s.apellidos, s.email,
@@ -182,7 +187,7 @@ JOIN requisitos r
 LEFT JOIN dependientes d 
        ON d.solicitud_id = s.id
 
-WHERE s.no_solicitud = '1-2025'
+WHERE s.no_solicitud = '2-2025'
   AND r.nombre = 'Cargas familiares'
 
 GROUP BY 
