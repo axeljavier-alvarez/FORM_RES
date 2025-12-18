@@ -36,4 +36,11 @@ class RequisitoTramite extends Model
             return $this->hasMany(DetalleSolicitud::class, 'requisito_tramite_id');
         }
 
+
+        // relacion con tramite
+        public function tramite()
+        {
+            return $this->belongsTo(Tramite::class, 'tramite_id');
+        }
+
 }

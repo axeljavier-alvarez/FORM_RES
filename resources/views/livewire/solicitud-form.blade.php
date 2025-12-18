@@ -1,6 +1,7 @@
 {{-- intl-tel-input --}}
+<div class="px-4 md:px-8">
 
-<div
+    <div
 x-data="{
 paso: 1,
 {{-- toast: @entangle('toast'), --}}
@@ -556,100 +557,56 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                 <div class="overflow-x-auto mt-4 border-t-4 border-b-4" style="border-color:#83BD3F;">
                     <table class="w-full text-left">
                         <thead>
-                            <tr class="border-b-4" style="border-color:#83BD3F;">
-                                <th class="px-4 py-3 font-bold text-[#03192B]">Requisitos</th>
-                                <th class="px-4 py-3 font-bold text-[#03192B] text-center">Agregar PDF / JPG</th>
+    <tr class="border-b-4" style="border-color:#83BD3F;">
+        <th class="px-4 py-3 font-bold text-[#03192B]">Requisitos</th>
+        <th class="px-4 py-3 font-bold text-[#03192B] text-center">Acción</th>
+    </tr>
+</thead>
 
-                            </tr>
-                        </thead>
+<tbody>
+    @foreach($requisitos as $index => $requisito)
+        @if($requisito['slug'] && $requisito['slug'] !== 'cargas-familiares')
+        <tr class="border-b-2" style="border-color:#83BD3F;">
+            
+            <td class="px-4 py-3">
+                <span class="text-[#03192B]">
+                    {{ $requisito['nombre'] }}
+                    @if($requisito['slug'] === 'fotocopia-del-boleto-de-ornato')
+                        <strong> (opcional)</strong>
+                    @endif
+                </span>
+            </td>
 
-                        <tbody>
-                            @foreach($requisitos as $index => $requisito)
-                                {{-- @if ($requisito['nombre'] !== 'Cargas familiares') --}}
-                                @if($requisito['slug'] && $requisito['slug'] !== 'cargas-familiares')
+        <!-- ALINEANDO ARCHIVOS DE REQUISITO -->         
+        <td class="px-4 py-3 text-right">
+                <div class="flex items-center justify-end gap-3"> @if(!isset($requisitos[$index]['archivo']))
+                        <label class="cursor-pointer inline-flex items-center gap-2 bg-[#10069F] text-white px-4 py-2 rounded hover:bg-[#0d057f] transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M4 12l7-8m0 0l7 8m-7-8v12" />
+                            </svg>
+                            <span>Subir archivo</span>
+                            <input type="file" wire:model="requisitos.{{ $index }}.archivo" accept="application/pdf,image/jpeg" class="hidden">
+                        </label>
+                    @else
+                        <p class="text-[#10069F] text-sm truncate w-[200px] text-right" title="{{ $requisitos[$index]['archivo']->getClientOriginalName() }}">
+                            {{ $requisitos[$index]['archivo']->getClientOriginalName() }}
+                        </p>
 
-                                <tr class="border-b-2" style="border-color:#83BD3F;">
-                                    <td class="px-4 py-3 text-[#03192B]">
-                                        {{ $requisito['nombre'] }}
+                        <button type="button" 
+                                @click="abrirModalEliminarRequisito({{ $index }})" 
+                                class="text-red-600 hover:text-red-800 transition-colors flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                            </svg>
+                        </button>
+                    @endif
+                </div>
+            </td>
 
-                                        @if($requisito['slug'] === 'fotocopia-del-boleto-de-ornato')
-                                        <strong> (opcional)</strong>
-                                        @endif
-
-
-                                       @if(
-                                        $requisito['slug'] === 'fotocopia-simple-de-su-documento-personal-de-identificacion'
-                                        && optional($tramites->firstWhere('id', $tramite_id))->slug === 'magisterio'
-                                        )
-                                        <br><strong>Si carece de DPI puede colocar la constancia de trámite</strong>
-                                        @endif
-                                    </td>
-
-                                    <td class="px-4 py-3 text-right">
-                                        
-
-                                        @if(!isset($requisitos[$index]['archivo']))
-                                        <div class="flex flex-col">
-                                        <label class="cursor-pointer inline-flex items-center gap-2
-                                        bg-[#10069F] text-white px-4 py-2 rounded hover:bg-[#0d057f]">
-
-                                                {{-- <x-heroicons-outline.adjustments-horizontal /> --}}
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M4 12l7-8m0 0l7 8m-7-8v12" />
-                                                </svg>
-
-                                                <span>Subir archivo</span>
-
-                                                <input type="file"
-                                                    wire:model="requisitos.{{ $index }}.archivo"
-                                                    accept="application/pdf,image/jpeg"
-                                                    class="hidden"
-                                                    >
-                                                    
-
-                                        </label>
-                                      
-                                        </div>
-                                        @else
-
-                                        <div class="flex items-center gap-2 mt-1">
-
-                                        <p class="mr-4 text-[#10069F] text-sm mt-1">
-                                            {{ $requisitos[$index]['archivo']->getClientOriginalName() }}
-                                        </p>
-                                      
-
-                                        <button type="button"
-                                        {{-- wire:click="eliminarArchivoRequisito({{ $index }})" --}}
-                                        @click="abrirModalEliminarRequisito({{ $index }})"
-                                        class="text-red-600 hover:text-red-800 font-bold"
-                                        title="Eliminar Archivo"
-                                        >
-
-                                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-                                            stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" 
-                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166
-                                                    m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077
-                                                    L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397
-                                                    m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397
-                                                    m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0
-                                                    c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                        </svg>
-                                                                            
-                                       </button>
-                                        </div>
-                                        
-                                        @endif
-                                    </td>
-                                </tr>
-
-                                @endif
-
-                            @endforeach
-                        </tbody>
+        </tr>
+        @endif
+    @endforeach
+</tbody>
 
 
                     </table>
@@ -774,42 +731,35 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                                     </td>
                                   
 
-                                   <td class="px-4 py-3 text-center">
-    @if (!isset($cargas[$index]['archivo']))
-        <label class="cursor-pointer inline-flex items-center gap-2 bg-[#83BD3F] text-white px-4 py-2 rounded hover:bg-green-700 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M4 12l7-8m0 0l7 8m-7-8v12"/>
-            </svg>
-            <span>Subir carga</span>
-          <input type="file" 
-                 accept="application/pdf,image/jpeg"
-class="hidden"
-    wire:model="cargas.{{ $index }}.archivo"
-    >
+                          <!-- ALINEANDO ARCHIVOS DE CARGA -->         
 
-    
-
-
-
+                        <td class="px-4 py-3 text-right"> @if (!isset($cargas[$index]['archivo']))
+                                <div class="flex justify-end"> <label class="cursor-pointer inline-flex items-center gap-2 bg-[#83BD3F] text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M4 12l7-8m0 0l7 8m-7-8v12"/>
+                                        </svg>
+                                        <span>Subir carga</span>
+                                        <input type="file" accept="application/pdf,image/jpeg" class="hidden" wire:model="cargas.{{ $index }}.archivo">
                                     </label>
-                                @else
-                                    <div class="flex items-center justify-center gap-2 mt-1">
-                                        <p class="text-[#10069F] text-sm mt-1">
-                                            {{ $cargas[$index]['archivo']->getClientOriginalName() }}
-                                        </p>
-                                        <button type="button"
-                                                @click="$dispatch('abrir-modal-eliminar-carga', {{ $index }})"
-                                                class="text-red-600 hover:text-red-800 font-bold"
-                                                title="Eliminar archivo">
-                                            <!-- SVG trash -->
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6"> <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166 m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077 L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397 m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397 m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0 c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </div>
+                            @else
+                                <div class="flex items-center justify-end gap-4"> <p class="text-[#10069F] text-sm truncate w-40 text-right" title="{{ $cargas[$index]['archivo']->getClientOriginalName() }}">
+                                        {{ $cargas[$index]['archivo']->getClientOriginalName() }}
+                                    </p>
+                                    
+                                    <button type="button"
+                                            @click="$dispatch('abrir-modal-eliminar-carga', {{ $index }})"
+                                            class="text-red-600 hover:text-red-800 flex-shrink-0"
+                                            title="Eliminar archivo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166 m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077 L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397 m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397 m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0 c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            @endif
+                        </td>
+                                    
 
-                                        </button>
-                                    </div>
-                                @endif
-                            </td>
 
 
 
@@ -938,5 +888,8 @@ class="hidden"
 
 
     </form>
+
+</div>
+
 
 </div>

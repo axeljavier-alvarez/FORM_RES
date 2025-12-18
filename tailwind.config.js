@@ -14,6 +14,20 @@ export default {
 
   theme: {
     extend: {
+
+      /* flotar imagen */
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-12px)' },
+        },
+      },
+      animation: {
+        float: 'float 6s ease-in-out infinite',
+      },
+
+
+      /* flowbite */
       fontFamily: {
         sans: ['Figtree', ...defaultTheme.fontFamily.sans],
       },
@@ -32,14 +46,14 @@ export default {
         'border-danger-subtle': '#fecaca',
       },
       borderRadius: {
-        'base': '0.5rem',  // para rounded-base
-        'sm': '0.125rem',  // para rounded-sm
+        base: '0.5rem',
+        sm: '0.125rem',
       },
       spacing: {
-        '4.5': '1.125rem', // para w-4.5 / h-4.5
-        '2': '0.5rem',     // ms-2
-        '3': '0.75rem',    // ms-3 / me-3
-        '24': '6rem',      // me-24
+        '4.5': '1.125rem',
+        '2': '0.5rem',
+        '3': '0.75rem',
+        '24': '6rem',
       },
     },
   },

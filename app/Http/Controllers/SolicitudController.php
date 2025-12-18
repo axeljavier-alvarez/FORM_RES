@@ -16,6 +16,12 @@ class SolicitudController extends Controller
         return view('solicitudes.create');
     }
 
+    // consultar solicitud
+    public function consultarSolicitudes()
+    {
+        return view('solicitudes.consultar-solicitudes');
+    }
+
     // public function store(Request $request)
     // {
     //     $data = $request->validate([

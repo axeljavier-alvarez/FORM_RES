@@ -20,6 +20,10 @@ Route::get('solicitud', [SolicitudController::class, 'create'])
     // ->middleware(CheckCartItems::class)
     ->name('solicitudes.create');
 
+// Solicitudes
+Route::get('consultar', [SolicitudController::class, 'consultarSolicitudes'])
+->name('solicitudes.consultarSolicitudes');
+
 // Route::post('solicitud', [SolicitudController::class, 'store'])
 // ->name('solicitudes.store');
 
