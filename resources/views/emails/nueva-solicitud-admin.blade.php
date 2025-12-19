@@ -2,7 +2,7 @@
 
     <tr> <td><strong>Nueva solicitud registrada </strong></td></tr>
     <tr><td>No. Solicitud: {{ $solicitud->no_solicitud }}</td></tr>
-    <tr><td>Nombre: {{ $solicitud->nombre }} {{ $solicitud->apellido }}</td></tr>
+    <tr><td>Nombre Completo: {{ $solicitud->nombres }} {{ $solicitud->apellidos }}</td></tr>
     <tr><td>CUI: {{ $solicitud->cui }}</td></tr>
     <tr><td>Teléfono: {{  $solicitud->telefono }}</td></tr>
     <tr><td>Correo: {{ $solicitud->email }}</td></tr>

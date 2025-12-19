@@ -21,7 +21,7 @@ Route::get('solicitud', [SolicitudController::class, 'create'])
     ->name('solicitudes.create');
 
 // Solicitudes
-Route::get('consultar', [SolicitudController::class, 'consultarSolicitudes'])
+Route::get('consulta', [SolicitudController::class, 'consultarSolicitudes'])
 ->name('solicitudes.consultarSolicitudes');
 
 // Route::post('solicitud', [SolicitudController::class, 'store'])
