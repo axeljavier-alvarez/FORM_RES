@@ -24,7 +24,8 @@ class RequisitoSeeder extends Seeder
             'Negativa de nacimiento del menor de edad',
             'Negativa de nacimiento extendida por el Registro Nacional de las Personas RENAP',
             'Resolución judicial que conste la detención de una persona. (prevención policial, auto de procesamiento etc.',
-            'Resolución judicial que ordene el procesamiento de niños y/o adolescentes en conflicto con la ley penal'
+            'Resolución judicial que ordene el procesamiento de niños y/o adolescentes en conflicto con la ley penal',
+            'Fotocopia simple del Documento Personal de Identificación de quien se encuentra privado de libertad'
         ];
 
         foreach($requisitos as $nombre){

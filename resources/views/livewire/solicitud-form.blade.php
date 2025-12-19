@@ -532,7 +532,8 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
             <!-- Requisitos por tramite -->
              @if(!empty($requisitos) && count($requisitos) > 0)
-
+   @if ($tramites->firstWhere('id', $tramite_id)?->slug 
+                !== 'tramites-legales-en-materia-penal-si-una-persona-se-encuentra-privada-de-libertad')
                 <!-- titulo centrado -->
                 <h2 class="text-center text-2xl font-bold mt-6 mb-2" style="color:#10069F">
                     REQUISITOS
@@ -553,67 +554,237 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                     @endforeach
                 </ul>
                 </div> --}}
+                
 
+             
+                    
                 <div class="overflow-x-auto mt-4 border-t-4 border-b-4" style="border-color:#83BD3F;">
                     <table class="w-full text-left">
                         <thead>
-    <tr class="border-b-4" style="border-color:#83BD3F;">
-        <th class="px-4 py-3 font-bold text-[#03192B]">Requisitos</th>
-        <th class="px-4 py-3 font-bold text-[#03192B] text-center">Acción</th>
-    </tr>
-</thead>
+                            <tr class="border-b-4" style="border-color:#83BD3F;">
+                                <th class="px-4 py-3 font-bold text-[#03192B]">Requisitos</th>
+                                <th class="px-4 py-3 font-bold text-[#03192B] text-center">Acción</th>
+                            </tr>
+                        </thead>
 
-<tbody>
-    @foreach($requisitos as $index => $requisito)
-        @if($requisito['slug'] && $requisito['slug'] !== 'cargas-familiares')
-        <tr class="border-b-2" style="border-color:#83BD3F;">
-            
-            <td class="px-4 py-3">
-                <span class="text-[#03192B]">
-                    {{ $requisito['nombre'] }}
-                    @if($requisito['slug'] === 'fotocopia-del-boleto-de-ornato')
-                        <strong> (opcional)</strong>
-                    @endif
-                </span>
-            </td>
+                    <tbody>
+                        @foreach($requisitos as $index => $requisito)
+                            @if($requisito['slug'] && $requisito['slug'] !== 'cargas-familiares')
+                            <tr class="border-b-2" style="border-color:#83BD3F;">
+                                
+                                <td class="px-4 py-3">
+                                    <span class="text-[#03192B]">
+                                        {{ $requisito['nombre'] }}
+                                        @if($requisito['slug'] === 'fotocopia-del-boleto-de-ornato')
+                                            <strong> (opcional)</strong>
+                                        @endif
+                                    </span>
+                                </td>
 
-        <!-- ALINEANDO ARCHIVOS DE REQUISITO -->         
-        <td class="px-4 py-3 text-right">
-                <div class="flex items-center justify-end gap-3"> @if(!isset($requisitos[$index]['archivo']))
-                        <label class="cursor-pointer inline-flex items-center gap-2 bg-[#10069F] text-white px-4 py-2 rounded hover:bg-[#0d057f] transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M4 12l7-8m0 0l7 8m-7-8v12" />
-                            </svg>
-                            <span>Subir archivo</span>
-                            <input type="file" wire:model="requisitos.{{ $index }}.archivo" accept="application/pdf,image/jpeg" class="hidden">
-                        </label>
-                    @else
-                        <p class="text-[#10069F] text-sm truncate w-[200px] text-right" title="{{ $requisitos[$index]['archivo']->getClientOriginalName() }}">
-                            {{ $requisitos[$index]['archivo']->getClientOriginalName() }}
-                        </p>
+                            <!-- ALINEANDO ARCHIVOS DE REQUISITO -->         
+                            <td class="px-4 py-3 text-right">
+                                    <div class="flex items-center justify-end gap-3"> @if(!isset($requisitos[$index]['archivo']))
+                                            <label class="cursor-pointer inline-flex items-center gap-2 bg-[#10069F] text-white px-4 py-2 rounded hover:bg-[#0d057f] transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M4 12l7-8m0 0l7 8m-7-8v12" />
+                                                </svg>
+                                                <span>Subir archivo</span>
+                                                <input type="file" wire:model="requisitos.{{ $index }}.archivo" accept="application/pdf,image/jpeg" class="hidden">
+                                            </label>
+                                        @else
+                                            <p class="text-[#10069F] text-sm truncate w-[200px] text-right" title="{{ $requisitos[$index]['archivo']->getClientOriginalName() }}">
+                                                {{ $requisitos[$index]['archivo']->getClientOriginalName() }}
+                                            </p>
 
-                        <button type="button" 
-                                @click="abrirModalEliminarRequisito({{ $index }})" 
-                                class="text-red-600 hover:text-red-800 transition-colors flex-shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                            </svg>
-                        </button>
-                    @endif
+                                            <button type="button" 
+                                                    @click="abrirModalEliminarRequisito({{ $index }})" 
+                                                    class="text-red-600 hover:text-red-800 transition-colors flex-shrink-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                </svg>
+                                            </button>
+                                        @endif
+                                    </div>
+                                </td>
+
+                            </tr>
+                            @endif
+                        @endforeach
+                    </tbody>
+
+
+                </table>
+
+
+
                 </div>
-            </td>
+                @endif
+                
 
-        </tr>
-        @endif
-    @endforeach
-</tbody>
+                    {{-- @if(
+                        $tramites->firstWhere('id', $tramite_id)?->slug
+                        === 'tramites-legales-en-materia-penal-si-una-persona-se-encuentra-privada-de-libertad'
+                    )                
+                    <!-- tramite legal en materia penal -->
+                    <div x-data="{ edad: '' }" class="mb-4 text-center">
+                        <p class="mt-2 mb-2 font-semibold text-[#03192B]">Seleccione su edad</p>
+
+                        <div class="flex justify-center gap-6 mb-2">
+                            <label class="flex items-center gap-1">
+                                <input type="radio" x-model="edad" value="menor"> Menor de edad
+                            </label>
+
+                            <label class="flex items-center gap-1">
+                                <input type="radio" x-model="edad" value="mayor"> Mayor de edad
+                            </label>
+                        </div>
+
+                        <p class="text-sm text-red-600 font-semibold" x-text="edad === 'menor' ? 'Adolescentes en conflicto con la ley penal' : (edad === 'mayor' ? 'Privados de libertad por encontrarse en un proceso penal' : '')"></p>
+                    </div>  
+                         @endif
+                    --}}
 
 
-                    </table>
+
+                    @if (
+                        $tramites->firstWhere('id', $tramite_id)?->slug
+                        === 'tramites-legales-en-materia-penal-si-una-persona-se-encuentra-privada-de-libertad'
+                    )
+
+                    <div
+                    x-data="{
+                    edad: '',
+                    requisitosMayor: [
+                    'resolucion-judicial-que-conste-la-detencion-de-una-persona-prevencion-policial-auto-de-procesamiento-etc',
+                    'fotocopia-del-boleto-de-ornato',
+                    'fotocopia-simple-del-documento-personal-de-identificacion-de-quien-se-encuentra-privado-de-libertad'
+                    ],
+                    requisitosMenor: [
+                    'resolucion-judicial-que-ordene-el-procesamiento-de-ninos-yo-adolescentes-en-conflicto-con-la-ley-penal',
+                    'certificacion-de-nacimiento-extendida-por-renap',
+                    ],
+
+                    requisitosComunes: [
+                        'fotocopia-simple-de-su-documento-personal-de-identificacion',
+                        'fotocopia-de-recibo-agua-luz-o-telefono-del-lugar-de-su-residencia'
+                    ],
+
+                    }"
+                    class="mt-6"
+                    >
 
 
+                        <p class=" text-center mt-2 mb-2 font-semibold text-[#03192B]">Seleccione su edad</p>
 
-                </div>
+                        <div class="flex justify-center gap-6 mb-2">
+                            <label class="flex items-center gap-1">
+                                <input type="radio" x-model="edad" value="menor" wire:model.live="edad"> Menor de edad
+                            </label>
+
+                            <label class="flex items-center gap-1">
+                                <input type="radio" x-model="edad" value="mayor" wire:model.live="edad"> Mayor de edad
+                            </label>
+
+
+                        </div>
+
+
+                        <p class="text-center mt-1 text-sm text-red-600 font-semibold" x-text="edad === 'menor' ? 'Adolescentes en conflicto con la ley penal' : (edad === 'mayor' ? 'Privados de libertad por encontrarse en un proceso penal' : '')"></p>
+
+
+                        <!-- DIBUJAR LOS REQUISITOS FILTRADOS -->
+                        <div x-show="edad !== ''" x-transition>
+
+                            <h2 class="text-center text-2xl font-bold mt-6 mb-2" style="color:#10069F">
+                                REQUISITOS
+                            </h2>
+
+                            <p class="text-center text-sm p-2 rounded" style="background-color: #EFF6FF; color: #1E293B;">
+                                Recuerde que puede subir únicamente documentos PDF o JPG
+                            </p>
+
+                            <div class="overflow-x-auto mt-4 border-t-4 border-b-4" style="border-color:#83BD3F;">
+
+                                        
+                            
+                            
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="border-b-4" style="border-color:#83BD3F;">
+                                            <th class="px-4 py-3 font-bold text-[#03192B]">Requisitos</th>
+                                            <th class="px-4 py-3 font-bold text-[#03192B] text-center">Acción</th>                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody> 
+                                        @foreach($requisitos as $index => $requisito)
+                                        
+                                        <tr
+                                        x-show="
+                                        requisitosComunes.includes('{{ $requisito['slug']}}') || 
+                                        (edad === 'mayor' && requisitosMayor.includes('{{ $requisito['slug'] }}'))
+                                        || (edad === 'menor' && requisitosMenor.includes('{{ $requisito['slug'] }}'))
+                                        "
+                                        x-transition
+                                        class="border-b-2"
+                                        style="border-color:#83BD3F;"
+                                        >
+                                        <td class="px-4 py-3 text-[#03192B]">
+                                            {{ $requisito['nombre'] }}
+
+                                            @if ($requisito['slug'] === 'fotocopia-del-boleto-de-ornato')
+                                                <strong>
+                                                    (opcional)
+                                                </strong>
+                                            @endif
+                                        </td>
+
+
+                                        <td class="px-4 py-3 text-right">
+                                            <div class="flex items-center justify-end gap-3">
+
+                                                @if(!isset($requisitos[$index]['archivo']))
+                                                <label class="cursor-pointer inline-flex items-center gap-2 bg-[#10069F] text-white px-4 py-2 rounded">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M4 12l7-8m0 0l7 8m-7-8v12" />
+                                                </svg>
+                                                <span>
+                                                    Subir archivo
+                                                </span>
+                                                    
+
+                                                    <input type="file"
+                                                    wire:model="requisitos.{{ $index }}.archivo"
+                                                    accept="application/pdf,image/jpeg"
+                                                    class="hidden">
+                                                </label>
+                                                @else
+                                                <p class="text-sm text-[#10069F] truncate w-40">
+                                                    {{ $requisitos[$index]['archivo']->getClientOriginalName() }}
+                                                </p>
+                                                <button
+                                                    type="button"
+                                                    @click="abrirModalEliminarRequisito({{ $index }})"
+                                                    class="text-red-600"
+                                                >
+                                                    ✕
+                                                </button>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        </tr>
+
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+                        
+                    @endif
+           
+
 
                 @if($tieneCargasFamiliares)
                 <div>
@@ -664,25 +835,9 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
 
 
-              
+            
 
-
-                   <!-- Selección de edad -->
-                    {{-- <div x-data="{ edad: '' }" class="mb-4 text-center">
-                        <p class="mb-2 font-semibold text-[#03192B]">Seleccione su edad</p>
-
-                        <div class="flex justify-center gap-6 mb-2">
-                            <label class="flex items-center gap-1">
-                                <input type="radio" x-model="edad" value="menor"> Menor de edad
-                            </label>
-
-                            <label class="flex items-center gap-1">
-                                <input type="radio" x-model="edad" value="mayor"> Mayor de edad
-                            </label>
-                        </div>
-
-                        <p class="text-sm text-red-600 font-semibold" x-text="edad === 'menor' ? 'Certificación de nacimiento' : (edad === 'mayor' ? 'Fotocopia simple de DPI' : '')"></p>
-                    </div> --}}
+                   
 
               
 

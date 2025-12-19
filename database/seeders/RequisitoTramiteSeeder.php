@@ -20,7 +20,7 @@ class RequisitoTramiteSeeder extends Seeder
         Tramite::find(3)->requisitos()->sync([3,1,2,8,2]); 
         Tramite::find(4)->requisitos()->sync([9,1,2]);
         Tramite::find(5)->requisitos()->sync([3,1,2,5,7,9]);
-        Tramite::find(6)->requisitos()->sync([3,10,1,2,11,7]);
+        Tramite::find(6)->requisitos()->sync([3,10,1,2,11,7,12]);
 
     }
 }
