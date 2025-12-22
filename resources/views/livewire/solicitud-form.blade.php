@@ -146,16 +146,38 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
             @foreach ($errors->getMessages() as $field => $messages)
                 @foreach ($messages as $message)
                     <li>
-                        @if ($message === 'validation.max.file' && str_starts_with($field, 'requisitos.'))
-                            @php
-                                $index = explode('.', $field)[1] ?? null;
-                                $nombre = $requisitos[$index]['nombre'] ?? 'Este requisito';
-                            @endphp
+                        <!-- Inicializar variable para almacenar -->
+                        @php
+                            $nombre = null;
+                        @endphp
 
-                            <strong>{{ $nombre }}:</strong>
-                            El archivo no debe superar 2MB.
-                        @else
-                            {{ $message }}
+                        <!-- Comprobar el error -->
+                        @if($message === 'validation.max.file')
+                           @if (str_starts_with($field, 'requisitos.'))
+                           @php 
+                           // tomar posicion 2 del array, sino sera null
+                           $index = explode('.', $field)[1] ?? null;
+                           // tomar el nombre del requisito
+                           $nombre = $requisitos[$index]['nombre'] ?? 'Requisito';
+                           @endphp                               
+
+                           @elseif (str_starts_with($field, 'cargas.'))
+                           @php
+                            $index = explode('.', $field)[1] ?? null;
+                            $nombre = 'Carga familiar ' . ($index + 1);
+
+                               
+                           @endphp
+                           @endif
+
+                           @if($nombre)
+                           <strong>{{ $nombre }}:</strong>
+                           El archivo no debe superar 2MB.
+                           @else
+                           El archivo no debe superar 2MB.
+                           @endif
+                        @else 
+                        {{ $message }}
                         @endif
                     </li>
                 @endforeach
@@ -857,7 +879,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                     </h3>
 
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left bg-white rounded shadow">
+                        >
                             <thead>
                                 <tr class="border-b" style="border-color:#83BD3F">
                                     <th class="px-4 py-3 font-bold text-[#03192B]">#</th>

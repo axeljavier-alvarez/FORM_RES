@@ -6,5 +6,7 @@ return [
 
 
     'mimes' => 'El archivo :attribute debe ser de tipo: :values.',
-    
+        
 ];
+
+

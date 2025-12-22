@@ -179,6 +179,7 @@ class SolicitudForm extends Component
     'requisitos.*.archivo.required' => 'Debe subir este requisito.',
     'requisitos.*.archivo.mimes' => 'Solo se permiten archivos PDF o JPG.',
     'requisitos.*.archivo.max' => 'El archivo no debe superar 2MB',
+    'cargas.*.archivo.max' => 'El archivo no debe superar 2MB'
    
     
 ];
