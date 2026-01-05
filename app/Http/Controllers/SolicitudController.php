@@ -19,7 +19,7 @@ class SolicitudController extends Controller
     // consultar solicitud
     public function consultarSolicitudes()
     {
-        return view('solicitudes.consultar-solicitudes');
+        return view('solicitudes.publica');
     }
 
     // public function store(Request $request)

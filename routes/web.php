@@ -22,15 +22,18 @@ Route::get('solicitud', [SolicitudController::class, 'create'])
 
 // Solicitudes
 Route::get('consulta', [SolicitudController::class, 'consultarSolicitudes'])
-->name('solicitudes.consultarSolicitudes');
+->name('solicitudes.publica');
 
 // Route::post('solicitud', [SolicitudController::class, 'store'])
 // ->name('solicitudes.store');
 
-// prueba de livewire
-Route::get('admin', function(){
-    return view ('admin.dashboard');
-})->name('dashboard');
+
+// VER LAS CONSTANCIAS CREADAS
+/* Route::get('ver-consultas', function(){
+    return view ('consulta.index');
+})->name('consulta.index'); */
+
+
 
 Route::middleware([
     'auth:sanctum',
