@@ -13,8 +13,7 @@
             <div class="flex items-center space-x-1.5">
 
                 @if ($loop->first)
-                
-                        <svg class="w-4 h-4 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5"/></svg>
+                        <svg class="w-4 h-4 me-1.5 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5"/></svg>
 
                 @else
 
@@ -23,22 +22,25 @@
                 @endif
 
 
+                
+
+
                 <!-- isset nos ayuda a ver si hay algo definido de nuestro programa-->
 
                 @isset($item['url'])
-
-                   <a href="{{ $item['url'] }}" 
-                class="inline-flex items-center text-sm font-medium text-body hover:text-fg-brand">
-                {{ $item['name'] }}
+                <a href="{{ $item['url'] }}"
+                   class="{{ $loop->first
+                        ? 'text-blue-600 underline font-bold hover:text-blue-800'
+                        : 'inline-flex items-center font-medium text-body-subtle'
+                   }}">
+                    {{ $item['name'] }}
                 </a>
-
-                @else
-
-                <span class="inline-flex items-center text-sm font-medium text-body-subtle">
+            @else
+                <span class="inline-flex items-center font-medium text-body-subtle">
                     {{ $item['name'] }}
                 </span>
+            @endisset
 
-                @endisset
                
              
 

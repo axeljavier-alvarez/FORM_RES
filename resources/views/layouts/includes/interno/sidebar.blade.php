@@ -2,7 +2,7 @@
       $links = [
          [
             'name' => 'Dashboard',
-            'icon' => 'fa-solid fa-gauge',
+            'icon' => 'fa-solid fa-house',
             'route' => route('interno.consulta.index'),
             'active' => request()->routeIs('interno.consulta.index')
         ],
@@ -17,11 +17,11 @@
          'active' => request()->routeIs('interno.solicitudes.*')
       ],
       [
-         'name' => 'Portadas',
-         'icon' => 'fa-solid fa-images',
-         'route' => '',
-         'active' => false
-      ]
+         'name' => 'Analisis de documentos',
+         'icon' => 'fa-solid fa-file-lines',
+         'route' => route('interno.analisis.index'),
+         'active' => request()->routeIs('interno.analisis.*')
+      ],
 ];
    @endphp
    

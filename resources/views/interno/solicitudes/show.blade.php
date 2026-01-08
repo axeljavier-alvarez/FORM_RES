@@ -7,6 +7,7 @@
         'name' => 'Solicitudes',
         'url' => route('interno.solicitudes.index')
     ],
+    
     [
         'name' => 'Ver'
     ]
