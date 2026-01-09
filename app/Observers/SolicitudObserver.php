@@ -27,6 +27,7 @@ class SolicitudObserver
      */
     public function updated(Solicitud $solicitud): void
     {
+        // registrar bitacora si cambio el estado
         if($solicitud->isDirty('estado_id')){
             $nuevoEstado = Estado::find($solicitud->estado_id);
             $nombreEstado = $nuevoEstado ? $nuevoEstado->nombre : 'DESCONOCIDO';
@@ -36,8 +37,8 @@ class SolicitudObserver
             if($nombreEstado === 'Cancelado'){
                 $descripcion = "La solicitud ha sido rechazada por el analista";
             } elseif ($nombreEstado === 'En proceso'){
-                $descripcion = "la solicitud ha sido aprobada para análisis";
-            }
+                $descripcion = "la solicitud esta en proceso para análisis";
+            } 
 
 
             Bitacora::create([

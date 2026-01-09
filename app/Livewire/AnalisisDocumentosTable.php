@@ -23,7 +23,7 @@ class AnalisisDocumentosTable extends DataTableComponent
             // agregar varios estados
             $query->whereNotIn('nombre', [
                 'Cancelado',
-                // 'Pendiente'
+                'En Proceso'
             ]);
         });
     }
@@ -213,6 +213,28 @@ class AnalisisDocumentosTable extends DataTableComponent
             
 
             // refresh datatable de rappasoft
+            $this->dispatch('refreshDatatable');
+            $this->dispatch('refreshComponent');
+        }
+    }
+
+
+    // peticion en proceso
+    #[On('peticionEnProceso')]
+
+    public function procesarSolicitud($id)
+    {
+        $estadoEnProceso = Estado::where('nombre', 'En proceso')->first();
+
+        if(!$estadoEnProceso) return;
+
+        $solicitud = Solicitud::find($id);
+
+        if($solicitud){
+            $solicitud->update([
+                'estado_id' =>  $estadoEnProceso->id
+            ]);
+
             $this->dispatch('refreshDatatable');
             $this->dispatch('refreshComponent');
         }

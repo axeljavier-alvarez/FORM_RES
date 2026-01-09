@@ -14,6 +14,8 @@
 
 <!-- CREACION DEL modal -->
 <div
+
+
 x-data="{ open:false, solicitud: {}}"
 @open-modal-solicitud.window="open = true; solicitud = $event.detail.solicitud"
 x-show="open"
@@ -284,6 +286,10 @@ aria-cabellad="modal-title" role="dialog" aria-modal="true"
           </button>
 
           <button type="button"
+            @click="if(confirm('¿Está seguro que desea aceptar esta solicitud?')) { 
+              Livewire.dispatch('peticionEnProceso', { id: solicitud.id }); 
+              open = false; 
+          }"
           class="inline-flex justify-center items-center 
           rounded-lg px-8 py-2.5 text-sm font-bold text-white shadow-sm
           transition-all hover:bg-emerald-700 active:scale-95"
