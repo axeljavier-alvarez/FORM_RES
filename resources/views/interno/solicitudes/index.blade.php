@@ -183,7 +183,7 @@
                     </span>
 
                     <span
-                    x-text="solicitud.zona.nombre"
+                    x-text="solicitud.zona?.nombre"
                     >
                     </span>
                 </p>
@@ -276,11 +276,16 @@
                                 <span class="font-semibold text-gray-900">
                                     Usuario
                                 </span>
+                                {{-- <span 
+                                    x-text="item.user ? item.user.name + ' ' + (item.user.lastname || '') : 'Sistema'"
+                                    class="italic text-gray-500">
+                                </span> --}}
                                 <span
                                 x-text="item.user.name"
                                 class="italic text-gray-500"
                                 >
                                 </span>
+
                             </p>
                         </template>
 

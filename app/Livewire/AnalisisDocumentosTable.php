@@ -8,14 +8,32 @@ use App\Models\Solicitud;
 use Carbon\Carbon;
 use App\Models\Estado;
 use Livewire\Attributes\On;
+use Illuminate\Database\Eloquent\Builder;
 
 class AnalisisDocumentosTable extends DataTableComponent
 {
     protected $model = Solicitud::class;
 
+    // no mostrar cuando este en cancelado
+    public function builder() : Builder
+    {
+        return Solicitud::query()->whereHas('estado', function($query){
+            // $query->where('nombre', '!=', 'Cancelado');
+
+            // agregar varios estados
+            $query->whereNotIn('nombre', [
+                'Cancelado',
+                // 'Pendiente'
+            ]);
+        });
+    }
+
      public function configure(): void
 {
     $this->setPrimaryKey('id');
+
+    // quita el parpadeo
+    $this->setLoadingPlaceholderStatus(false);
 
     $this->setThAttributes(function (Column $column) {
         return [
@@ -161,6 +179,16 @@ class AnalisisDocumentosTable extends DataTableComponent
             $solicitud->fecha_registro_traducida = $solicitud->created_at 
             ? Carbon::parse($solicitud->created_at)
             ->translatedFormat('d F Y H:i') : 'N/A';
+
+
+            // no mostrar  solicitudes con cancelado
+            // $solicitud->bitacoras->each(function ($item){
+            //     if(str_contains($item->evento, 'Cancelado')){
+            //             $item->user = null;
+            //         }
+
+            // });
+                   
             
             $this->dispatch('open-modal-solicitud', solicitud: $solicitud->toArray());
         }
@@ -182,12 +210,11 @@ class AnalisisDocumentosTable extends DataTableComponent
                 'estado_id' => $estadoCancelado->id
             ]);
 
-            // 1. Cerramos el modal por si acaso
-            $this->dispatch('close-modal-solicitud');
+            
 
-            // 2. Redireccionamos a la URL que pediste
-            // Esto refrescará la tabla y cerrará el modal por completo
-            return redirect()->to('/interno/analisis');
+            // refresh datatable de rappasoft
+            $this->dispatch('refreshDatatable');
+            $this->dispatch('refreshComponent');
         }
     }
 

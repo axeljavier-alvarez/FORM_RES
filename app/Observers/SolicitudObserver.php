@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Solicitud;
 use App\Models\Bitacora;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Estado;
 
 class SolicitudObserver
 {
@@ -26,7 +27,26 @@ class SolicitudObserver
      */
     public function updated(Solicitud $solicitud): void
     {
-        
+        if($solicitud->isDirty('estado_id')){
+            $nuevoEstado = Estado::find($solicitud->estado_id);
+            $nombreEstado = $nuevoEstado ? $nuevoEstado->nombre : 'DESCONOCIDO';
+
+            $descripcion = "El estado de la solicitud cambió a: " . $nombreEstado;
+
+            if($nombreEstado === 'Cancelado'){
+                $descripcion = "La solicitud ha sido rechazada por el analista";
+            } elseif ($nombreEstado === 'En proceso'){
+                $descripcion = "la solicitud ha sido aprobada para análisis";
+            }
+
+
+            Bitacora::create([
+                'solicitud_id' => $solicitud->id,
+                'user_id' => Auth::id(),
+                'evento' => 'CAMBIO DE ESTADO: ' . $nombreEstado,
+                'descripcion' => $descripcion
+            ]);
+        }
     }
 
     /**

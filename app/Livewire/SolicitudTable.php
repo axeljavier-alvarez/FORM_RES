@@ -198,6 +198,13 @@ class SolicitudTable extends DataTableComponent
              $solicitud->bitacoras->each(function ($item) {
                 $item->fecha_formateada = Carbon::parse($item->created_at)
                     ->translatedFormat('d F Y H:i');
+
+
+                    // no mostrar  solicitudes con cancelado
+
+                    // if(str_contains($item->evento, 'Cancelado')){
+                    //     $item->user = null;
+                    // }
             });
 
             $this->dispatch('open-modal-detalle', solicitud: $solicitud->toArray());

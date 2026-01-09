@@ -263,7 +263,10 @@ aria-cabellad="modal-title" role="dialog" aria-modal="true"
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <button 
           type="button"
-          @click="if(confirm('¿Está seguro que desea rechazar esta solicitud?')) { Livewire.dispatch('peticionRechazar', { id: solicitud.id }) }"
+          @click="if(confirm('¿Está seguro que desea rechazar esta solicitud?')) { 
+              Livewire.dispatch('peticionRechazar', { id: solicitud.id }); 
+              open = false; 
+          }"
           class="inline-flex justify-center items-center rounded-lg px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 active:scale-95"
           style="background-color: #D63440;">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
