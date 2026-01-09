@@ -12,6 +12,8 @@ SELECT * FROM bitacoras;
 
 SELECT * FROM solicitudes;
 
+SELECT * FROM estados;
+
 SHOW TRIGGERS;
 
 
@@ -194,7 +196,124 @@ GROUP BY
 
 
 
-    
+   /* bitacoras, estados, path y solicitudes */
+   
+   SELECT
+    s.id              AS solicitud_id,
+    s.no_solicitud,
+    s.nombres,
+    s.apellidos,
+    s.email,
+    s.telefono,
+    s.cui,
+    s.domicilio,
+    s.observaciones,
+
+    e.nombre          AS estado_actual,
+
+    b.id              AS bitacora_id,
+    b.evento,
+    b.descripcion,
+    b.created_at      AS fecha_evento,
+
+    COALESCE(u.name, 'Sistema') AS usuario,
+
+    ds.id             AS detalle_id,
+    ds.path           AS archivo
+
+FROM solicitudes s
+JOIN estados e
+     ON e.id = s.estado_id
+
+LEFT JOIN bitacoras b
+       ON b.solicitud_id = s.id
+
+LEFT JOIN users u
+       ON u.id = b.user_id
+
+LEFT JOIN detalle_solicitud ds
+       ON ds.solicitud_id = s.id
+
+/* FILTRO OPCIONAL */
+/* WHERE s.no_solicitud = '2-2025' */
+
+ORDER BY
+    b.created_at ASC,
+    ds.id ASC;
+
+
+/* */
+
+
+SELECT
+    s.id AS solicitud_id,
+    s.no_solicitud,
+    s.nombres,
+    s.apellidos,
+    s.email,
+    s.telefono,
+    s.cui,
+    s.domicilio,
+    s.observaciones,
+
+    e.nombre AS estado_actual,
+
+    /* ================= ARCHIVOS ================= */
+    GROUP_CONCAT(
+        DISTINCT ds.path
+        ORDER BY ds.path
+        SEPARATOR ' | '
+    ) AS archivos,
+
+    /* ================= BITÁCORA COMPLETA ================= */
+    bita.bitacora
+
+FROM solicitudes s
+JOIN estados e
+     ON e.id = s.estado_id
+
+LEFT JOIN detalle_solicitud ds
+       ON ds.solicitud_id = s.id
+
+/* ===== SUBQUERY: BITÁCORA AGRUPADA POR SOLICITUD ===== */
+LEFT JOIN (
+    SELECT
+        b.solicitud_id,
+        GROUP_CONCAT(
+            CONCAT(
+                DATE_FORMAT(b.created_at, '%d/%m/%Y %H:%i'),
+                ' - ',
+                COALESCE(u.name, 'Sistema'),
+                ' (',
+                b.evento,
+                '): ',
+                b.descripcion
+            )
+            ORDER BY b.created_at
+            SEPARATOR ' || '
+        ) AS bitacora
+    FROM bitacoras b
+    LEFT JOIN users u ON u.id = b.user_id
+    GROUP BY b.solicitud_id
+) bita
+ON bita.solicitud_id = s.id
+
+/* FILTRO */
+/* WHERE s.no_solicitud = '2-2025' */
+
+GROUP BY
+    s.id,
+    s.no_solicitud,
+    s.nombres,
+    s.apellidos,
+    s.email,
+    s.telefono,
+    s.cui,
+    s.domicilio,
+    s.observaciones,
+    e.nombre,
+    bita.bitacora;
+
 
 
 
