@@ -173,6 +173,7 @@ class AnalisisDocumentosTable extends DataTableComponent
             'estado',
             'zona',
             'dependientes',
+            'requisitosTramites.requisito',
             'requisitosTramites.tramite',
             
         ])->find($id);
@@ -189,6 +190,10 @@ class AnalisisDocumentosTable extends DataTableComponent
             ? Carbon::parse($solicitud->created_at)
             ->translatedFormat('d F Y H:i') : 'N/A';
 
+            // array de requisitos por tramite
+            $solicitud->requisitos_por_tramite = $solicitud->requisitosTramites->map(function($rt){
+                return $rt->requisito?->nombre;
+            })->filter()->unique()->values()->toArray();
 
             // no mostrar  solicitudes con cancelado
             // $solicitud->bitacoras->each(function ($item){

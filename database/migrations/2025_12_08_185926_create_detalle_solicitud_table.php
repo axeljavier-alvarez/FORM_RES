@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('path');
             $table->foreignId('solicitud_id')->constrained('solicitudes')->onDelete('cascade');
-            $table->foreignId('requisito_tramite_id')->constrained('requisito_tramite')->onDelete('cascade');
+            $table->foreignId('requisito_tramite_id')
+            ->nullable()
+            ->constrained('requisito_tramite')
+            ->onDelete('cascade');
             $table->timestamps();
         });
     }

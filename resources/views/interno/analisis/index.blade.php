@@ -297,6 +297,22 @@
                                 </h4>
                             </div>
 
+
+                            <!-- CARGAR ARRAY DE LOS DOCUMENTOS -->
+                            <div class="space-y-1 mt-3">
+                              <template x-if="solicitud.requisitos_por_tramite &&
+                              solicitud.requisitos_por_tramite.length > 0">
+                              <template x-for="req in
+                              solicitud.requisitos_por_tramite" :key="req">
+                              <div>
+                                <span x-text="req">
+
+                                </span>
+                              </div>
+                              </template>
+                              </template>
+                            </div>
+
                 </div>
 
 
@@ -445,7 +461,7 @@
       </h3>
 
       <p class="font-bold text-blue-500">
-        ¿Está seguro que desea mandar la solicitud a visita de campo
+        ¿Está seguro que desea mandar la solicitud a visita de campo?
       </p>
 
       <div class="flex justify-end gap-3 mt-5">
