@@ -1,8 +1,23 @@
+/* prueba para actualizar el estado de las solicitudes */
+/* UPDATE solicitudes
+SET estado_id = 1; */
+/* 
+UPDATE solicitudes
+SET estado_id = 3
+WHERE id = 32; */
+
+
+DESCRIBE detalle_solicitud;
+
 SELECT * FROM solicitudes;
+
+SELECT * FROM bitacoras;
+
 
 SELECT * FROM zonas;
 
 SELECT * FROM estados;
+
 
 SELECT * FROM tramites;
 
@@ -13,6 +28,11 @@ SELECT * FROM requisito_tramite;
 SELECT * FROM solicitudes_has_requisitos_tramites;
 
 SELECT * FROM detalle_solicitud;
+
+
+
+
+
 /* SHOW CREATE TABLE solicitudes;
 SHOW CREATE TABLE zonas; */
 
