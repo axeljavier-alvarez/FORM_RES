@@ -4,7 +4,7 @@ namespace Database\Seeders;
 use App\Models\Estado;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\Schema;
 
 class EstadoSeeder extends Seeder
 {
@@ -13,11 +13,13 @@ class EstadoSeeder extends Seeder
      */
     public function run(): void
     {
-        $estados = ['Pendiente', 'En proceso', 'Completado', 'Cancelado'];
 
-        foreach($estados as $nombre){
-            Estado::create(['nombre' => $nombre]);
-        }
+   $estados = ['Pendiente', 'En proceso', 'Visita de Campo', 'Completado', 'Cancelado'];
+
+    foreach($estados as $nombre){
+        
+        Estado::firstOrCreate(['nombre' => $nombre]);
+    }
 
     }
 }

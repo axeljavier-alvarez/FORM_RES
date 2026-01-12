@@ -23,9 +23,13 @@ class SolicitudTable extends DataTableComponent
         
     });
 
-    $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
+    $this->setTdAttributes(function(Column $column){
         return [
-            'class' => 'text-left align-middle',
+            'class' => match($column->getTitle()){
+                'Estado' => 'text-center align-middle',
+                'Acción' => 'text-center align-middle',
+                default => 'text-left align-middle'
+            }
         ];
     });
 }
@@ -112,10 +116,11 @@ class SolicitudTable extends DataTableComponent
 
                 ->format(function($value, $row){
                     $color = match($value) {
-                        'Pendiente' => 'orange',
+                         'Pendiente' => '#F5725B',
                         'En proceso' => '#EAB308',
-                        'Completado' => 'green',
-                        'Cancelado' => 'red'
+                        'Visita de Campo' => '#92400E',
+                        'Completado' => '#22C55E',
+                        'Cancelado' => '#EF4444'
 
                     };
 

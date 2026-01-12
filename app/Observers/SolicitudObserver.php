@@ -32,13 +32,25 @@ class SolicitudObserver
             $nuevoEstado = Estado::find($solicitud->estado_id);
             $nombreEstado = $nuevoEstado ? $nuevoEstado->nombre : 'DESCONOCIDO';
 
-            $descripcion = "El estado de la solicitud cambió a: " . $nombreEstado;
+            // $descripcion = "El estado de la solicitud cambió a: " . $nombreEstado;
 
-            if($nombreEstado === 'Cancelado'){
-                $descripcion = "La solicitud ha sido rechazada por el analista";
-            } elseif ($nombreEstado === 'En proceso'){
-                $descripcion = "la solicitud esta en proceso para análisis";
-            } 
+            // if($nombreEstado === 'Cancelado'){
+            //     $descripcion = "La solicitud ha sido rechazada por el analista";
+            // } elseif ($nombreEstado === 'En proceso'){
+            //     $descripcion = "la solicitud esta en proceso para análisis";
+            // } 
+
+            
+
+
+            $descripcion = match ($nombreEstado) {
+        'Cancelado' => $solicitud->observaciones
+            ? 'Solicitud rechazada. Motivo: ' . $solicitud->observaciones
+            : 'Solicitud rechazada sin observaciones.',
+        'En proceso' => 'La solicitud está en proceso para análisis.',
+        default => 'Cambio de estado a: ' . $nombreEstado,
+    };
+
 
 
             Bitacora::create([

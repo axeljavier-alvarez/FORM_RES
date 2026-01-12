@@ -14,6 +14,9 @@ class AnalisisDocumentosTable extends DataTableComponent
 {
     protected $model = Solicitud::class;
 
+    // imprimir los errores
+    // public ?string $errorObservaciones = null;
+
     // no mostrar cuando este en cancelado
     public function builder() : Builder
     {
@@ -23,7 +26,8 @@ class AnalisisDocumentosTable extends DataTableComponent
             // agregar varios estados
             $query->whereNotIn('nombre', [
                 'Cancelado',
-                'En Proceso'
+                'En Proceso',
+                'Completado'
             ]);
         });
     }
@@ -43,9 +47,13 @@ class AnalisisDocumentosTable extends DataTableComponent
         
     });
 
-    $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
+    $this->setTdAttributes(function(Column $column){
         return [
-            'class' => 'text-left align-middle',
+            'class' => match($column->getTitle()){
+                'Estado' => 'text-center align-middle',
+                'Acción' => 'text-center align-middle',
+                default => 'text-left align-middle'
+            }
         ];
     });
 }
@@ -128,11 +136,12 @@ class AnalisisDocumentosTable extends DataTableComponent
 
 
                 ->format(function($value, $row){
-                    $color = match($value) {
-                        'Pendiente' => 'orange',
+                     $color = match($value) {
+                         'Pendiente' => '#F5725B',
                         'En proceso' => '#EAB308',
-                        'Completado' => 'green',
-                        'Cancelado' => 'red'
+                        'Visita de Campo' => '#92400E',
+                        'Completado' => '#22C55E',
+                        'Cancelado' => '#EF4444'
 
                     };
 
@@ -195,28 +204,51 @@ class AnalisisDocumentosTable extends DataTableComponent
     }
 
 
-    // cancelar una solicitud
-    #[On('peticionRechazar')] 
-    public function rechazarSolicitud($id)
-    {
-        $estadoCancelado = Estado::where('nombre', 'Cancelado')->first();
+    #[On('peticionRechazar')]
+public function rechazarSolicitud(int $id, string $observaciones)
+{
+    // validar observaciones
+    // if (blank($observaciones)) {
+    //     $this->errorObservaciones = 'Debe ingresar una observación';
+    //     return;
+    // }
+    // $this->errorObservaciones = null;
 
-        if(!$estadoCancelado) return;
-
-        $solicitud = Solicitud::find($id);
-
-        if($solicitud){
-            $solicitud->update([
-                'estado_id' => $estadoCancelado->id
-            ]);
-
-            
-
-            // refresh datatable de rappasoft
-            $this->dispatch('refreshDatatable');
-            $this->dispatch('refreshComponent');
+        if (blank($observaciones)) {
+            $this->dispatch('error-rechazo', mensaje: 'Debe ingresar una observación')
+            ;
+            return;
         }
-    }
+
+
+
+    // $this->dispatch('error-rechazo', mensaje: 'Debe ingresar una observación');
+
+
+    // estado cancelado
+    $estadoCancelado = Estado::where('nombre', 'Cancelado')->first();
+    if (!$estadoCancelado) return;
+
+    // solicitud
+    $solicitud = Solicitud::find($id);
+    if (!$solicitud) return;
+
+    // update
+    $solicitud->update([
+        'estado_id' => $estadoCancelado->id,
+        'observaciones' => $observaciones,
+    ]);
+
+    // rechazo exitoso
+    $this->dispatch('rechazo-exitoso');
+    // $this->dispatch('rechazoExitoso');
+
+    // refresh tabla
+    /* 
+    $this->dispatch('refreshDatatable');
+    $this->dispatch('refreshComponent'); */
+}
+
 
 
     // peticion en proceso
@@ -235,10 +267,32 @@ class AnalisisDocumentosTable extends DataTableComponent
                 'estado_id' =>  $estadoEnProceso->id
             ]);
 
+            $this->dispatch('solicitud-aceptada');
+                /* 
             $this->dispatch('refreshDatatable');
-            $this->dispatch('refreshComponent');
+            $this->dispatch('refreshComponent'); */
         }
     }
+
+    // mandar solicitud a campo
+    #[On('peticionCampo')]
+    public function visitaCampoSolicitud($id)
+    {
+        $estadoVisitaCampo = Estado::where('nombre', 'Visita de Campo')->first();
+        if(!$estadoVisitaCampo) return;
+
+        $solicitud = Solicitud::find($id);
+
+        if($solicitud){
+            $solicitud->update([
+                'estado_id' => $estadoVisitaCampo->id
+            ]);
+
+            $this->dispatch('solicitud-visita-campo');
+        }
+    }
+
+   
 
 
    

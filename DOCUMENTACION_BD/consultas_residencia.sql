@@ -54,8 +54,8 @@ INNER JOIN requisitos r ON r.id = rt.requisito_id
 ORDER BY t.id;
 
 
-
+/* 
 
 DELETE FROM solicitudes_has_requisitos_tramites
 
-DELETE FROM solicitudes
+DELETE FROM solicitudes */
