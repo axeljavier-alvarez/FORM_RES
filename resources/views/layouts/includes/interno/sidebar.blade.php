@@ -22,6 +22,12 @@
          'route' => route('interno.analisis.index'),
          'active' => request()->routeIs('interno.analisis.*')
       ],
+      [
+         'name' => 'Visita de campo',
+         'icon' => 'fa-solid fa-magnifying-glass-location',
+         'route' => route('interno.visita-campo.index'),
+         'active' => request()->routeIs('interno.visita-campo.*')
+      ]
 ];
    @endphp
    

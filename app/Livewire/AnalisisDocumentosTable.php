@@ -183,6 +183,7 @@ class AnalisisDocumentosTable extends DataTableComponent
             'dependientes',
             'requisitosTramites.requisito',
             'requisitosTramites.tramite',
+            'requisitosTramites.detalles'
             
         ])->find($id);
 
@@ -199,9 +200,9 @@ class AnalisisDocumentosTable extends DataTableComponent
             ->translatedFormat('d F Y H:i') : 'N/A';
 
             // array de requisitos por tramite
-            $solicitud->requisitos_por_tramite = $solicitud->requisitosTramites->map(function($rt){
-                return $rt->requisito?->nombre;
-            })->filter()->unique()->values()->toArray();
+            // $solicitud->requisitos_por_tramite = $solicitud->requisitosTramites->map(function($rt){
+            //     return $rt->requisito?->nombre;
+            // })->filter()->unique()->values()->toArray();
 
             // no mostrar  solicitudes con cancelado
             // $solicitud->bitacoras->each(function ($item){
@@ -210,6 +211,31 @@ class AnalisisDocumentosTable extends DataTableComponent
             //         }
 
             // });
+
+            // mostrar documento por solicitud con sus requisitos
+            $solicitud->documentos = $solicitud->requisitosTramites
+            ->map(function ($rt) use ($solicitud){
+                // buscar detalle solo de la solicitud
+                $detalle = $rt->detalles
+                ->where('solicitud_id', $solicitud->id)
+                ->first();
+
+
+                return [
+                    'requisito_tramite_id' => $rt->id,
+                    'nombre' => $rt->requisito?->nombre,
+                    // ubicacion del archivo
+                    'path' => $detalle ? $detalle->path : null,
+
+                ];
+            })
+
+            ->filter(fn($item) => $item['nombre'] && $item['path'])
+            ->values()
+            ->toArray();
+
+
+           
                    
             
             $this->dispatch('open-modal-solicitud', solicitud: $solicitud->toArray());

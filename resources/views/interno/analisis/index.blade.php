@@ -18,11 +18,28 @@
     x-data="{ 
     open:false, 
     solicitud: {},
+
     openRechazo: false,
     openAceptar: false,
     openVisitaCampo: false,
+
+    openDocumento: false,
+    documentoActual: null,
+
     observaciones: '',
-    errorRechazo: null
+    errorRechazo: null,
+
+     {{-- codigo de cargas familiares --}}
+    openCargas: false,
+    verDocumento(path, nombre = 'Documento'){
+    this.documentoActual = {
+        path: path,
+        nombre: nombre,
+    };
+    this.openDocumento = true;
+    }
+
+
     }"
 
     x-on:error-rechazo.window="
@@ -59,13 +76,63 @@
 
 
 
+<!-- MODAL PARA ABRIR DOCUMENTO -->
+<div x-show="openDocumento" x-cloak class="fixed inset-0 z-[999] flex items-center justify-center">
+
+  
+    <div class="fixed inset-0 bg-black bg-opacity-50" @click="openDocumento = false">
+
+    </div>
+
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl p-4 relative"> 
+
+      <!-- ENCABEZADO DEL MODAL -->
+      <div class="flex items-center justify-between border-b pb-2 mb-3">
+        <h3 class="font-bold text-lg text-gray-800" x-text="documentoActual?.nombre">
+        </h3>
+        <button @click="openDocumento = false"
+        class="p-2 text-red-500 hover:bg-red-50 rounded-full">
+         ✕
+        </button>
+      </div>
+
+      <!-- donde se vera el documento -->
+      <div class="h-[70vh] border rounded-lg overflow-hidden">
+        
+        <!-- ver el pdf -->
+            <template x-if="documentoActual?.path && documentoActual.path.endsWith('.pdf')">
+                <iframe
+                    :src="`/storage/${documentoActual.path}`"
+                    class="w-full h-full"
+                ></iframe>
+            </template>
+
+
+        <!--donde se vera la imagen -->
+        <template x-if="documentoActual?.path && !documentoActual.path.endsWith('.pdf')">
+        <img
+            :src="`/storage/${documentoActual.path}`"
+            class="w-full h-full object-contain"
+            />
+        </template>
+      </div>
+
+
+
+    </div>
+
+
+
+</div>
+
 <!-- MODAL DE DETALLE -->
 
       <div x-show="open" x-cloak class="fixed inset-0 z-50
       overflow-y-auto"> 
-                    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"> 
-            </div>
 
+       <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          @click="open = false">
+        </div>
 
             <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
 
@@ -321,15 +388,89 @@
                                 </h4>
                             </div>
 
+                            <div class="space-y-2 mt-3"> 
+                               <template x-if="solicitud.documentos && solicitud.documentos.length > 0">
+                                <template x-for="doc in solicitud.documentos" :key="doc.requisito_tramite_id">
+
+                                  <button
+                                  @click="
+                                  documentoActual = doc;
+                                  openDocumento = true;
+                                  "
+                                  class="w-full flex items-center justify-between px-4 py-2
+                                  bg-yellow-50 border border-yellow-300 rounded-lg text-sm
+                                  font-bold text-yellow-800 hover:bg-yellow-100 transition">
+
+                                  <span x-text="doc.nombre"> </span>
+
+{{-- 
+                                  <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M15 12H9m6 0l-3-3m3 3l-3 3"/>
+                                  </svg> --}}
+                                  
+                                  </button>
+                                </template>
+                                
+
+                              </template>
+
+                              <template x-if="!solicitud.documentos || solicitud.documentos.length === 0">
+                                <span class="px-2 py-1 rounded-full text-xs font-bold bg-white border text-gray-500">
+                                  N/A
+                                </span>
+                              </template>
+                            </div>
+
+
+                            
+                              <div class="mt-4">
+                                <h4 class="font-semibold text-gray-900">
+                                    Dependientes:
+                                </h4>
+
+                                <div class="flex flex-wrap gap-2">
+                                  <template x-if="solicitud.dependientes &&
+                                  solicitud.dependientes.length > 0">
+                                  <template x-for="dep in solicitud.dependientes"
+                                  :key="dep.id">
+                                    <span class="px-3 py-1 bg-green-50 text-green-700
+                                    border border-green-200 rounded-full text-xs font-medium">
+
+                                    <span x-text="dep.nombres + ' ' + (dep.apellidos || '')">
+                                    </span>
+                                    </span>
+
+                                  </template>
+                                  </template>
+
+                                  <template x-if="!solicitud.dependientes ||
+                                  solicitud.dependientes.length === 0">
+                                  <span class="px-2 py-1 rounded-full text-xs font-bold 
+                                  bg-white border text-gray-500">
+                                  N/A
+                                  </span>
+                                  </template>
+                                </div>
+                            </div>
+
+
+
+
+
+                           
+
+
+
 
                             <!-- CARGAR ARRAY DE LOS DOCUMENTOS -->
-                            <div class="space-y-1 mt-3">
+                            {{-- <div class="space-y-1 mt-3">
                               <template x-if="solicitud.requisitos_por_tramite &&
                               solicitud.requisitos_por_tramite.length > 0">
                               <template x-for="req in
                               solicitud.requisitos_por_tramite" :key="req">
                               <div class="px-3 py-1 bg-yellow-50 text-yellow-800 border
-                              border-yellow-200 rounded-lg text-sm">
+                              border-yellow-200 rounded-lg text-sm font-bold">
                                 <span x-text="req">
 
                                 </span>
@@ -346,7 +487,7 @@
                               </template>
 
 
-                            </div>
+                            </div> --}}
 
                 </div>
 
@@ -408,16 +549,52 @@
 
        <!-- MODAL DE RECHAZO -->
 <div x-show="openRechazo" x-cloak class="fixed inset-0 z-60 flex items-center justify-center"> 
-  <div class="fixed inset-0 bg-black bg-opacity-50">
-
+ <div class="fixed inset-0 bg-black bg-opacity-50"
+    @click="openRechazo = false">
   </div>
 
-  <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative"> 
-    <h3 class="text-lg font-bold mb-4 text-gray-800"> 
-      Rechazar Solicitud
-    </h3>
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
+      
+
+      <div class="flex items-center justify-between"> 
+ <div class="flex items-center gap-2">
+      
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="text-lg font-bold text-gray-800">
+            Rechazar Solicitud
+        </h3>
+
+
+        
+
+    </div>
+
+
+     <button @click="openRechazo = false" 
+                            type="button" 
+                            class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
+                            aria-label="Cerrar modal">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+        </button>
+
+
+
+      </div>
+   
+ 
+
+
+  
+
+
     
-    <p class="font-bold text-blue-500">
+    <p class="font-bold mt-2 text-blue-500">
       ¿Está seguro que desea rechazar la solicitud? 
     <p>
     <!-- MOSTRAR EL ERROR -->
@@ -486,16 +663,52 @@
   <!-- MODAL DE VISITA DE CAMPO -->
     <div x-show="openVisitaCampo" x-cloak class="fixed inset-0 z-60
     flex items-center justify-center">
-    <div class="fixed inset-0 bg-black bg-opacity-50">
+    <div class="fixed inset-0 bg-black bg-opacity-50"
+    @click="openVisitaCampo = false">
 
     </div>
 
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
-      <h3 class="text-lg font-bold mb-4 text-gray-800">
-        Solicitud a Visita de Campo
-      </h3>
 
-      <p class="font-bold text-blue-500">
+      
+
+      <div class="flex items-center justify-between"> 
+
+
+         <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" 
+          class="h-6 w-6 text-[#FFAA0D]" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4M7 21h10a2 2 0 002-2V7l-6-4H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+      </svg>
+
+
+          <h3 class="text-lg font-bold text-gray-800">
+              Solicitud a Visita de Campo
+          </h3>
+      </div>
+
+
+    
+      <button @click="openVisitaCampo = false" 
+                              type="button" 
+                              class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
+                              aria-label="Cerrar modal">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+      </button>
+
+
+     
+
+      </div>
+   
+
+      <p class="font-bold text-blue-500 mt-2">
         ¿Está seguro que desea mandar la solicitud a visita de campo?
       </p>
 
@@ -512,7 +725,7 @@
           id: solicitud.id
         });
         "
-        class="px-4 py-2 text-sm font-bold text-white rounded-lg bg-red-600"> 
+        class="px-4 py-2 text-sm font-bold text-white rounded-lg" style="background-color:  #FFAA0D;"> 
           Mandar a visita de campo
         </button>
       </div>
@@ -526,15 +739,61 @@
 
   <div x-show="openAceptar" x-cloak class="fixed inset-0 z-60
   flex items-center justify-center">
-    <div class="fixed inset-0 bg-black bg-opacity-50"> 
 
-    </div>
+      <div 
+        class="fixed inset-0 bg-black bg-opacity-50"
+        @click="openAceptar = false"
+      ></div>
     
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
-      <h3 class="text-lg font-bold mb-4 text-gray-800">
-        Aceptar Solicitud
-      </h3>
-      <p class="font-bold text-blue-500">
+      
+
+
+      <div class="flex items-center justify-between">
+
+
+
+         <div class="flex items-center gap-2">
+     
+
+   
+
+   
+
+     <svg xmlns="http://www.w3.org/2000/svg"
+     class="h-6 w-6 text-green-600"
+     fill="none"
+     viewBox="0 0 24 24"
+     stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+    </svg>
+
+
+
+        <h3 class="text-lg font-bold text-gray-800">
+            Aceptar Solicitud
+        </h3>
+    </div>
+
+
+      <button @click="openAceptar = false" 
+                              type="button" 
+                              class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
+                              aria-label="Cerrar modal">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+      </button>
+
+
+
+      </div>
+      
+
+      <p class="font-bold text-blue-500 mt-2">
         ¿Está seguro que desea aceptar está solicitud?
       </p>
 
