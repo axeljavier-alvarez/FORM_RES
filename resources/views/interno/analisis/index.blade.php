@@ -6,7 +6,7 @@
     [
     'name' => 'Analisis de documentos'
     ]
-    
+
 ]">
 
     @livewire('analisis-documentos-table')
@@ -15,8 +15,8 @@
 <div
 
 
-    x-data="{ 
-    open:false, 
+    x-data="{
+    open:false,
     solicitud: {},
 
     openRechazo: false,
@@ -61,30 +61,30 @@
         openVisitaCampo = false;
         open = false;
     "
-    
+
     @open-modal-solicitud.window="
-    open = true; 
+    open = true;
     solicitud = $event.detail.solicitud
     "
     {{-- x-show="open"
     x-cloak
     class="fixed inset-0 z-50 overflow-y-auto"
-    aria-cabellad="modal-title" 
-    role="dialog" 
+    aria-cabellad="modal-title"
+    role="dialog"
     aria-modal="true" --}}
-> 
+>
 
 
 
 <!-- MODAL PARA ABRIR DOCUMENTO -->
 <div x-show="openDocumento" x-cloak class="fixed inset-0 z-[999] flex items-center justify-center">
 
-  
+
     <div class="fixed inset-0 bg-black bg-opacity-50" @click="openDocumento = false">
 
     </div>
 
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl p-4 relative"> 
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl p-4 relative">
 
       <!-- ENCABEZADO DEL MODAL -->
       <div class="flex items-center justify-between border-b pb-2 mb-3">
@@ -98,7 +98,7 @@
 
       <!-- donde se vera el documento -->
       <div class="h-[70vh] border rounded-lg overflow-hidden">
-        
+
         <!-- ver el pdf -->
             <template x-if="documentoActual?.path && documentoActual.path.endsWith('.pdf')">
                 <iframe
@@ -128,7 +128,7 @@
 <!-- MODAL DE DETALLE -->
 
       <div x-show="open" x-cloak class="fixed inset-0 z-50
-      overflow-y-auto"> 
+      overflow-y-auto">
 
        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
           @click="open = false">
@@ -142,7 +142,7 @@
               x-transition:enter="ease-out duration-300"
               x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-              
+
               class="relative transform overflow-hidden rounded-lg
               bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full
               sm:max-w-4xl p-6"> --}}
@@ -153,7 +153,7 @@
               relative">
                 <h3 class="text-2xl font-bold text-gray-900"
                 id="modal-title">
-                Solicitud No. 
+                Solicitud No.
 
                 <span x-text="solicitud.no_solicitud">
 
@@ -161,32 +161,32 @@
                 </h3>
 
 
-                <button @click="open = false" 
-                        type="button" 
+                <button @click="open = false"
+                        type="button"
                         class="absolute top-0 right-0 p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
                         aria-label="Cerrar modal">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
-                
+
 
               </div> --}}
 
 
                <div x-show="open"
                 x-cloak
-                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl p-6"> 
-                
-                <div class="bg-blue-200 text-gray-900 shadow-inner flex items-center justify-between relative 
-                            -mx-6 -mt-6 mb-6 px-6 py-4 border-b"> 
-                    
+                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl p-6">
+
+                <div class="bg-blue-200 text-gray-900 shadow-inner flex items-center justify-between relative
+                            -mx-6 -mt-6 mb-6 px-6 py-4 border-b">
+
                     <h3 class="text-2xl font-bold" id="modal-title">
                         Solicitud No. <span x-text="solicitud.no_solicitud"></span>
                     </h3>
 
-                    <button @click="open = false" 
-                            type="button" 
+                    <button @click="open = false"
+                            type="button"
                             class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
                             aria-label="Cerrar modal">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -194,7 +194,7 @@
                         </svg>
                     </button>
                 </div>
-    
+
 
 
               <!-- Datos generales -->
@@ -204,7 +204,7 @@
                 <div class="bg-gray-50 border border-blue-200
                 rounded-xl p-5 shadow-sm">
 
-                <div class="flex items-center mb-3"> 
+                <div class="flex items-center mb-3">
                   <span class="p-2 bg-blue-100 rounded-lg mr-2 text-blue-600">
                           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                   </span>
@@ -215,13 +215,13 @@
 
                 </div>
 
-                <div class="space-y-3 text-sm text-gray-600"> 
+                <div class="space-y-3 text-sm text-gray-600">
                   <p>
                     <span class="font-semibold text-gray-900">
                       Nombre Completo
                     </span>
 
-                    <span x-text="solicitud.nombres + ' ' + 
+                    <span x-text="solicitud.nombres + ' ' +
                     (solicitud.apellidos || '')">
 
                     </span>
@@ -253,14 +253,14 @@
                       DPI/Cui
                     </span>
 
-                                
+
                     <span x-text="solicitud.cui">
 
                     </span>
                   </p>
 
-                  <p> 
-                    <span class="font-semibold text-gray-900"> 
+                  <p>
+                    <span class="font-semibold text-gray-900">
                                     No. Solicitud
                     </span>
 
@@ -269,7 +269,7 @@
                     </span>
                   </p>
 
-                  <p> 
+                  <p>
                     <span class="font-semibold text-gray-900">
                         Fecha de registro
                       </span>
@@ -306,10 +306,10 @@
                             Estado Actual:
                         </span>
 
-                        <span 
+                        <span
                                     x-text="solicitud.estado ? solicitud.estado.nombre : 'N/A'"
-                                    :class="!solicitud.estado 
-                                        ? 'px-2 py-1 rounded-full text-xs font-bold bg-white border' 
+                                    :class="!solicitud.estado
+                                        ? 'px-2 py-1 rounded-full text-xs font-bold bg-white border'
                                         : 'text-gray-600 font-normal ml-1'"
                         >
                         </span>
@@ -346,7 +346,7 @@
 
                                   <template x-if="!solicitud.dependientes ||
                                   solicitud.dependientes.length === 0">
-                                  <span class="px-2 py-1 rounded-full text-xs font-bold 
+                                  <span class="px-2 py-1 rounded-full text-xs font-bold
                                   bg-white border text-gray-500">
                                   N/A
                                   </span>
@@ -359,12 +359,12 @@
                                     Trámite:
                                 </span>
 
-                                <span 
+                                <span
                                     class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold uppercase"
                                     x-text="solicitud.requisitos_tramites?.[0]?.tramite?.nombre || 'General'"
                                 >
                                 </span>
-                              
+
                             </p>
 
 
@@ -388,7 +388,7 @@
                                 </h4>
                             </div>
 
-                            <div class="space-y-2 mt-3"> 
+                            <div class="space-y-2 mt-3">
                                <template x-if="solicitud.documentos && solicitud.documentos.length > 0">
                                 <template x-for="doc in solicitud.documentos" :key="doc.requisito_tramite_id">
 
@@ -403,15 +403,15 @@
 
                                   <span x-text="doc.nombre"> </span>
 
-{{-- 
+{{--
                                   <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M15 12H9m6 0l-3-3m3 3l-3 3"/>
                                   </svg> --}}
-                                  
+
                                   </button>
                                 </template>
-                                
+
 
                               </template>
 
@@ -423,7 +423,7 @@
                             </div>
 
 
-                            
+
                               <div class="mt-4">
                                 <h4 class="font-semibold text-gray-900">
                                     Dependientes:
@@ -446,7 +446,7 @@
 
                                   <template x-if="!solicitud.dependientes ||
                                   solicitud.dependientes.length === 0">
-                                  <span class="px-2 py-1 rounded-full text-xs font-bold 
+                                  <span class="px-2 py-1 rounded-full text-xs font-bold
                                   bg-white border text-gray-500">
                                   N/A
                                   </span>
@@ -458,7 +458,7 @@
 
 
 
-                           
+
 
 
 
@@ -479,7 +479,7 @@
                               </template>
 
 
-                              
+
                               <template x-if="!solicitud.requisitos_por_tramite || solicitud.requisitos_por_tramite.length === 0">
                                   <span class="px-2 py-1 rounded-full text-xs font-bold bg-white border text-gray-500">
                                       N/A
@@ -494,11 +494,11 @@
 
                 <!-- CONTENEDOR 3 BOTONES -->
                   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <button 
+                    <button
                       type="button"
-                      {{-- @click="if(confirm('¿Está seguro que desea rechazar esta solicitud?')) { 
-                          Livewire.dispatch('peticionRechazar', { id: solicitud.id }); 
-                          open = false; 
+                      {{-- @click="if(confirm('¿Está seguro que desea rechazar esta solicitud?')) {
+                          Livewire.dispatch('peticionRechazar', { id: solicitud.id });
+                          open = false;
                       }" --}}
                       @click="openRechazo = true"
                       class="inline-flex justify-center items-center rounded-lg px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 active:scale-95"
@@ -510,7 +510,7 @@
                     <div class="flex flex-col sm:flex-row gap-3">
                       <button type="button"
 
-                      @click="openVisitaCampo = true " 
+                      @click="openVisitaCampo = true "
                       class="inline-flex justify-center items-center rounded-lg px-6 py-2.5
                       text-sm font-bold text-black shadow-sm transition-all hover:bg-opacity-80
                       active:scale-95" style="background-color:  #FFAA0D;">
@@ -520,12 +520,12 @@
                       </button>
 
                       <button type="button"
-                        {{-- @click="if(confirm('¿Está seguro que desea aceptar esta solicitud?')) { 
-                          Livewire.dispatch('peticionEnProceso', { id: solicitud.id }); 
-                          open = false; 
+                        {{-- @click="if(confirm('¿Está seguro que desea aceptar esta solicitud?')) {
+                          Livewire.dispatch('peticionEnProceso', { id: solicitud.id });
+                          open = false;
                       }" --}}
                       @click="openAceptar = true"
-                      class="inline-flex justify-center items-center 
+                      class="inline-flex justify-center items-center
                       rounded-lg px-8 py-2.5 text-sm font-bold text-white shadow-sm
                       transition-all hover:bg-emerald-700 active:scale-95"
                       style="background-color: #059669;">
@@ -534,31 +534,31 @@
                       </button>
 
                     </div>
-                  </div> 
+                  </div>
 
 
               </div>
 
 
               </div>
-        
+
       </div>
 
 
 
 
        <!-- MODAL DE RECHAZO -->
-<div x-show="openRechazo" x-cloak class="fixed inset-0 z-60 flex items-center justify-center"> 
+<div x-show="openRechazo" x-cloak class="fixed inset-0 z-60 flex items-center justify-center">
  <div class="fixed inset-0 bg-black bg-opacity-50"
     @click="openRechazo = false">
   </div>
 
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
-      
 
-      <div class="flex items-center justify-between"> 
+
+      <div class="flex items-center justify-between">
  <div class="flex items-center gap-2">
-      
+
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none"
           viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -569,13 +569,13 @@
         </h3>
 
 
-        
+
 
     </div>
 
 
-     <button @click="openRechazo = false" 
-                            type="button" 
+     <button @click="openRechazo = false"
+                            type="button"
                             class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
                             aria-label="Cerrar modal">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -586,20 +586,20 @@
 
 
       </div>
-   
- 
 
 
-  
 
 
-    
+
+
+
+
     <p class="font-bold mt-2 text-blue-500">
-      ¿Está seguro que desea rechazar la solicitud? 
+      ¿Está seguro que desea rechazar la solicitud?
     <p>
     <!-- MOSTRAR EL ERROR -->
 
-    {{-- <div class="mt-2 text-sm text-red-600" wire:loading.remove> 
+    {{-- <div class="mt-2 text-sm text-red-600" wire:loading.remove>
       @if ($errorObservaciones)
       {{ $errorObservaciones }}
       @endif
@@ -608,10 +608,10 @@
     x-show="errorRechazo"
     x-cloak
     class="mt-2 text-sm text-red-600"
-    x-text="errorRechazo"> 
+    x-text="errorRechazo">
 
     </p>
-    
+
 
 
 
@@ -623,7 +623,7 @@
     x-model="observaciones"
     rows="4"
     class="w-full border rounded-lg p-2 text-sm focus:ring focus:ring-red-200"
-    placeholder="Escriba el motivo del rechazo..."> 
+    placeholder="Escriba el motivo del rechazo...">
 
     </textarea>
     <div class="flex justify-end gap-3 mt-5">
@@ -654,8 +654,8 @@
     </div>
   </div>
 
-  <div> 
-    
+  <div>
+
   </div>
 </div>
 
@@ -670,16 +670,16 @@
 
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
 
-      
 
-      <div class="flex items-center justify-between"> 
+
+      <div class="flex items-center justify-between">
 
 
          <div class="flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" 
-          class="h-6 w-6 text-[#FFAA0D]" 
-          fill="none" 
-          viewBox="0 0 24 24" 
+            <svg xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-[#FFAA0D]"
+          fill="none"
+          viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M9 12l2 2 4-4M7 21h10a2 2 0 002-2V7l-6-4H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -692,9 +692,9 @@
       </div>
 
 
-    
-      <button @click="openVisitaCampo = false" 
-                              type="button" 
+
+      <button @click="openVisitaCampo = false"
+                              type="button"
                               class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
                               aria-label="Cerrar modal">
                           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -703,10 +703,10 @@
       </button>
 
 
-     
+
 
       </div>
-   
+
 
       <p class="font-bold text-blue-500 mt-2">
         ¿Está seguro que desea mandar la solicitud a visita de campo?
@@ -719,13 +719,13 @@
         Cancelar
         </button>
 
-        <button 
+        <button
         @click="
         Livewire.dispatch('peticionCampo', {
           id: solicitud.id
         });
         "
-        class="px-4 py-2 text-sm font-bold text-white rounded-lg" style="background-color:  #FFAA0D;"> 
+        class="px-4 py-2 text-sm font-bold text-white rounded-lg" style="background-color:  #FFAA0D;">
           Mandar a visita de campo
         </button>
       </div>
@@ -735,18 +735,18 @@
 
 
 
-      <!-- MODAL DE ACEPTAR --> 
+      <!-- MODAL DE ACEPTAR -->
 
   <div x-show="openAceptar" x-cloak class="fixed inset-0 z-60
   flex items-center justify-center">
 
-      <div 
+      <div
         class="fixed inset-0 bg-black bg-opacity-50"
         @click="openAceptar = false"
       ></div>
-    
+
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
-      
+
 
 
       <div class="flex items-center justify-between">
@@ -754,11 +754,11 @@
 
 
          <div class="flex items-center gap-2">
-     
 
-   
 
-   
+
+
+
 
      <svg xmlns="http://www.w3.org/2000/svg"
      class="h-6 w-6 text-green-600"
@@ -779,8 +779,8 @@
     </div>
 
 
-      <button @click="openAceptar = false" 
-                              type="button" 
+      <button @click="openAceptar = false"
+                              type="button"
                               class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
                               aria-label="Cerrar modal">
                           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -791,7 +791,7 @@
 
 
       </div>
-      
+
 
       <p class="font-bold text-blue-500 mt-2">
         ¿Está seguro que desea aceptar está solicitud?
@@ -811,21 +811,21 @@
         id: solicitud.id
       });
       " class="px-4 py-2 text-sm font-bold text-white rounded-lg
-      bg-red-600"
+      bg-green-600"
       >
       Aceptar solicitud
       </button>
 
-     
+
 
     </div>
 
     </div>
-    
-    
+
+
   </div>
 
- 
+
 
 
 

@@ -27,7 +27,7 @@ class AnalisisDocumentosTable extends DataTableComponent
             $query->whereNotIn('nombre', [
                 'Cancelado',
                 'En Proceso',
-                'Completado'
+                'Completado',
             ]);
         });
     }
@@ -44,7 +44,7 @@ class AnalisisDocumentosTable extends DataTableComponent
             'style' => 'background-color: #BFDBFE !important;',
             'class' => 'font-bold text-gray-900 text-center text-lg py-2',
         ];
-        
+
     });
 
     $this->setTdAttributes(function(Column $column){
@@ -60,7 +60,7 @@ class AnalisisDocumentosTable extends DataTableComponent
     $this->setTrAttributes(function($row, $index){
         return[
             'style' => $index % 2 === 0
-             ? 'background-color: #FFFFFF' 
+             ? 'background-color: #FFFFFF'
              : 'background-color: #F3F4F6'
         ];
     });
@@ -69,18 +69,18 @@ class AnalisisDocumentosTable extends DataTableComponent
     public function columns(): array
     {
         return [
-          
+
             // no solicitud
             Column::make("No solicitud", "no_solicitud")
                     ->format(function($value){
 
-                        return '<span class="font-bold text-gray-800">' 
-                        . $value . 
+                        return '<span class="font-bold text-gray-800">'
+                        . $value .
                         '</span>';
                     })
                     ->html(),
-                
-        
+
+
             // nombre completo nombres y apellidos
             Column::make("Nombre Completo", "nombres")
             ->searchable()
@@ -98,8 +98,8 @@ class AnalisisDocumentosTable extends DataTableComponent
                 // html unificado
                 return '<div class="flex flex-col">
                 <span class="font-bold text-gray-800">
-                ' . $nombreCompleto . ' 
-                </span> 
+                ' . $nombreCompleto . '
+                </span>
                 <span style="color: #322EA5; font-size: 0.85rem;"
                 class="font-semibold">
                 ' . $nombreTramite . '
@@ -125,33 +125,35 @@ class AnalisisDocumentosTable extends DataTableComponent
                 ,
                 // Column::make("Cui", "cui")
                 //     ->sortable(),
-            // fecha de creacion   
+            // fecha de creacion
             // Column::make("Fecha solicitud", "created_at")
             //         ->sortable(),
 
             Column::make("Fecha solicitud", "created_at")
-            
-            
+
+
             ->format(function($value, $row){
                 return $row->created_at
                 ? Carbon::parse($row->created_at)->translatedFormat('d F Y H:i')
                 : '-';
             }),
             // estado
-            Column::make("Estado", "estado.nombre") 
-          
-                
+            Column::make("Estado", "estado.nombre")
+
+
 
 
                 ->format(function($value, $row){
-                     $color = match($value) {
-                         'Pendiente' => '#F5725B',
-                        'En proceso' => '#EAB308',
-                        'Visita de Campo' => '#92400E',
-                        'Completado' => '#22C55E',
-                        'Cancelado' => '#EF4444'
-
+                     $color = match ($value) {
+                        'Pendiente'        => '#FACC15',
+                        'En proceso'       => '#3B82F6',
+                        'Visita asignada'  =>  '#EAB308',
+                        'Visita realizada'=> '#8B5CF6',
+                        'Completado'       => '#22C55E',
+                        'Cancelado'        => '#EF4444',
+                        default            => '#6B7280',
                     };
+
 
                     return '<span style="color: ' . $color . '; font-weight: bold;">' . $value . '</span>';
 
@@ -159,12 +161,12 @@ class AnalisisDocumentosTable extends DataTableComponent
                 })
 
                 ->html(),
-        
+
                 Column::make("Acción", "id")
                 ->format(function($value, $row){
 
                     return '<button wire:click="verSolicitud('. $row->id . ')"
-                    class="text-blue-600 underline font-bold hover:text-blue-800"> 
+                    class="text-blue-600 underline font-bold hover:text-blue-800">
                     Ver Solicitud
                     </button>';
                 })
@@ -184,10 +186,10 @@ class AnalisisDocumentosTable extends DataTableComponent
             'requisitosTramites.requisito',
             'requisitosTramites.tramite',
             'requisitosTramites.detalles'
-            
+
         ])->find($id);
 
-        
+
 
         // llamar al array
 
@@ -195,7 +197,7 @@ class AnalisisDocumentosTable extends DataTableComponent
 
             // traducir fecha de la solicitud
 
-            $solicitud->fecha_registro_traducida = $solicitud->created_at 
+            $solicitud->fecha_registro_traducida = $solicitud->created_at
             ? Carbon::parse($solicitud->created_at)
             ->translatedFormat('d F Y H:i') : 'N/A';
 
@@ -235,9 +237,9 @@ class AnalisisDocumentosTable extends DataTableComponent
             ->toArray();
 
 
-           
-                   
-            
+
+
+
             $this->dispatch('open-modal-solicitud', solicitud: $solicitud->toArray());
         }
     }
@@ -283,7 +285,7 @@ public function rechazarSolicitud(int $id, string $observaciones)
     // $this->dispatch('rechazoExitoso');
 
     // refresh tabla
-    /* 
+    /*
     $this->dispatch('refreshDatatable');
     $this->dispatch('refreshComponent'); */
 }
@@ -307,7 +309,7 @@ public function rechazarSolicitud(int $id, string $observaciones)
             ]);
 
             $this->dispatch('solicitud-aceptada');
-                /* 
+                /*
             $this->dispatch('refreshDatatable');
             $this->dispatch('refreshComponent'); */
         }
@@ -317,7 +319,7 @@ public function rechazarSolicitud(int $id, string $observaciones)
     #[On('peticionCampo')]
     public function visitaCampoSolicitud($id)
     {
-        $estadoVisitaCampo = Estado::where('nombre', 'Visita de Campo')->first();
+        $estadoVisitaCampo = Estado::where('nombre', 'Visita asignada')->first();
         if(!$estadoVisitaCampo) return;
 
         $solicitud = Solicitud::find($id);
@@ -331,8 +333,8 @@ public function rechazarSolicitud(int $id, string $observaciones)
         }
     }
 
-   
 
 
-   
+
+
 }

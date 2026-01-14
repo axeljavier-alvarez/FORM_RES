@@ -21,8 +21,9 @@ class VisitaCampoTable extends DataTableComponent
             // $query->where('nombre', '!=', 'Cancelado');
 
             // agregar varios estados
-            $query->where('nombre', [
-                'Visita de Campo',
+            $query->whereIn('nombre', [
+                'Visita realizada',
+                'Visita asignada',
             ]);
         });
     }
@@ -40,7 +41,7 @@ class VisitaCampoTable extends DataTableComponent
                     'style' => 'background-color: #BFDBFE !important;',
                     'class' => 'font-bold text-gray-900 text-center text-lg py-2',
                 ];
-                
+
             });
 
             $this->setTdAttributes(function(Column $column){
@@ -56,29 +57,29 @@ class VisitaCampoTable extends DataTableComponent
             $this->setTrAttributes(function($row, $index){
                 return[
                     'style' => $index % 2 === 0
-                    ? 'background-color: #FFFFFF' 
+                    ? 'background-color: #FFFFFF'
                     : 'background-color: #F3F4F6'
                 ];
             });
         }
 
-   
+
 
          public function columns(): array
     {
         return [
-          
+
             // no solicitud
             Column::make("No solicitud", "no_solicitud")
                     ->format(function($value){
 
-                        return '<span class="font-bold text-gray-800">' 
-                        . $value . 
+                        return '<span class="font-bold text-gray-800">'
+                        . $value .
                         '</span>';
                     })
                     ->html(),
-                
-        
+
+
             // nombre completo nombres y apellidos
             Column::make("Nombre Completo", "nombres")
             ->searchable()
@@ -96,8 +97,8 @@ class VisitaCampoTable extends DataTableComponent
                 // html unificado
                 return '<div class="flex flex-col">
                 <span class="font-bold text-gray-800">
-                ' . $nombreCompleto . ' 
-                </span> 
+                ' . $nombreCompleto . '
+                </span>
                 <span style="color: #322EA5; font-size: 0.85rem;"
                 class="font-semibold">
                 ' . $nombreTramite . '
@@ -123,32 +124,33 @@ class VisitaCampoTable extends DataTableComponent
                 ,
                 // Column::make("Cui", "cui")
                 //     ->sortable(),
-            // fecha de creacion   
+            // fecha de creacion
             // Column::make("Fecha solicitud", "created_at")
             //         ->sortable(),
 
             Column::make("Fecha solicitud", "created_at")
-            
-            
+
+
             ->format(function($value, $row){
                 return $row->created_at
                 ? Carbon::parse($row->created_at)->translatedFormat('d F Y H:i')
                 : '-';
             }),
             // estado
-            Column::make("Estado", "estado.nombre") 
-          
-                
+            Column::make("Estado", "estado.nombre")
+
+
 
 
                 ->format(function($value, $row){
-                     $color = match($value) {
-                         'Pendiente' => '#F5725B',
-                        'En proceso' => '#EAB308',
-                        'Visita de Campo' => '#FFAA0D',
-                        'Completado' => '#22C55E',
-                        'Cancelado' => '#EF4444'
-
+                      $color = match ($value) {
+                        'Pendiente'        => '#FACC15',
+                        'En proceso'       => '#3B82F6',
+                        'Visita asignada'  =>  '#EAB308',
+                        'Visita realizada'=> '#8B5CF6',
+                        'Completado'       => '#22C55E',
+                        'Cancelado'        => '#EF4444',
+                        default            => '#6B7280',
                     };
 
                     return '<span style="color: ' . $color . '; font-weight: bold;">' . $value . '</span>';
@@ -157,12 +159,12 @@ class VisitaCampoTable extends DataTableComponent
                 })
 
                 ->html(),
-        
+
                 Column::make("Acción", "id")
                 ->format(function($value, $row){
 
                     return '<button wire:click="verVisitaCampo('. $row->id . ')"
-                    class="text-blue-600 underline font-bold hover:text-blue-800"> 
+                    class="text-blue-600 underline font-bold hover:text-blue-800">
                     Verificar
                     </button>';
                 })
@@ -176,7 +178,7 @@ class VisitaCampoTable extends DataTableComponent
 
     public function verVisitaCampo($id)
     {
-        
+
 
         //  $solicitud = Solicitud::find($id);
 
@@ -185,16 +187,16 @@ class VisitaCampoTable extends DataTableComponent
         // limitar registros bitacora 'bitacoras' => fn ($q) => $q->latest()->limit(10)
         // objeto estado en array
         $solicitud = Solicitud::with([
-            'estado', 
-            'zona', 
+            'estado',
+            'zona',
             'dependientes',
             'requisitosTramites.tramite',
             'bitacoras.user'
             ])->find($id);
 
            // traduciendo la fecha de created_at
-           
-           
+
+
 
         if($solicitud){
 
@@ -218,7 +220,7 @@ class VisitaCampoTable extends DataTableComponent
             $this->dispatch('open-modal-visita', solicitud: $solicitud->toArray());
         }
 
-        
+
 
     }
 

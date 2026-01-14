@@ -26,47 +26,60 @@
         editor: null,
 
         initEditor() {
+            // 🔒 Evita crear el editor más de una vez
             if (this.editor) return;
 
             const el = document.querySelector('#editor');
             if (!el) return;
-ClassicEditor.create(el, {
-    toolbar: {
-        items: [
-            'heading',
-            '|',
-            'imageUpload', // 👈 SIEMPRE ANTES
-            'bold',
-            'italic',
-            'underline',
-            'link',
-            '|',
-            'bulletedList',
-            'numberedList',
-            '|',
-            'undo',
-            'redo'
-        ],
-        shouldNotGroupWhenFull: true
-    },
 
-    simpleUpload: {
-        uploadUrl: '{{ route('interno.visita-campo.upload') }}',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        }
-    }
-});
-
-
+            ClassicEditor.create(el, {
+                toolbar: {
+                    items: [
+                        'heading',
+                        '|',
+                        'imageUpload',
+                        'bold',
+                        'italic',
+                        'underline',
+                        'link',
+                        '|',
+                        'bulletedList',
+                        'numberedList',
+                        '|',
+                        'undo',
+                        'redo'
+                    ],
+                    shouldNotGroupWhenFull: true
+                },
+                simpleUpload: {
+                    uploadUrl: '{{ route('interno.visita-campo.upload') }}',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            }).then(editor => {
+                this.editor = editor; // solo un ckeditor
+            }).catch(error => {
+                console.error(error);
+            });
         }
     }"
-    x-init="$watch('step', value => { if (value === 3) initEditor() })"
+
+    x-init="
+        $watch('step', value => {
+            if (value === 3) {
+                initEditor();
+            }
+        })
+    "
+
     @open-modal-visita.window="
         open = true;
-        solicitud = $event.detail.solicitud
+        solicitud = $event.detail.solicitud;
+        step = 1;
     "
 >
+
 
 
 <!-- ABRIR MODAL PARA VISITA-->
