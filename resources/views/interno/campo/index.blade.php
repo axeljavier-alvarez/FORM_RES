@@ -546,7 +546,7 @@ overflow-y-auto">
 
                         <h4 class="font-bold text-gray-800
                         uppercase text-sm tracking-wider">
-                        Observaciones
+                        Observaciones de Visita de campo
                         </h4>
                   </div>
 

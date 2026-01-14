@@ -5,6 +5,9 @@ namespace App\Livewire;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Solicitud;
+use App\Models\Bitacora;
+use Illuminate\Support\Facades\Auth;
+
 use Carbon\Carbon;
 use App\Models\Estado;
 use Livewire\Attributes\On;
@@ -14,6 +17,9 @@ use Illuminate\Support\Str;
 class VisitaCampoTable extends DataTableComponent
 {
     protected $model = Solicitud::class;
+
+
+    public string $estadoSeleccionado = 'Visita asignada';
 
     // no mostrar cuando este en cancelado
     public function builder() : Builder
@@ -229,28 +235,26 @@ class VisitaCampoTable extends DataTableComponent
     #[On('visitaRealizada')]
     public function visitaRealizada(int $id, string $observaciones)
     {
-        /* if(blank($observaciones)){
-            $this->dispatch('visita-realizada', );
-        } */
-
-            // eliminar el html de ckeditor
-        $observacionesLimpias = trim(strip_tags($observaciones)); 
-
+        $solicitud = Solicitud::find($id);
+        if(!$solicitud) return;
 
         $estadoVisitaRealizada = Estado::where('nombre', 'Visita realizada')->first();
         if(!$estadoVisitaRealizada) return;
 
-        $solicitud = Solicitud::find($id);
-        if(!$solicitud) return;
-
         $solicitud->update([
             'estado_id' => $estadoVisitaRealizada->id,
-            'observaciones' => $observacionesLimpias
         ]);
 
+        Bitacora::create([
+            'solicitud_id' => $solicitud->id,
+            'user_id' => Auth::id(),
+            'evento' => 'CAMBIO DE ESTADO: Visita de campo realizada',
+            'descripcion' => trim(strip_tags($observaciones)) ?: 'Visita de campo realizada sin observaciones.'
+        ]);
 
         $this->dispatch('visita-realizada');
     }
+
 
 
 }

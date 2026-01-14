@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use App\Models\Estado;
 use Livewire\Attributes\On;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Bitacora;
 
 class AnalisisDocumentosTable extends DataTableComponent
 {
@@ -245,49 +247,38 @@ class AnalisisDocumentosTable extends DataTableComponent
     }
 
 
-    #[On('peticionRechazar')]
+  #[On('peticionRechazar')]
 public function rechazarSolicitud(int $id, string $observaciones)
 {
     // validar observaciones
-    // if (blank($observaciones)) {
-    //     $this->errorObservaciones = 'Debe ingresar una observación';
-    //     return;
-    // }
-    // $this->errorObservaciones = null;
+    if (blank($observaciones)) {
+        $this->dispatch('error-rechazo', mensaje: 'Debe ingresar una observación');
+        return;
+    }
 
-        if (blank($observaciones)) {
-            $this->dispatch('error-rechazo', mensaje: 'Debe ingresar una observación')
-            ;
-            return;
-        }
-
-
-
-    // $this->dispatch('error-rechazo', mensaje: 'Debe ingresar una observación');
-
-
-    // estado cancelado
+    // obtener estado "Cancelado"
     $estadoCancelado = Estado::where('nombre', 'Cancelado')->first();
     if (!$estadoCancelado) return;
 
-    // solicitud
+    // obtener la solicitud
     $solicitud = Solicitud::find($id);
     if (!$solicitud) return;
 
-    // update
+    // actualizar solo el estado (no modificamos observaciones)
     $solicitud->update([
         'estado_id' => $estadoCancelado->id,
-        'observaciones' => $observaciones,
     ]);
 
-    // rechazo exitoso
-    $this->dispatch('rechazo-exitoso');
-    // $this->dispatch('rechazoExitoso');
+    // crear la bitácora directamente, igual que visitaRealizada
+    Bitacora::create([
+        'solicitud_id' => $solicitud->id,
+        'user_id' => Auth::id(),
+        'evento' => 'CAMBIO DE ESTADO: Solicitud Rechazada',
+        'descripcion' => trim(strip_tags($observaciones)) ?: 'Solicitud rechazada sin motivo detallado.'
+    ]);
 
-    // refresh tabla
-    /*
-    $this->dispatch('refreshDatatable');
-    $this->dispatch('refreshComponent'); */
+    // enviar evento al frontend
+    $this->dispatch('rechazo-exitoso');
 }
 
 
