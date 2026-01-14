@@ -17,6 +17,8 @@
         <!-- Font awesome -->
         <script src="https://kit.fontawesome.com/e2d71e4ca2.js" crossorigin="anonymous"></script>
 
+        <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+
         @stack('css')
 
         <!-- Scripts -->
@@ -33,7 +35,7 @@ x-data="{ open: false }"
 class="sm:overflow-auto"
 >
 
-   
+
 @include('layouts.includes.interno.navigation')
 @include('layouts.includes.interno.sidebar')
 
@@ -69,5 +71,8 @@ x-on:click="open = false"
 @stack('modals')
 
         @livewireScripts
+
+
+        @stack('js')
 </body>
 </html>

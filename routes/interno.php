@@ -11,7 +11,8 @@ Route::get('ver-consultas', function(){
 
 
 Route::resource('solicitudes', SolicitudController::class);
-
 Route::resource('analisis', AnalisisController::class);
-
 Route::resource('visita-campo', VisitaCampoController::class);
+
+Route::post('visita-campo/upload', [VisitaCampoController::class, 'upload'])
+     ->name('visita-campo.upload');

@@ -64,4 +64,21 @@ class VisitaCampoController extends Controller
     {
         //
     }
+
+    public function upload(Request $request)
+{
+    $request->validate([
+        'upload' => 'required|image|max:2048'
+    ]);
+
+    $file = $request->file('upload');
+    $filename = time() . '_' . $file->getClientOriginalName();
+    $path = $file->storeAs('public/uploads', $filename);
+
+    return response()->json([
+        'url' => Storage::url($path)
+    ]);
+}
+
+
 }

@@ -1,0 +1,7 @@
+.ck.ck-editor {
+    width: 100%;
+}
+
+.ck-toolbar {
+    flex-wrap: nowrap;
+}

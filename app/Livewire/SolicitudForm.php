@@ -106,7 +106,7 @@ class SolicitudForm extends Component
     // para subir archivos
         use WithFileUploads;
 
-      
+
 
      public function mount()
     {
@@ -171,7 +171,7 @@ class SolicitudForm extends Component
     'domicilio.required' => 'Debe ingresar el domicilio.',
     'zona_id.required' => 'Debe seleccionar una zona.',
     'zona_id.exists' => 'La zona seleccionada no es válida.',
-    'observaciones.max' => 'Ha excedido la longitud de 500 caracteres para observaciones', 
+    'observaciones.max' => 'Ha excedido la longitud de 500 caracteres para observaciones',
 
     // Paso 2 - trámites y requisitos
     'tramite_id.required' => 'Debe seleccionar un trámite.',
@@ -180,8 +180,8 @@ class SolicitudForm extends Component
     'requisitos.*.archivo.mimes' => 'Solo se permiten archivos PDF o JPG.',
     'requisitos.*.archivo.max' => 'El archivo no debe superar 2MB',
     'cargas.*.archivo.max' => 'El archivo no debe superar 2MB'
-   
-    
+
+
 ];
 
 
@@ -282,7 +282,7 @@ public function updated($property)
 
 
         }
-        
+
 
         // GUARDAR CARGAS FAMILIARES
 if($this->agregarCargas === 'si' && count($this->cargas) > 0){
@@ -327,26 +327,26 @@ if($this->agregarCargas === 'si' && count($this->cargas) > 0){
 
 
         // ENVIAR CORREO AL USUARIO
-        if ($solicitud->email) {
-        $mensaje = <<<HTML
-        Hemos registrado su solicitud con el número {$solicitud->no_solicitud}
-        Podrá ver el proceso de su trámite en el siguiente enlace:
-        http://constanciaresidencia.test/consulta
-        HTML;
+        // if ($solicitud->email) {
+        // $mensaje = <<<HTML
+        // Hemos registrado su solicitud con el número {$solicitud->no_solicitud}
+        // Podrá ver el proceso de su trámite en el siguiente enlace:
+        // http://constanciaresidencia.test/consulta
+        // HTML;
 
-        Mail::to($solicitud->email)
-            ->send(new NotificacionSolicitud($mensaje));
-        }   
+        // Mail::to($solicitud->email)
+        //     ->send(new NotificacionSolicitud($mensaje));
+        // }
 
-        Mail::to('axel5javier536@gmail.com')
-            ->send(new NuevaSolicitudAdmin($solicitud));
+        // Mail::to('axel5javier536@gmail.com')
+        //     ->send(new NuevaSolicitudAdmin($solicitud));
 
         DB::commit();
 
-        
-            $this->emailEnmascarado = $this->enmascararEmail($solicitud->email);
-            $this->zonas = Zona::all();
-       
+
+            // $this->emailEnmascarado = $this->enmascararEmail($solicitud->email);
+            // $this->zonas = Zona::all();
+
         } catch(\Throwable $e){
 
 
@@ -467,8 +467,8 @@ if($this->agregarCargas === 'si' && count($this->cargas) > 0){
                 //         'zona_id' => 'required|exists:zonas,id',
                 //     ]);
                 // }
-                
-                
+
+
                 if ($paso == 2) {
 
                     $slugTramite = optional(
@@ -483,7 +483,7 @@ if($this->agregarCargas === 'si' && count($this->cargas) > 0){
                 $messages['tramite_id.required'] = 'Debe seleccionar un trámite.';
                 $messages['tramite_id.exists']   = 'Debe seleccionar un trámite válido.';
 
-   
+
                 if ($slugTramite === 'tramites-legales-en-materia-penal-si-una-persona-se-encuentra-privada-de-libertad') {
 
                     /* verificando edad */
@@ -546,7 +546,7 @@ if($this->agregarCargas === 'si' && count($this->cargas) > 0){
                     }
 
                         }
-                    
+
                         else {
 
                             foreach ($this->requisitos as $index => $req) {
@@ -566,7 +566,7 @@ if($this->agregarCargas === 'si' && count($this->cargas) > 0){
                             }
                         }
 
-    
+
                         // validacion de cargas familiare
                         if ($this->tieneCargasFamiliares) {
                             $rules['agregarCargas'] = 'required|in:si,no';
@@ -579,7 +579,7 @@ if($this->agregarCargas === 'si' && count($this->cargas) > 0){
                             foreach($this->cargas as $index => $carga){
                                 $rules["cargas.$index.nombres"] = 'required|string|max:45';
                                 $rules["cargas.$index.apellidos"] = 'required|string|max:45';
-                                $rules["cargas.$index.archivo"] = 'required|file|mimes:pdf,jpg,jpeg|max:2048';                                
+                                $rules["cargas.$index.archivo"] = 'required|file|mimes:pdf,jpg,jpeg|max:2048';
                                 $messages["cargas.$index.nombres.required"] = "Debe ingresar los nombres de la carga #" . ($index + 1);
                                 $messages["cargas.$index.apellidos.required"] = "Debe ingresar los apellidos de la carga #" . ($index + 1);
                                 $messages["cargas.$index.archivo.required"] = "Debe subir un archivo para la carga #" . ($index + 1);
@@ -597,8 +597,8 @@ if($this->agregarCargas === 'si' && count($this->cargas) > 0){
                     }
 
 
-                        
-                
+
+
 
                 if($paso == 3){
                     $this->validate([
@@ -851,7 +851,7 @@ public function updatedCui($value)
 
     try {
         $this->validateOnly('cui');
-        $this->resetErrorBag('cui'); 
+        $this->resetErrorBag('cui');
     } catch (ValidationException $e) {
         $this->setErrorBag($e->validator->errors());
     }
@@ -934,7 +934,7 @@ public function updatedRequisitos($value, $key){
     $index = $parts[0];
     $nombreRequisito = $this->requisitos[$index]['nombre'] ?? 'requisito';
         try {
-            // 
+            //
             $this->validateOnly("requisitos.{$key}", [
             "requisitos.{$key}" => 'nullable|file|mimes:pdf,jpeg,jpg|max:2048'
         ], [
@@ -948,16 +948,16 @@ public function updatedRequisitos($value, $key){
         );
 
         } catch (\Exception $e) {
-            
+
             // limpiar archivo invalido
             // $parts = explode('.', $key);
             // $index = $parts[0];
-            
+
             $this->requisitos[$index]['archivo'] = null;
             throw $e;
         }
-        
-    
+
+
 }
 
 

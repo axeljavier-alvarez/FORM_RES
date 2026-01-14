@@ -8,21 +8,66 @@
    ]
 ]">
 
+
+
+
 @livewire('visita-campo-table')
 
 
-<div
-x-data="{
-open: false,
-solicitud: {},
-step: 1
-}"
 
-@open-modal-visita.window="
-    open = true; 
-    solicitud = $event.detail.solicitud
+
+
+
+<div
+    x-data="{
+        open: false,
+        solicitud: {},
+        step: 1,
+        editor: null,
+
+        initEditor() {
+            if (this.editor) return;
+
+            const el = document.querySelector('#editor');
+            if (!el) return;
+ClassicEditor.create(el, {
+    toolbar: {
+        items: [
+            'heading',
+            '|',
+            'imageUpload', // 👈 SIEMPRE ANTES
+            'bold',
+            'italic',
+            'underline',
+            'link',
+            '|',
+            'bulletedList',
+            'numberedList',
+            '|',
+            'undo',
+            'redo'
+        ],
+        shouldNotGroupWhenFull: true
+    },
+
+    simpleUpload: {
+        uploadUrl: '{{ route('interno.visita-campo.upload') }}',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    }
+});
+
+
+        }
+    }"
+    x-init="$watch('step', value => { if (value === 3) initEditor() })"
+    @open-modal-visita.window="
+        open = true;
+        solicitud = $event.detail.solicitud
     "
 >
+
 
 <!-- ABRIR MODAL PARA VISITA-->
 <div x-show="open" x-cloak class="fixed inset-0 z-50
@@ -36,7 +81,7 @@ overflow-y-auto">
 <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
    <div x-show="open"
                 x-cloak
-                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl p-6"> 
+                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl p-6">
    <div class="bg-blue-200 text-gray-900 shadow-inner flex items-center justify-between relative
    -mx-6 -mt-6 mb-6 px-6 py-4 border-b">
 
@@ -44,8 +89,8 @@ overflow-y-auto">
                Solicitud No. <span x-text="solicitud.no_solicitud"></span>
    </h3>
 
-   <button @click="open = false" 
-                            type="button" 
+   <button @click="open = false"
+                            type="button"
                             class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
                             aria-label="Cerrar modal">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +101,7 @@ overflow-y-auto">
    </div>
 
    <!-- DATOS DEL STEP -->
-  
+
    <!-- STEPPER -->
 <div class="flex items-center justify-center mb-8">
 
@@ -109,11 +154,11 @@ overflow-y-auto">
 
 
       <!-- 1. DATOS DE SOLICITUD -->
-      
+
       <div class="grid grid-cols-1 gap-6">
 
          <div x-show="step === 1" x-transition>
-         
+
             <div class="bg-gray-50 border border-gray-200
          rounded-xl p-5 shadow-sm">
          <div class="flex items-center mb-3">
@@ -125,13 +170,13 @@ overflow-y-auto">
             </h4>
          </div>
 
-         <div class="space-y-3 text-sm text-gray-600"> 
+         <div class="space-y-3 text-sm text-gray-600">
              <p>
                     <span class="font-semibold text-gray-900">
                       Nombre Completo
                     </span>
 
-                    <span x-text="solicitud.nombres + ' ' + 
+                    <span x-text="solicitud.nombres + ' ' +
                     (solicitud.apellidos || '')">
 
                     </span>
@@ -164,14 +209,14 @@ overflow-y-auto">
                       DPI/Cui
                     </span>
 
-                                
+
                     <span x-text="solicitud.cui">
 
                     </span>
                   </p>
 
-                  <p> 
-                    <span class="font-semibold text-gray-900"> 
+                  <p>
+                    <span class="font-semibold text-gray-900">
                                     No. Solicitud
                     </span>
 
@@ -180,7 +225,7 @@ overflow-y-auto">
                     </span>
                   </p>
 
-                  <p> 
+                  <p>
                     <span class="font-semibold text-gray-900">
                         Fecha de registro
                       </span>
@@ -218,16 +263,16 @@ overflow-y-auto">
                             Estado Actual:
                         </span>
 
-                        <span 
+                        <span
                                     x-text="solicitud.estado ? solicitud.estado.nombre : 'N/A'"
-                                    :class="!solicitud.estado 
-                                        ? 'px-2 py-1 rounded-full text-xs font-bold bg-white border' 
+                                    :class="!solicitud.estado
+                                        ? 'px-2 py-1 rounded-full text-xs font-bold bg-white border'
                                         : 'text-gray-600 font-normal ml-1'"
                         >
                         </span>
                       </p>
 
-                     
+
 
                       <p>
                         <span class="font-semibold text-gray-900">
@@ -239,7 +284,7 @@ overflow-y-auto">
 
 
 
-                      
+
                       <div class="mt-4">
                                 <h4 class="font-semibold text-gray-900">
                                     Dependientes:
@@ -262,7 +307,7 @@ overflow-y-auto">
 
                                   <template x-if="!solicitud.dependientes ||
                                   solicitud.dependientes.length === 0">
-                                  <span class="px-2 py-1 rounded-full text-xs font-bold 
+                                  <span class="px-2 py-1 rounded-full text-xs font-bold
                                   bg-white border text-gray-500">
                                   N/A
                                   </span>
@@ -275,12 +320,12 @@ overflow-y-auto">
                                     Trámite:
                                 </span>
 
-                                <span 
+                                <span
                                     class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold uppercase"
                                     x-text="solicitud.requisitos_tramites?.[0]?.tramite?.nombre || 'General'"
                                 >
                                 </span>
-                              
+
                             </p>
 
 
@@ -293,7 +338,7 @@ overflow-y-auto">
 
          </div>
 
-         
+
          <!-- 2. BITACORA DE ESTA SOLICITUD -->
 
          <div x-show="step === 2" x-transition>
@@ -301,7 +346,7 @@ overflow-y-auto">
              <div class="bg-gray-50 border border-gray-200
          rounded-xl p-5 shadow-sm">
          <div class="flex items-center mb-3">
-            
+
             <span class="p-2 bg-green-100 rounded-lg mr-2 text-green-600">
 
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -320,7 +365,7 @@ overflow-y-auto">
             <template x-if="solicitud.bitacoras && solicitud.bitacoras.length > 0">
                <template x-for="item in solicitud.bitacoras" :key="item.id">
                   <div class="bg-white border rounded-lg p-3">
-                          
+
                      <p x-show="item.evento">
                             <span class="font-semibold text-gray-900">
                                 Evento
@@ -336,7 +381,7 @@ overflow-y-auto">
                                 <span class="font-semibold text-gray-900">
                                     Usuario
                                 </span>
-                                {{-- <span 
+                                {{-- <span
                                     x-text="item.user ? item.user.name + ' ' + (item.user.lastname || '') : 'Sistema'"
                                     class="italic text-gray-500">
                                 </span> --}}
@@ -351,18 +396,18 @@ overflow-y-auto">
 
 
                       <p>
-                            <span class="font-semibold text-gray-900"> 
+                            <span class="font-semibold text-gray-900">
                                 Fecha:
                             </span>
                             <span x-text="item.fecha_formateada">
-                                
+
                             </span>
                         </p>
 
                         <p>
-                            
+
                             <span class="font-semibold text-gray-900">
-                                Detalle 
+                                Detalle
                             </span>
 
                             <span x-text="item.descripcion">
@@ -387,7 +432,7 @@ overflow-y-auto">
 
                   <!-- 3. OBSERVACIONES Y FOTOS -->
          <div x-show="step === 3" x-transition>
-            
+
 
                 <div class="bg-gray-50 border border-gray-200
          rounded-xl p-5 shadow-sm">
@@ -407,16 +452,20 @@ overflow-y-auto">
                   </div>
 
 
-                  <textarea
+                    <textarea id="editor"
                         rows="4"
                         placeholder="Ingrese observaciones..."
                         class="w-full rounded-lg border border-gray-300 p-3 text-sm
                               focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400">
                   </textarea>
 
-               
+
+
+
+
+
                </div>
-               
+
 
 
 
@@ -436,7 +485,7 @@ overflow-y-auto">
                      uppercase text-sm tracking-wider">
                      Fotografías
                      </h4>
-                     </div>   
+                     </div>
 
                      <input
                            type="file"
@@ -452,7 +501,7 @@ overflow-y-auto">
 
 
                </div>
-               
+
 
 
 
@@ -460,7 +509,7 @@ overflow-y-auto">
 
 
 
-        
+
 
 
          </div>
@@ -485,11 +534,11 @@ overflow-y-auto">
             <button
                x-show="step === 3"
                class="ml-auto px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 font-semibold">
-               Enviar visita de campo 
+               Enviar visita de campo
             </button>
 
          </div>
-     
+
 
 
 
@@ -503,3 +552,7 @@ overflow-y-auto">
 </div>
 </div>
 </x-interno-layout>
+
+
+
+
