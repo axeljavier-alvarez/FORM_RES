@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\Estado;
 use Livewire\Attributes\On;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class VisitaCampoTable extends DataTableComponent
 {
@@ -222,6 +223,33 @@ class VisitaCampoTable extends DataTableComponent
 
 
 
+    }
+
+    // aceptar visita de campo con observaciones
+    #[On('visitaRealizada')]
+    public function visitaRealizada(int $id, string $observaciones)
+    {
+        /* if(blank($observaciones)){
+            $this->dispatch('visita-realizada', );
+        } */
+
+            // eliminar el html de ckeditor
+        $observacionesLimpias = trim(strip_tags($observaciones)); 
+
+
+        $estadoVisitaRealizada = Estado::where('nombre', 'Visita realizada')->first();
+        if(!$estadoVisitaRealizada) return;
+
+        $solicitud = Solicitud::find($id);
+        if(!$solicitud) return;
+
+        $solicitud->update([
+            'estado_id' => $estadoVisitaRealizada->id,
+            'observaciones' => $observacionesLimpias
+        ]);
+
+
+        $this->dispatch('visita-realizada');
     }
 
 

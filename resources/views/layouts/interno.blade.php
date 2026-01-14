@@ -19,6 +19,10 @@
 
         <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
 
+        <script>
+        window.visitaEditor = null;
+        </script>
+
         @stack('css')
 
         <!-- Scripts -->

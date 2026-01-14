@@ -12,22 +12,17 @@
 
 
 @livewire('visita-campo-table')
-
-
-
-
-
-
 <div
     x-data="{
         open: false,
+        openVisitaAsignada: false,
         solicitud: {},
         step: 1,
-        editor: null,
+        observaciones: '',
 
         initEditor() {
-            // 🔒 Evita crear el editor más de una vez
-            if (this.editor) return;
+            // evitar crear multiples instancias
+            if (window.visitaEditor) return;
 
             const el = document.querySelector('#editor');
             if (!el) return;
@@ -57,13 +52,28 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
                 }
-            }).then(editor => {
-                this.editor = editor; // solo un ckeditor
-            }).catch(error => {
+            })
+            .then(editor => {
+                // guardar instancia global
+                window.visitaEditor = editor;
+
+                // ckeditor con alpine
+                editor.model.document.on('change:data', () => {
+                    this.observaciones = editor.getData();
+                });
+            })
+            .catch(error => {
                 console.error(error);
             });
         }
     }"
+
+    x-on:visita-realizada.window="
+        openVisitaAsignada = false;
+        open = false;
+        observaciones = '';
+        if (window.visitaEditor) window.visitaEditor.setData('');
+    "
 
     x-init="
         $watch('step', value => {
@@ -79,6 +89,82 @@
         step = 1;
     "
 >
+
+
+
+<!-- MODAL PARA CONFIRMAR VISITA DE CAMPO -->
+<div x-show="openVisitaAsignada"
+     x-cloak
+     class="fixed inset-0 z-[60] flex items-center justify-center">
+     
+    <div class="fixed inset-0 bg-black bg-opacity-50"
+    @click="openVisitaAsignada = false">
+    </div>
+
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative"> 
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2"> 
+                      <svg xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6 text-green-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                        </svg>
+                    <h3 class="text-lg font-bold text-gray-800">
+                        Confirmar visita de campo
+                    </h3>
+                </div>
+
+                <button @click="openVisitaAsignada = false"
+                              type="button"
+                              class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
+                              aria-label="Cerrar modal">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+                </button>
+
+              </div>
+
+              <p class="font-bold text-blue-500 mt-2">
+                    ¿Está seguro que desea confirmar esta visita de campo?
+              </p>
+
+
+
+                <div class="flex justify-end gap-3 mt-5">
+                    <button
+                    @click="openVisitaAsignada = false"
+                    class="px-4 py-2 text-sm font-bold bg-gray-200 rounded-lg">
+                    Cancelar
+                    </button>
+
+                    <button
+                    @click="
+                    Livewire.dispatch('visitaRealizada', {
+                        id: solicitud.id,
+                        observaciones: observaciones
+
+                    });
+                    " class="px-4 py-2 text-sm font-bold text-white rounded-lg
+                    bg-teal-600"
+                    >
+                    Enviar visita de campo
+                    </button>
+
+
+
+                    </div>
+
+
+
+               
+    </div>
+</div>
 
 
 
@@ -545,6 +631,7 @@ overflow-y-auto">
 
 
             <button
+               @click="openVisitaAsignada = true"
                x-show="step === 3"
                class="ml-auto px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 font-semibold">
                Enviar visita de campo
@@ -562,7 +649,11 @@ overflow-y-auto">
    </div>
 </div>
 
+
 </div>
+
+
+
 </div>
 </x-interno-layout>
 

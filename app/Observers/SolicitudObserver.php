@@ -40,15 +40,17 @@ class SolicitudObserver
             //     $descripcion = "la solicitud esta en proceso para análisis";
             // } 
 
-            
-
-
+        
             $descripcion = match ($nombreEstado) {
-        'Cancelado' => $solicitud->observaciones
-            ? 'Solicitud rechazada. Motivo: ' . $solicitud->observaciones
-            : 'Solicitud rechazada sin observaciones.',
-        'En proceso' => 'La solicitud está en proceso para análisis.',
-        default => 'Cambio de estado a: ' . $nombreEstado,
+            'Cancelado' => $solicitud->observaciones
+                ? 'Solicitud rechazada. Motivo: ' . $solicitud->observaciones
+                : 'Solicitud rechazada sin observaciones.',
+            'Visita realizada' => filled(trim($solicitud->observaciones))
+                ? 'Visita de campo realizada. Observaciones: ' . $solicitud->observaciones
+                : 'Visita de campo sin observaciones.',
+
+            'En proceso' => 'La solicitud está en proceso para análisis.',
+            default => 'Cambio de estado a: ' . $nombreEstado,
     };
 
 
