@@ -1,7 +1,3 @@
-.ck.ck-editor {
-    width: 100%;
-}
-
-.ck-toolbar {
-    flex-wrap: nowrap;
+.ck-editor__editable {
+    min-height: 200px; /* ajusta a lo que quieras */
 }

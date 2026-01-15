@@ -11,9 +11,38 @@
 
 
 
+<div class="flex gap-2 mb-4">
+    <button
+        @click="Livewire.dispatch('filtrar-visitas', { estado: 'Visita asignada' })"
+        class="px-4 py-2 rounded-lg font-bold bg-gray-200 text-gray-700">
+        Visita Asignada
+    </button>
+
+    <button
+        @click="Livewire.dispatch('filtrar-visitas', { estado: 'Visita realizada' })"
+        class="px-4 py-2 rounded-lg font-bold bg-gray-200 text-gray-700">
+        Visita Realizada
+    </button>
+</div>
+
 @livewire('visita-campo-table')
 <div
     x-data="{
+       // insertar multiples imagenes en el modal del datatable
+        mostrarInput: true,
+        fotosSeleccionadas: [],
+        // guarda wire:id de componente livewire
+        livewireId: null,
+        init(){
+            // espera a que todo el componente este renderizado
+            this.$nextTick(() => {
+               const el = document.querySelector('[wire\\:id]');
+               if(el) {
+                  this.livewireId = el.getAttribute('wire:id');
+               }
+            });
+        },
+
         open: false,
         openVisitaAsignada: false,
         solicitud: {},
@@ -32,7 +61,6 @@
                     items: [
                         'heading',
                         '|',
-                        'imageUpload',
                         'bold',
                         'italic',
                         'underline',
@@ -77,7 +105,7 @@
 
     x-init="
         $watch('step', value => {
-            if (value === 3) {
+            if (value === 2) {
                 initEditor();
             }
         })
@@ -442,6 +470,166 @@ overflow-y-auto">
 
          <div x-show="step === 2" x-transition>
 
+                    <div class="bg-gray-50 border border-gray-200
+                rounded-xl p-5 shadow-sm">
+                    <div class="mb-6">
+                            <div class="flex items-center mb-3">
+                                <span class="p-2 bg-gray-100 rounded-lg mr-2 text-gray-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 10h8M8 14h6m-2 6l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                                </svg>
+                                </span>
+
+                                <h4 class="font-bold text-gray-800
+                                uppercase text-sm tracking-wider">
+                                Observaciones de Visita de campo
+                                </h4>
+                        </div>
+
+
+                            <textarea 
+                                id="editor"
+                                rows="4"
+                                placeholder="Ingrese observaciones..."
+                                class="w-full rounded-lg border border-gray-300 p-3 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400">
+                            </textarea>
+ 
+
+
+
+
+
+                    </div>
+
+
+
+
+                        <div>
+
+                   <div class="flex items-center mb-2">
+                     <span class="p-2 bg-gray-100 rounded-lg mr-2 text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                 d="M3 7h3l2-3h8l2 3h3v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                     </span>
+
+                     <h4 class="font-bold text-gray-800
+                     uppercase text-sm tracking-wider">
+                     Fotografías
+                     </h4>
+                     </div>
+
+                     {{-- <input
+                           type="file"
+                           multiple
+                           accept="image/*"
+                           class="block w-full text-sm text-gray-600
+                                 file:mr-4 file:py-2 file:px-4
+                                 file:rounded-lg file:border-0
+                                 file:text-sm file:font-semibold
+                                 file:bg-gray-200 file:text-gray-700
+                                 hover:file:bg-gray-300"
+                     /> --}}
+
+                   <!-- INPUT FILE -->
+                   <div x-show="mostrarInput">
+                    <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.webp"
+                    class="block w-full text-sm text-gray-600
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-lg file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-gray-200 file:text-gray-700
+                    hover:file:bg-gray-300"
+
+                    @change="
+                    if (!livewireId) return;
+                    // toma el primer archivo
+                    const file = $event.target.files[0];
+                    // busca componente livewire correcto
+                    Livewire.find(livewireId)
+                    .upload('fotos', file, ()=>{
+                        // agrega nombre para mostrarlo
+                        fotosSeleccionadas.push(file.name);
+                        // ocultar input de subida
+                        mostrarInput = false;
+                        // resetear input para volver a usarlo
+                        $event.target.value = '';
+                    });
+                    "
+                    > 
+
+                    </input>
+                   </div>
+
+
+                   <!-- BOTON PARA AGREGAR OTRA FOTO -->
+                   <button
+                   x-show="!mostrarInput"
+                   @click="mostrarInput = true"
+                   class="mt-3 px-4 py-2 bg-blue-600
+                   text-white rounded-lg font-semibold hover:bg-blue-700"> 
+                   Agregar otra foto
+                   </button>
+
+                   <!-- mostrar el listado de fotos -->
+
+                    <div class="mt-4 space-y-2">
+                        <template x-for="(foto, index) in fotosSeleccionadas" :key="index">
+                            <div class="flex items-center gap-2 bg-white border rounded-lg p-2 text-sm">
+                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"/>
+                                </svg>
+
+                                <span x-text="foto"></span>
+
+                                 <button
+                                    @click="fotosSeleccionadas.splice(index, 1)">
+                                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+
+                            </div>
+
+                           
+                        </template>
+                    </div>
+                  
+
+                   
+
+                   
+
+
+               
+
+
+
+               </div>
+
+
+
+
+         </div>
+
+
+
+
+         </div>
+
+
+                  <!-- 3. OBSERVACIONES Y FOTOS -->
+         <div x-show="step === 3" x-transition>
+            
              <div class="bg-gray-50 border border-gray-200
          rounded-xl p-5 shadow-sm">
          <div class="flex items-center mb-3">
@@ -454,7 +642,7 @@ overflow-y-auto">
 
             <h4 class="font-bold text-gray-800 uppercase text-sm
             tracking-wider">
-            Historial del trámite
+            Historial de la solicitud
             </h4>
 
          </div>
@@ -524,93 +712,7 @@ overflow-y-auto">
 
 
          </div>
-
-
-         </div>
-
-
-                  <!-- 3. OBSERVACIONES Y FOTOS -->
-         <div x-show="step === 3" x-transition>
-
-
-                <div class="bg-gray-50 border border-gray-200
-         rounded-xl p-5 shadow-sm">
-               <div class="mb-6">
-                     <div class="flex items-center mb-3">
-                        <span class="p-2 bg-gray-100 rounded-lg mr-2 text-gray-600">
-                           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 10h8M8 14h6m-2 6l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-                           </svg>
-                        </span>
-
-                        <h4 class="font-bold text-gray-800
-                        uppercase text-sm tracking-wider">
-                        Observaciones de Visita de campo
-                        </h4>
-                  </div>
-
-
-                    <textarea id="editor"
-                        rows="4"
-                        placeholder="Ingrese observaciones..."
-                        class="w-full rounded-lg border border-gray-300 p-3 text-sm
-                              focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400">
-                  </textarea>
-
-
-
-
-
-
-               </div>
-
-
-
-
-               <div>
-
-                   <div class="flex items-center mb-2">
-                     <span class="p-2 bg-gray-100 rounded-lg mr-2 text-gray-600">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                 d="M3 7h3l2-3h8l2 3h3v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                     </span>
-
-                     <h4 class="font-bold text-gray-800
-                     uppercase text-sm tracking-wider">
-                     Fotografías
-                     </h4>
-                     </div>
-
-                     <input
-                           type="file"
-                           multiple
-                           accept="image/*"
-                           class="block w-full text-sm text-gray-600
-                                 file:mr-4 file:py-2 file:px-4
-                                 file:rounded-lg file:border-0
-                                 file:text-sm file:font-semibold
-                                 file:bg-gray-200 file:text-gray-700
-                                 hover:file:bg-gray-300"
-                     />
-
-
-               </div>
-
-
-
-
-         </div>
-
-
-
-
-
-
+            
          </div>
          <div class="flex justify-between mt-6">
 

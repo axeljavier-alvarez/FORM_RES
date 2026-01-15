@@ -19,6 +19,12 @@ return new class extends Migration
             ->nullable()
             ->constrained('requisito_tramite')
             ->onDelete('cascade');
+            $table->foreignId('user_id')
+            ->nullable()
+            ->constrained()
+            ->cascadeOnDelete();
+
+
             $table->timestamps();
         });
     }

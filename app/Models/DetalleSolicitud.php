@@ -15,6 +15,7 @@ class DetalleSolicitud extends Model
     protected $fillable = [
         'path',
         'solicitud_id',
+        'user_id', 
         'requisito_tramite_id'
     ];
 
@@ -27,5 +28,9 @@ class DetalleSolicitud extends Model
     public function requisitoTramite()
     {
         return $this->belongsTo(RequisitoTramite::class, 'requisito_tramite_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }

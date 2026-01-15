@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Interno;
 use App\Http\Controllers\Controller;
 use App\Models\Solicitud;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class VisitaCampoController extends Controller
 {

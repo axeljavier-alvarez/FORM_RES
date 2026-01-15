@@ -6,6 +6,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Solicitud;
 use App\Models\Bitacora;
+use App\Models\DetalleSolicitud;
 use Illuminate\Support\Facades\Auth;
 
 use Carbon\Carbon;
@@ -13,27 +14,57 @@ use App\Models\Estado;
 use Livewire\Attributes\On;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Livewire\WithFileUploads;
 
 class VisitaCampoTable extends DataTableComponent
 {
+
+    // manejo de fotos
+    use WithFileUploads;
+    public array $fotos = [];
+
     protected $model = Solicitud::class;
 
 
     public string $estadoSeleccionado = 'Visita asignada';
 
+    // reglas generales
+    protected function rules()
+    {
+        return[
+            'fotos.*' => [
+                'required',
+                'file',
+                'mimes:jpg,jpeg,png,webp',
+                'max:5120'
+            ],
+        ];
+    }
     // no mostrar cuando este en cancelado
     public function builder() : Builder
     {
-        return Solicitud::query()->whereHas('estado', function($query){
-            // $query->where('nombre', '!=', 'Cancelado');
+        // return Solicitud::query()->whereHas('estado', function($query){
+        //     // $query->where('nombre', '!=', 'Cancelado');
 
-            // agregar varios estados
-            $query->whereIn('nombre', [
-                'Visita realizada',
-                'Visita asignada',
-            ]);
+        //     // agregar varios estados
+        //     $query->whereIn('nombre', [
+        //         'Visita realizada',
+        //         'Visita asignada',
+        //     ]);
+        // });
+
+        return Solicitud::query()->whereHas('estado', function($query){
+            $query->where('nombre', $this->estadoSeleccionado);
         });
     }
+
+      #[On('filtrar-visitas')]
+        public function filtrarVisitas(string $estado)
+        {
+            $this->estadoSeleccionado = $estado;
+
+            $this->resetPage();
+        }
 
 
      public function configure(): void
@@ -245,12 +276,43 @@ class VisitaCampoTable extends DataTableComponent
             'estado_id' => $estadoVisitaRealizada->id,
         ]);
 
+        // guardar bitacora
         Bitacora::create([
             'solicitud_id' => $solicitud->id,
             'user_id' => Auth::id(),
             'evento' => 'CAMBIO DE ESTADO: Visita de campo realizada',
             'descripcion' => trim(strip_tags($observaciones)) ?: 'Visita de campo realizada sin observaciones.'
         ]);
+
+
+        
+        // guardar fotos unaxuna
+        // dd($this->fotos);
+        foreach($this->fotos as $foto){
+            $nombreOriginal = pathInfo($foto->getClientOriginalName(),
+            PATHINFO_FILENAME);
+
+            $extension = $foto->getClientOriginalExtension();
+
+            $nombreFinal = $solicitud->no_solicitud . '-' .
+            Str::slug($nombreOriginal) . '.' . $extension;
+
+            $ruta = $foto->storeAs(
+                'visita-campo',
+                $nombreFinal,
+                'public'
+            );
+
+            DetalleSolicitud::create([
+                'solicitud_id' => $solicitud->id,
+                'user_id' => Auth::id(),
+                'requisito_tramite_id' => null,
+                'path' => $ruta
+            ]);
+        }
+        
+        // limpiar fotos
+        $this->reset('fotos');
 
         $this->dispatch('visita-realizada');
     }

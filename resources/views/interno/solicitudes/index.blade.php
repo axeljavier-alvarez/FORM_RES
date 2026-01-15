@@ -239,7 +239,7 @@
 
                 <h4 class="font-bold text-gray-800
                 uppercase text-sm tracking-wider">
-                Historial del trámite
+                Historial de la solicitud
                 </h4>
             </div>
 

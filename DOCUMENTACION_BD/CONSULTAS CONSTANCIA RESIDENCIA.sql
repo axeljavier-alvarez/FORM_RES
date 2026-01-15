@@ -10,6 +10,9 @@ SELECT * FROM detalle_solicitud; */
 
 /* consulta de dependientes, solicitud y detalle */
 
+DESCRIBE detalle_solicitud;
+SELECT * FROM bitacoras;
+SELECT * FROM solicitudes;
 SELECT * FROM estados;
 
 SELECT * FROM requisitos;
