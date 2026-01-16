@@ -6,6 +6,47 @@ UPDATE solicitudes
 SET estado_id = 3
 WHERE id = 32; */
 
+SELECT 
+s.no_solicitud,
+-- bitacora
+
+b.id AS bitacora_id,
+b.evento,
+b.descripcion,
+b.created_at AS fecha_evento,
+
+
+-- usuario de bitacora
+ub.id AS usuario_bitacora_id,
+ub.name AS usuario_bitacora,
+
+-- detalle solicitud
+ds.id AS detalle_id,
+ds.path,
+
+-- usuario que subio el el detalle
+ud.id AS usuario_detalle_id,
+ud.name AS usuario_detalle
+
+FROM solicitudes s
+
+LEFT JOIN bitacoras b
+ON b.solicitud_id = s.id
+
+LEFT JOIN users ub
+ON ub.id = b.user_id
+
+LEFT JOIN detalle_solicitud ds
+ON ds.solicitud_id = s.id
+
+LEFT JOIN users ud
+ON ud.id = ds.user_id
+
+WHERE s.no_solicitud IN('20-2025', '21-2025', '22-2025')
+
+ORDER BY s.no_solicitud, b.created_at DESC;
+
+
 
 DESCRIBE detalle_solicitud;
 
