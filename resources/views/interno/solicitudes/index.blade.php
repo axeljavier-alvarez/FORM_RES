@@ -22,7 +22,8 @@
 
    
 
-    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>            
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+    @click="open = false"></div>            
 
 
     <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -326,7 +327,7 @@
     rounded-md bg-green-600 px-8 py-2.5 text-sm
     font-semibold text-white shadow-sm hover:bg-green-500
     focus-visible:outline focus-visible:outline-2
-    focus-visible:outline-offset-2 foucs-visible:outline-green-600
+    focus-visible:outline-offset-2 focus-visible:outline-green-600
     transition-all">
     Aceptar
     </button>

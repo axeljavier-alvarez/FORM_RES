@@ -6,11 +6,19 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Solicitud;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class EmisionConstanciasTable extends DataTableComponent
 {
     
 protected $model = Solicitud::class;
+
+        public function builder(): Builder
+        {
+            return Solicitud::query()
+                ->orderByDesc('id');
+        }
+
         public function configure(): void
         {
             $this->setPrimaryKey('id');
@@ -47,6 +55,12 @@ protected $model = Solicitud::class;
         public function columns(): array
     {
         return [
+
+
+            Column::make('ID', 'id')
+                ->sortable()
+                ->hideIf(true),
+
 
             // no solicitud
             Column::make("No solicitud", "no_solicitud")

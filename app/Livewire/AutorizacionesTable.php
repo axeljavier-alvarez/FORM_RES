@@ -6,13 +6,31 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Solicitud;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class AutorizacionesTable extends DataTableComponent
 {
      protected $model = Solicitud::class;
+
+
+      public function builder() : Builder
+    {
+        return Solicitud::query()->whereHas('estado', function($query){
+            // $query->where('nombre', '!=', 'Cancelado');
+
+            // agregar varios estados
+            $query->whereIn('nombre', [
+                'Por autorizar',
+                'Autorizado',
+            ]);
+        })->orderByDesc('id');
+    }
+
         public function configure(): void
         {
             $this->setPrimaryKey('id');
+
+            // $this->setDefaultSort('id', 'desc');
 
             $this->setThAttributes(function (Column $column) {
                 return [
@@ -46,6 +64,10 @@ class AutorizacionesTable extends DataTableComponent
         public function columns(): array
     {
         return [
+
+                Column::make('ID', 'id')
+            ->sortable()
+            ->hideIf(true),
 
             // no solicitud
             Column::make("No solicitud", "no_solicitud")

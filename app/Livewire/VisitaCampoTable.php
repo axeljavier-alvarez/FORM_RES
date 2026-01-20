@@ -55,7 +55,7 @@ class VisitaCampoTable extends DataTableComponent
 
         return Solicitud::query()->whereHas('estado', function($query){
             $query->where('nombre', $this->estadoSeleccionado);
-        });
+        })->orderByDesc('id');
     }
 
       #[On('filtrar-visitas')]
@@ -69,7 +69,10 @@ class VisitaCampoTable extends DataTableComponent
 
      public function configure(): void
         {
+
             $this->setPrimaryKey('id');
+
+            // $this->setDefaultSort('id', 'desc');
 
             // quita el parpadeo
             $this->setLoadingPlaceholderStatus(false);
@@ -106,6 +109,11 @@ class VisitaCampoTable extends DataTableComponent
          public function columns(): array
     {
         return [
+
+        Column::make('ID', 'id')
+    ->sortable()
+    ->hideIf(true),
+
 
             // no solicitud
             Column::make("No solicitud", "no_solicitud")

@@ -22,21 +22,27 @@ class AnalisisDocumentosTable extends DataTableComponent
     // no mostrar cuando este en cancelado
     public function builder() : Builder
     {
+
+
         return Solicitud::query()->whereHas('estado', function($query){
             // $query->where('nombre', '!=', 'Cancelado');
 
             // agregar varios estados
             $query->whereNotIn('nombre', [
-                'Cancelado',
-                'En Proceso',
+                'Por autorizar',
+                'Por emitir',
                 'Completado',
+                'Cancelado'
             ]);
-        });
+        })
+        ->orderByDesc('id');
     }
 
      public function configure(): void
 {
     $this->setPrimaryKey('id');
+
+    // $this->setDefaultSort('id', 'desc');
 
     // quita el parpadeo
     $this->setLoadingPlaceholderStatus(false);
@@ -71,6 +77,12 @@ class AnalisisDocumentosTable extends DataTableComponent
     public function columns(): array
     {
         return [
+
+        Column::make('ID', 'id')
+    ->sortable()
+    ->hideIf(true),
+
+
 
             // no solicitud
             Column::make("No solicitud", "no_solicitud")
@@ -296,22 +308,22 @@ public function rechazarSolicitud(int $id, string $descripcion)
 
 
     // peticion en proceso
-    #[On('peticionEnProceso')]
+    #[On('peticionPorAutorizar')]
 
     public function procesarSolicitud($id)
     {
-        $estadoEnProceso = Estado::where('nombre', 'En proceso')->first();
+        $estadoPorAutorizar = Estado::where('nombre', 'Por autorizar')->first();
 
-        if(!$estadoEnProceso) return;
+        if(!$estadoPorAutorizar) return;
 
         $solicitud = Solicitud::find($id);
 
         if($solicitud){
             $solicitud->update([
-                'estado_id' =>  $estadoEnProceso->id
+                'estado_id' =>  $estadoPorAutorizar->id
             ]);
 
-            $this->dispatch('solicitud-aceptada');
+            $this->dispatch('solicitud-por-autorizar');
                 /*
             $this->dispatch('refreshDatatable');
             $this->dispatch('refreshComponent'); */

@@ -6,14 +6,25 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Solicitud;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class SolicitudTable extends DataTableComponent
 {
     protected $model = Solicitud::class;
+
+
+public function builder(): Builder
+{
+    return Solicitud::query()
+        ->orderByDesc('id');
+}
+
+
 public function configure(): void
 {
     $this->setPrimaryKey('id');
 
+    // $this->setDefaultSort('id', 'desc');
     $this->setThAttributes(function (Column $column) {
         return [
             'style' => 'background-color: #BFDBFE !important;',
@@ -46,6 +57,12 @@ public function configure(): void
     {
         return [
 
+
+        Column::make('ID', 'id')
+    ->sortable()
+    ->hideIf(true),
+
+    
             // no solicitud
             Column::make("No solicitud", "no_solicitud")
                     ->format(function($value){

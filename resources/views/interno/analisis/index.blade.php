@@ -52,7 +52,7 @@
         errorRechazo = null;
     "
 
-    x-on:solicitud-aceptada.window="
+    x-on:solicitud-por-autorizar.window="
         openAceptar = false;
         open = false;
     "
@@ -820,7 +820,7 @@
 
       <button
       @click="
-      Livewire.dispatch('peticionEnProceso', {
+      Livewire.dispatch('peticionPorAutorizar', {
         id: solicitud.id
       });
       " class="px-4 py-2 text-sm font-bold text-white rounded-lg
