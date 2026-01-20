@@ -32,26 +32,37 @@ class SolicitudObserver
                 return;
             }
 
+            $estadoAnteriorId = $solicitud->getOriginal('estado_id');
+            $estadoAnterior = Estado::find($estadoAnteriorId);
+            $nombreEstadoAnterior = $estadoAnterior?->nombre;
 
             $nuevoEstado = Estado::find($solicitud->estado_id);
-            $nombreEstado = $nuevoEstado ? $nuevoEstado->nombre : 'DESCONOCIDO';
+            $nombreEstadoNuevo  = $nuevoEstado?->nombre ?? 'DESCONOCIDO';
 
             
 
             $comentario = $solicitud->observacion_bitacora;
             
-            $descripcion = $comentario ?: match ($nombreEstado) {
-                'Cancelado'        => 'La solicitud se canceló.',
-                'Por autorizar'       => 'La solicitud está pendiente de autorizar',
-                'Visita asignada'  => 'La solicitud fue asignada a visita de campo.',
-                'Visita realizada' => 'El visitador de campo no ingreso observaciones',
+            $descripcion = $comentario ?: match (true) {
+
+            // SOLICITUD DESPUES DE PASAR POR VISITA DE CAMPO, CASO ESPECIAL
+            $nombreEstadoNuevo === 'Por emitir'
+            && $nombreEstadoAnterior === 'Visita Realizada'
+            => 'La visita de campo fue aceptada y ahora ya está autorizado y se puede emitir',
+
+                $nombreEstadoNuevo === 'Cancelado' => 'La solicitud se canceló.',
+                $nombreEstadoNuevo === 'Por autorizar' => 'La solicitud está pendiente de autorizar',
+                $nombreEstadoNuevo === 'Visita asignada'  => 'La solicitud fue asignada a visita de campo.',
+                $nombreEstadoNuevo === 'Visita realizada' => 'El visitador de campo no ingreso observaciones',
+                $nombreEstadoNuevo === 'Por emitir'       => 'La solicitud está autorizada y ya se puede emitir',
+                $nombreEstadoNuevo === 'Completado' => 'La solicitud fue emitida y completada',
                 default            => 'Cambio de estado.',
             };
 
             Bitacora::create([
                 'solicitud_id' => $solicitud->id,
                 'user_id' => Auth::id(),
-                'evento' => 'CAMBIO DE ESTADO: ' . $nombreEstado,
+                'evento' => 'CAMBIO DE ESTADO: ' . $nombreEstadoNuevo,
                 'descripcion' => $descripcion
             ]);
         

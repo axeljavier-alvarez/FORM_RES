@@ -29,6 +29,7 @@
 <div
     x-data="{
        {{-- CODIGO PARA IMAGENES DE CAMPO --}}
+       
         openPreview: false,
         imgSource: '',
         imagenActiva:null,
@@ -877,10 +878,20 @@ overflow-y-auto">
 
 
             <button
+                x-show="step === 3 && solicitud.estado?.nombre === 'Visita asignada'"
                @click="openVisitaAsignada = true"
                x-show="step === 3"
                class="ml-auto px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 font-semibold">
                Enviar visita de campo
+            </button>
+
+
+            <button
+            x-show="step === 3 && solicitud.estado?.nombre === 'Visita realizada'"
+            x-show="step === 3"
+            class="ml-auto px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 font-semibold">
+
+            Aceptar visita de campo
             </button>
 
          </div>
