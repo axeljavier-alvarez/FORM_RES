@@ -227,7 +227,8 @@ class VisitaCampoTable extends DataTableComponent
         $solicitud = Solicitud::with([
             'estado',
             'zona',
-            'dependientes',
+            'detalles.dependiente',
+            'requisitosTramites.requisito',
             'requisitosTramites.tramite',
             'bitacoras.user',
             'detalles.user'
@@ -256,22 +257,61 @@ class VisitaCampoTable extends DataTableComponent
                     // }
             });
 
+            // procesar documentos
+            $documentosNormales = $solicitud->requisitosTramites
+            ->filter(fn($rt) => $rt->requisito?->slug !== 'cargas-familiares')
+            ->map(function ($rt) use ($solicitud) {
+                $detalle = $rt->detalles->where('solicitud_id', $solicitud->id)->first();
+                if (!$detalle || !$detalle->path) return null;
+
+                return [
+                    'tipo' => 'normal',
+                    'titulo' => $rt->reqeuisito?->nombre,
+                    'path' => $detalle->path,
+                ];
+            })->filter();
+
+
+            // buscar cargas familiares
+            $rtCarga = $solicitud->requisitosTramites->where('requisito.slug', 'cargas-familiares')->first();
+            $dependientes = collect();
+            if($rtCarga){
+                $dependientes = $rtCarga->detalles
+                ->where('solicitud_id', $solicitud->id)
+                ->load('dependiente')
+                ->map(function ($d){
+                    if (!$d->dependiente) return null;
+                    return [
+                        'id' => $d->id,
+                        'nombre' => $d->dependiente->nombres . ' ' . $d->dependiente->apellidos,
+                        'path' => $d->path ?? null
+                        ];
+                })->filter()->values();
+            }
+
+            // unificar documentos
+            $documentosFinales = $documentosNormales->values()->all();
+            $documentosFinales[] = [
+                'tipo' => 'carga',
+                'titulo' => 'Cargas familiares',
+                'dependientes' => $dependientes->toArray()
+            ];
+
 
             // convertir a array
            $solicitudArray = $solicitud->toArray();
+           $solicitudArray['documentos'] = $documentosFinales;
 
            $solicitudArray['fotos'] = collect($solicitudArray['detalles'] ?? [])
-           ->filter(function($detalle){
-              // filtro para encontrar las visitas de campo
-              return !empty($detalle['path']) &&
-              is_null($detalle['requisito_tramite_id']);
-           })
+            ->filter(function($detalle){
+                return !empty($detalle['path']) && is_null($detalle['requisito_tramite_id']);
+            })
            ->map(function($detalle){
             return [
                 'id' => $detalle['id'],
                 'ruta' => $detalle['path'],
-                'visitador_campo' => 
-                $detalle['user']['name'] ?? 'Sisitema' 
+                'visitador_campo' =>
+                $detalle['user']['name'] ?? 'Sisitema'
                 ];
            })
            ->values()
@@ -279,7 +319,7 @@ class VisitaCampoTable extends DataTableComponent
 
             // $this->dispatch('open-modal-visita', solicitud: $solicitud->toArray());
 
-        $this->dispatch('open-modal-visita', solicitud: $solicitudArray);    
+        $this->dispatch('open-modal-visita', solicitud: $solicitudArray);
         }
 
 
@@ -309,17 +349,18 @@ class VisitaCampoTable extends DataTableComponent
         ]);
 
 
-        
+
         // guardar fotos unaxuna
         // dd($this->fotos);
         foreach($this->fotos as $foto){
-            $nombreOriginal = pathInfo($foto->getClientOriginalName(),
-            PATHINFO_FILENAME);
+
+
 
             $extension = $foto->getClientOriginalExtension();
 
-            $nombreFinal = $solicitud->no_solicitud . '-' .
-            Str::slug($nombreOriginal) . '.' . $extension;
+            $hashAleatorio = Str::random(20);
+
+            $nombreFinal = $solicitud->no_solicitud . '-' . $hashAleatorio . '.' . $extension;
 
             $ruta = $foto->storeAs(
                 'visita-campo',
@@ -331,10 +372,11 @@ class VisitaCampoTable extends DataTableComponent
                 'solicitud_id' => $solicitud->id,
                 'user_id' => Auth::id(),
                 'requisito_tramite_id' => null,
-                'path' => $ruta
+                'path' => $ruta,
+                'tipo' => 'foto_visita'
             ]);
         }
-        
+
         // limpiar fotos
         $this->reset('fotos');
 

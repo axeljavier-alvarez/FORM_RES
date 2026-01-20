@@ -31,7 +31,7 @@
        {{-- CODIGO PARA IMAGENES DE CAMPO --}}
         openPreview: false,
         imgSource: '',
-        imagenActiva:null, 
+        imagenActiva:null,
         mostrarInput: true,
         fotosSeleccionadas: [],
         // guarda wire:id de componente livewire
@@ -99,7 +99,7 @@
         }
     }"
     @preview-foto.window="openPreview = true; imgSource = $event.detail.url"
-   
+
 
     x-on:visita-realizada.window="
         openVisitaAsignada = false;
@@ -141,7 +141,7 @@
         </svg>
     </button>
 
-    <img :src="imgSource" 
+    <img :src="imgSource"
      class="max-w-[95vw] max-h-[95vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
 >
     </div>
@@ -150,14 +150,14 @@
 <div x-show="openVisitaAsignada"
      x-cloak
      class="fixed inset-0 z-[60] flex items-center justify-center">
-     
+
     <div class="fixed inset-0 bg-black bg-opacity-50"
     @click="openVisitaAsignada = false">
     </div>
 
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative"> 
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2"> 
+                <div class="flex items-center gap-2">
                       <svg xmlns="http://www.w3.org/2000/svg"
                         class="h-6 w-6 text-green-600"
                         fill="none"
@@ -216,7 +216,7 @@
 
 
 
-               
+
     </div>
 </div>
 
@@ -435,38 +435,46 @@ overflow-y-auto">
                         <span x-text="solicitud.zona?.nombre"></span>
                       </p>
 
-
-
-
+                      <!-- DEPENDIENTES -->
                       <div class="mt-4">
-                                <h4 class="font-semibold text-gray-900">
-                                    Dependientes:
-                                </h4>
+                        <h4 class="font-semibold text-gray-900">
+                            Dependientes
+                        </h4>
+                        <div class="flex flex-wrap gap-2">
+                            <template x-if="solicitud.documentos &&
+                            solicitud.documentos.find(d => d.tipo === 'carga')">
+                            <div class="flex flex-wrap gap-2">
+                                <template x-for="dep in solicitud.documentos.find(d => d.tipo === 'carga').dependientes" :key="dep.id">
 
-                                <div class="flex flex-wrap gap-2">
-                                  <template x-if="solicitud.dependientes &&
-                                  solicitud.dependientes.length > 0">
-                                  <template x-for="dep in solicitud.dependientes"
-                                  :key="dep.id">
-                                    <span class="px-3 py-1 bg-green-50 text-green-700
-                                    border border-green-200 rounded-full text-xs font-medium">
 
-                                    <span x-text="dep.nombres + ' ' + (dep.apellidos || '')">
+                                    <button
+                                    @click="documentoActual = dep; openDocumento = true;"
+                                    class="px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-full
+                                    text-xs font-medium hover:bg-green-100 transition"
+                                    >
+
+                                    <span x-text="dep.nombre"></span>
+
+                                    </button>
+
+                                </template>
+
+                                <template x-if="solicitud.documentos.find(d=> d.tipo === 'carga').dependientes.length === 0">
+
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 border border-orange-200 text-orange-600 shadow-sm">
+                                        <i class="fas fa-info-circle mr-1"></i> El usuario no ingresó dependientes
                                     </span>
-                                    </span>
 
-                                  </template>
-                                  </template>
-
-                                  <template x-if="!solicitud.dependientes ||
-                                  solicitud.dependientes.length === 0">
-                                  <span class="px-2 py-1 rounded-full text-xs font-bold
-                                  bg-white border text-gray-500">
-                                  N/A
-                                  </span>
-                                  </template>
-                                </div>
+                                </template>
+                            </div>
+                            </template>
+                        </div>
                       </div>
+
+
+
+
+
 
                             <p>
                                 <span class="font-semibold text-gray-900">
@@ -517,14 +525,14 @@ overflow-y-auto">
                         </div>
 
 
-                            <textarea 
+                            <textarea
                                 id="editor"
                                 rows="4"
                                 placeholder="Ingrese observaciones..."
                                 class="w-full rounded-lg border border-gray-300 p-3 text-sm
                                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400">
                             </textarea>
- 
+
 
 
 
@@ -605,7 +613,7 @@ overflow-y-auto">
                     mostrarInput = false;
                     $event.target.value = '';
                     "
-                    > 
+                    >
 
                     </input>
                    </div>
@@ -616,7 +624,7 @@ overflow-y-auto">
                    x-show="!mostrarInput"
                    @click="mostrarInput = true"
                    class="mt-3 px-4 py-2 bg-blue-600
-                   text-white rounded-lg font-semibold hover:bg-blue-700"> 
+                   text-white rounded-lg font-semibold hover:bg-blue-700">
                    Agregar otra foto
                    </button>
 
@@ -629,11 +637,11 @@ overflow-y-auto">
                     <div class="relative bg-gray-100 rounded-lg
                     overflow-hidden border shadow-sm group">
                     <!-- imagen -->
-                      <img :src="foto.url" 
-     @click="$dispatch('preview-foto', { url: foto.url })" 
-     
+                      <img :src="foto.url"
+     @click="$dispatch('preview-foto', { url: foto.url })"
+
      class="w-full h-48 object-contain bg-white cursor-zoom-in hover:opacity-90 transition">
-     
+
                     <!-- eliminar -->
                     <button
                     @click="fotosSeleccionadas.splice(index, 1)"
@@ -648,15 +656,15 @@ overflow-y-auto">
                     </button>
                     </div>
                    </template>
-                   </div>   
+                   </div>
 
 
 
-                                    
 
-                                    
 
-                                
+
+
+
 
 
 
@@ -666,15 +674,15 @@ overflow-y-auto">
 
 
             </div>
- 
+
            </div>
            <!-- MOSTRAR CUANDO YA SE COMPLETO LA VISITA -->
            <div x-show="solicitud.estado?.nombre === 'Visita realizada'">
             <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm space-y-6">
                 <div>
                     <div class="flex items-center mb-3">
-                        <span class="p-2 bg-blue-50 rounded-lg mr-2 text-blue-600"> 
-                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>                             
+                        <span class="p-2 bg-blue-50 rounded-lg mr-2 text-blue-600">
+                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                         </span>
                         <h4 class="font-bold text-gray-800 uppercase text-sm tracking-wider">
                             Resultado de la Visita
@@ -684,8 +692,8 @@ overflow-y-auto">
                     <!-- mostrar la descripcion de la visita -->
                     <div class="prose prose-sm max-w-none text-gray-700
                     bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
-                    
-                    <template x-for="bitacora in solicitud.bitacoras?.filter(b=> 
+
+                    <template x-for="bitacora in solicitud.bitacoras?.filter(b=>
                         b.evento.includes('Visita de campo realizada'))" :key="bitacora.id">
 
                        <div class="mb-2">
@@ -701,7 +709,7 @@ overflow-y-auto">
                     </template>
 
 
-                    <template 
+                    <template
                     x-show="!(solicitud.bitacoras?.some(b=>
                     b.evento.includes('Visita de campo realizada')
                     ))">
@@ -710,7 +718,7 @@ overflow-y-auto">
                         </p>
                     </template>
 
-                    
+
                     </div>
                 </div>
 
@@ -747,7 +755,7 @@ overflow-y-auto">
                             </template>
                         </template>
 
-                        <template x-if="!solicitud.fotos || solicitud.fotos.length === 0"> 
+                        <template x-if="!solicitud.fotos || solicitud.fotos.length === 0">
                             <p class="col-span-full text-sm text-gray-500 italic">
                                 No se adjuntaron fotografías en esta visita
                             </p>
@@ -758,14 +766,14 @@ overflow-y-auto">
             </div>
 
            </div>
-                
+
 
          </div>
 
 
                   <!-- 3. OBSERVACIONES Y FOTOS -->
          <div x-show="step === 3" x-transition>
-            
+
              <div class="bg-gray-50 border border-gray-200
          rounded-xl p-5 shadow-sm">
          <div class="flex items-center mb-3">
@@ -848,7 +856,7 @@ overflow-y-auto">
 
 
          </div>
-            
+
          </div>
          <div class="flex justify-between mt-6">
 

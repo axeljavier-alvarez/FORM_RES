@@ -90,13 +90,13 @@
       <div class="flex items-center justify-between border-b pb-2 mb-3">
         <h3 class="font-bold text-lg text-gray-800" x-text="documentoActual?.nombre">
         </h3>
-        
+
         <div class="flex items-center gap-2">
 
           <template x-if="documentoActual && documentoActual.path">
 
 
-             <a :href="`/storage/${documentoActual.path}`" target="_blank" 
+             <a :href="`/storage/${documentoActual.path}`" target="_blank"
               class="p-2 text-blue-500 hover:bg-blue-50 rounded-full transition-colors"
               title="Abrir en pestaña nueva">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
@@ -342,7 +342,7 @@
                           Dependientes
                         </h4>
                         <div class="flex flex-wrap gap-2">
-                          <template x-if="solicitud.documentos && 
+                          <template x-if="solicitud.documentos &&
                           solicitud.documentos.find(d => d.tipo === 'carga')">
                           <div class="flex flex-wrap gap-2">
                             <template x-for="dep in solicitud.documentos.find(d => d.tipo === 'carga').dependientes" :key="dep.id">
@@ -355,15 +355,15 @@
                             </template>
 
                             <template x-if="solicitud.documentos.find(d => d.tipo === 'carga').dependientes.length === 0">
-                              <span class="px-2 py-1 rounded-full text-xs font-bold bg-white border text-gray-500">
-                                El usuario no ingreso dependientes
+                              <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 border border-orange-200 text-orange-600 shadow-sm">
+                                    <i class="fas fa-info-circle mr-1"></i> El usuario no ingresó dependientes
                               </span>
                             </template>
                           </div>
                           </template>
                         </div>
                       </div>
-                      
+
                                                   <p>
                                 <span class="font-semibold text-gray-900">
                                     Trámite:
@@ -403,7 +403,7 @@
                                       <div class="space-y-2 mt-3">
                                         <template x-if="solicitud.documentos && solicitud.documentos.length > 0">
                                           <template x-for="(doc, index) in solicitud.documentos" :key="index">
-                                            
+
                                             <div>
                                               <template x-if="doc.tipo === 'normal'">
                                                 <button
@@ -429,7 +429,7 @@
                                                   <h4 class="font-bold" x-text="doc.titulo">
 
                                                   </h4>
-                                                </div> 
+                                                </div>
 
                                                 <div class="mt-1 space-y-1">
                                                   <template x-if="doc.dependientes && doc.dependientes.length > 0">
@@ -442,7 +442,7 @@
                                                     <span x-text="dep.nombre"></span>
                                                     </button>
 
-                                                    
+
                                                     </template>
 
                                                   </template>
@@ -459,17 +459,17 @@
                                                 </div>
 
                                               </template>
-          
+
                                             </div>
                                           </template>
-                                        </template> 
+                                        </template>
 
                                       </div>
 
 
-                            
 
-                          
+
+
 
 
 
@@ -678,7 +678,7 @@
   <!-- MODAL DE VISITA DE CAMPO -->
     <div x-show="openVisitaCampo" x-cloak class="fixed inset-0 z-60
     flex items-center justify-center">
-    <div 
+    <div
     class="fixed inset-0 bg-black bg-opacity-50"
     @click="openVisitaCampo = false">
 

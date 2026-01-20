@@ -338,7 +338,7 @@ public function updated($property)
         $q->where('slug', 'cargas-familiares'))
         ->first();
 
-        // 
+        //
         if($requisitoCarga){
             foreach($this->cargas as $carga){
 
@@ -374,7 +374,7 @@ public function updated($property)
                         'path' => $path
                     ]);
                 }
-                
+
             }
         }
        }
@@ -382,22 +382,20 @@ public function updated($property)
 
 
         // ENVIAR CORREO AL USUARIO
-        if ($solicitud->email) {
-        $mensaje = <<<HTML
-        Hemos registrado su solicitud con el número {$solicitud->no_solicitud}
-        Podrá ver el proceso de su trámite en el siguiente enlace:
-        http://constanciaresidencia.test/consulta
-        HTML;
+        // if ($solicitud->email) {
+        // $mensaje = <<<HTML
+        // Hemos registrado su solicitud con el número {$solicitud->no_solicitud}
+        // Podrá ver el proceso de su trámite en el siguiente enlace:
+        // http://constanciaresidencia.test/consulta
+        // HTML;
 
-        Mail::to($solicitud->email)
-            ->send(new NotificacionSolicitud($mensaje));
-        }
-        Mail::to('axel5javier536@gmail.com')
-            ->send(new NuevaSolicitudAdmin($solicitud));
+        // Mail::to($solicitud->email)
+        //     ->send(new NotificacionSolicitud($mensaje));
+        // }
+        // Mail::to('axel5javier536@gmail.com')
+        //     ->send(new NuevaSolicitudAdmin($solicitud));
         DB::commit();
-                     
         } catch(\Throwable $e){
-
             DB::rollBack();
             // dd($e->getMessage()); // Solo mensaje
             // Mostrar error
@@ -484,36 +482,36 @@ public function updated($property)
                 public function validarPaso($paso)
         {
             try {
-                // if($paso == 1){
-                //     $this->validate([
-                //         'nombres' => 'required|string|max:60',
-                //         'apellidos' => 'required|string|max:60',
-                //         'email' => [
-                //             'required',
-                //             'email',
-                //             'max:45',
-                //             Rule::unique('solicitudes', 'email')
-                //         ],
+                if($paso == 1){
+                    $this->validate([
+                        'nombres' => 'required|string|max:60',
+                        'apellidos' => 'required|string|max:60',
+                        'email' => [
+                            'required',
+                            'email',
+                            'max:45',
+                            Rule::unique('solicitudes', 'email')
+                        ],
 
-                //         'telefono' => $this->reglasTelefonoPorPais(),
+                        'telefono' => $this->reglasTelefonoPorPais(),
 
-                //         'codigo_pais' => 'required',
-                //         'cui' => [
-                //             'required',
-                //             'string',
-                //             'size:13',
-                //             Rule::unique('solicitudes', 'cui'),
-                //             // regla validacion cui
-                //             function ($attribute, $value, $fail){
-                //                 if(!$this->cuiEsValido($value)){
-                //                     $fail('El DPI ingresado no es válido');
-                //                 }
-                //             }
-                //         ],
-                //         'domicilio' => 'required|string|max:255',
-                //         'zona_id' => 'required|exists:zonas,id',
-                //     ]);
-                // }
+                        'codigo_pais' => 'required',
+                        'cui' => [
+                            'required',
+                            'string',
+                            'size:13',
+                            Rule::unique('solicitudes', 'cui'),
+                            // regla validacion cui
+                            function ($attribute, $value, $fail){
+                                if(!$this->cuiEsValido($value)){
+                                    $fail('El DPI ingresado no es válido');
+                                }
+                            }
+                        ],
+                        'domicilio' => 'required|string|max:255',
+                        'zona_id' => 'required|exists:zonas,id',
+                    ]);
+                }
 
 
                 if ($paso == 2) {
