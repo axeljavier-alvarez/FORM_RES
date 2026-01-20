@@ -431,8 +431,8 @@ public function updated($property)
     //         }
 
     //         // ENMASCARAR EMAIL
-    //         $this->emailEnmascarado = $this->enmascararEmail($solicitud->email);
-    //         $this->zonas = Zona::all();
+            $this->emailEnmascarado = $this->enmascararEmail($solicitud->email);
+            $this->zonas = Zona::all();
 
 
 }

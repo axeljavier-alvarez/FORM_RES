@@ -14,15 +14,33 @@
 
  <!-- modal para ver acciones -->
 
-    <div x-data="{ open: false, solicitud: {} }" 
-     @open-modal-detalle.window="open = true; solicitud = $event.detail.solicitud"
-     x-show="open"
-         x-cloak
-         class="fixed inset-0 z-50 overflow-y-auto" 
-         aria-cabellad="modal-title" role="dialog" aria-modal="true">
+    <div
+    x-data="{
+        open: false,
+        solicitud: {},
+        openCompletada: false
+    }"
+
+    x-on:solicitud-completada.window="
+        openCompletada = false;
+        open = false;
+    "
+
+    @open-modal-detalle.window="
+        open = true;
+        solicitud = $event.detail.solicitud
+    "
+
+    x-show="open"
+    x-cloak
+    class="fixed inset-0 z-50 overflow-y-auto"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+>
 
 
-   
+
 
     <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
     @click="open = false">
@@ -333,8 +351,9 @@
         focus-visible:outline-offset-2 focus-visible:outline-red-600">
             No autorizar
         </button>
-    <button @click="open = false"
+    <button
     type="button"
+    @click="openCompletada = true"
     class="inline-flex justify-center
     rounded-md bg-green-600 px-8 py-2.5 text-sm
     font-semibold text-white shadow-sm hover:bg-green-500
@@ -354,6 +373,59 @@
    </div>
 
    </div>
+
+
+   <!-- MODAL DE COMPLETAR LA SOLICITUD -->
+   <div x-show="openCompletada" x-cloak class="fixed inset-0 z-60
+   flex items-center justify-center">
+   <div
+   class="fixed inset-0 bg-black bg-opacity-50"
+   @click="openCompletada = false"
+   >
+   </div>
+
+
+     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
+
+
+              <div class="flex items-center justify-between">
+                 <div class="flex items-center gap-2">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="text-lg font-bold text-gray-800">
+                        Completar la solicitud
+                    </h3>
+                 </div>
+
+                  <button @click="openCompletada = false"
+                            type="button"
+                            class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
+                            aria-label="Cerrar modal">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                  </button>
+
+
+
+
+              </div>
+
+
+              <p class="font-bold mt-2 text-green-500">
+                ¿Está seguro que desea completar la solicitud?
+                <br>
+                <strong>Se emitira la constancia</strong>
+              </p>
+     </div>
+
+   </div>
+   
+
    
    </div>
 </x-interno-layout>

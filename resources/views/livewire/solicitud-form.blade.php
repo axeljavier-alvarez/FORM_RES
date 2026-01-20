@@ -190,6 +190,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
         <!-- Modal de confirmar eliminacion de archivo -->
         <div
         x-show="mostrarConfirmacionEliminarRequisito"
+        x-cloak
         class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
         >
 
@@ -258,6 +259,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
         <div
         x-show="mostrarConfirmacion"
+        x-cloak
         class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
         s-transition
         >
