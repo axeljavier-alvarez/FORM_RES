@@ -52,7 +52,7 @@
         errorRechazo = null;
     "
 
-    x-on:solicitud-por-autorizar.window="
+    x-on:solicitud-aceptada.window="
         openAceptar = false;
         open = false;
     "
@@ -819,17 +819,15 @@
       </button>
 
       <button
-      @click="
-      Livewire.dispatch('peticionPorAutorizar', {
-        id: solicitud.id
-      });
-      " class="px-4 py-2 text-sm font-bold text-white rounded-lg
-      bg-green-600"
-      >
-      Aceptar solicitud
-      </button>
-
-
+        @click="
+        openAceptar = false;
+        open = false;
+        Livewire.dispatch('peticionPorAutorizar', { id: solicitud.id });
+    "
+        class="px-4 py-2 text-sm font-bold text-white rounded-lg bg-green-600"
+    >
+        Aceptar solicitud
+    </button>
 
     </div>
 

@@ -397,5 +397,32 @@ class VisitaCampoTable extends DataTableComponent
     }
 
 
+    // cambiar de estado aceptarlo
+
+    // peticion en proceso
+    #[On('peticionPorAutorizar')]
+
+    public function procesarSolicitud($id)
+    {
+        $estadoPorAutorizar = Estado::where('nombre', 'Por autorizar')->first();
+
+        if(!$estadoPorAutorizar) return;
+
+        $solicitud = Solicitud::find($id);
+
+        if($solicitud){
+            $solicitud->update([
+                'estado_id' =>  $estadoPorAutorizar->id
+            ]);
+
+            $this->dispatch('solicitud-por-autorizar');
+                /*
+            $this->dispatch('refreshDatatable');
+            $this->dispatch('refreshComponent'); */
+        }
+    }
+    
+
+
 
 }
