@@ -48,8 +48,7 @@
      x-transition:enter-start="opacity-0" 
      x-transition:enter-end="opacity-100" 
      class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity z-50" 
-     @click.away="open = false">
-     
+     @click="open = false">
 </div>
 
 <div x-show="open" 

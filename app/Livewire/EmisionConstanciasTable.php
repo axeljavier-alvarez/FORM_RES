@@ -7,6 +7,8 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Solicitud;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
+use App\Models\Estado;
 
 class EmisionConstanciasTable extends DataTableComponent
 {
@@ -232,6 +234,27 @@ protected $model = Solicitud::class;
 
 
 
+    }
+
+
+    // emitir constancia
+    #[On('emitirConstancia')]
+    public function emitirConstancia($id)
+    {
+        $estadoCompletado = Estado::where('nombre', 'Completado')->first();
+
+        if(!$estadoCompletado) return;
+
+        $solicitud = Solicitud::find($id);
+
+        if($solicitud){
+            $solicitud->update([
+                'estado_id' => $estadoCompletado->id
+            ]);
+
+            $this->dispatch('solicitud-emitir-constancia');
+
+        }
     }
 
 }

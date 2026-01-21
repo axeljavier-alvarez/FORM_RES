@@ -233,7 +233,7 @@ class AutorizacionesTable extends DataTableComponent
 
     }
 
-    // completar solicitud
+    // peticion por emitir
     #[On('peticionPorEmitir')]
     public function peticionPorEmitir($id)
     {
