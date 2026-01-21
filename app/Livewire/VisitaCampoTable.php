@@ -280,7 +280,7 @@ class VisitaCampoTable extends DataTableComponent
 
                 return [
                     'tipo' => 'normal',
-                    'titulo' => $rt->reqeuisito?->nombre,
+                    'titulo' => $rt->requisito?->nombre,
                     'path' => $detalle->path,
                 ];
             })->filter();

@@ -214,6 +214,7 @@ class SolicitudTable extends DataTableComponent
         $solicitud = Solicitud::with([
             'estado',
             'zona',
+            'detalles.dependiente',
             // 'dependientes',
             // 'detalleSolicitud.dependiente',
             'requisitosTramites.tramite',
@@ -230,6 +231,49 @@ class SolicitudTable extends DataTableComponent
             $solicitud->fecha_registro_traducida = $solicitud->created_at
             ? Carbon::parse($solicitud->created_at)
             ->translatedFormat('d F Y H:i') : 'N/A';
+
+            // procesar documentos
+            $documentosNormales = $solicitud->requisitosTramites
+            ->filter(fn($rt) => $rt->requisito?->slug !== 'cargas-familiares')
+            ->map(function ($rt) use ($solicitud) {
+                $detalle = $rt->detalles->where('solicitud_id', $solicitud->id)->first();
+                if(!$detalle || !$detalle->path) return null;
+
+                return [
+                    'tipo' => 'normal',
+                    'titulo' => $rt->requisito?->nombre,
+                    'path' => $detalle->path
+                ];
+
+            })->filter();
+
+            $rtCarga = $solicitud->requisitosTramites->where('requisito.slug', 'cargas-familiares')
+            ->first();
+            $dependientes = collect();
+            if($rtCarga){
+                $dependientes = $rtCarga->detalles
+                ->where('solicitud_id', $solicitud->id)
+                ->load('dependiente')
+                ->map(function ($d){
+                    if(!$d->dependiente) return null;
+
+                    return [
+                        'id' => $d->id,
+                        'nombre' => $d->dependiente->nombres . ' ' . $d->dependiente->apellidos,
+                        'path' => $d->path ?? null
+                    ];
+                })->filter()->values();
+            }
+
+
+            $documentosFinales = $documentosNormales->values()->all();
+
+            $documentosFinales[] = [
+                'tipo' => 'carga',
+                'titulo' => 'Cargas familiares',
+                'dependientes' => $dependientes->toArray()
+            ];
+
             // traduciendo fecha de la bitacora
              $solicitud->bitacoras->each(function ($item) {
                 $item->fecha_formateada = Carbon::parse($item->created_at)
@@ -243,7 +287,14 @@ class SolicitudTable extends DataTableComponent
                     // }
             });
 
-            $this->dispatch('open-modal-detalle', solicitud: $solicitud->toArray());
+
+            $solicitudArray = $solicitud->toArray();
+
+
+            $solicitudArray['documentos'] = $documentosFinales;
+
+
+            $this->dispatch('open-modal-detalle', solicitud: $solicitudArray);
         }
 
 
