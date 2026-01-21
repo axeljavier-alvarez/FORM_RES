@@ -46,8 +46,8 @@ class SolicitudObserver
             $descripcion = $comentario ?: match (true) {
 
             // SOLICITUD DESPUES DE PASAR POR VISITA DE CAMPO, CASO ESPECIAL
-            $nombreEstadoNuevo === 'Por emitir'
-            && $nombreEstadoAnterior === 'Visita Realizada'
+            $nombreEstadoNuevo === 'Por autorizar'
+            && $nombreEstadoAnterior === 'Visita realizada'
             => 'La visita de campo fue aceptada y ahora ya está autorizado y se puede emitir',
 
                 $nombreEstadoNuevo === 'Cancelado' => 'La solicitud se canceló.',

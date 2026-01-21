@@ -34,21 +34,30 @@ class AutorizacionesTable extends DataTableComponent
 
     // Títulos de la tabla (Encabezados) - ¡AHORA MÁS COLORIDOS!
     $this->setThAttributes(fn() => [
-        // Cambiamos el gris por un azul profundo y texto blanco o azul claro
+      
         'class' => 'bg-blue-600 text-white uppercase text-xs tracking-widest py-4 px-4 font-black border-none first:rounded-l-lg last:rounded-r-lg shadow-sm'
     ]);
 
-    // Filas con borde lateral dinámico
-    $this->setTrAttributes(function($row) {
-        $estado = $row->estado?->nombre ?? '';
-        $colorBorder = ($estado === 'Autorizado') ? 'border-green-500' : 'border-blue-500';
-        
+
+    $this->setTdAttributes(function(Column $column){
         return [
-            'class' => "bg-white shadow-sm hover:shadow-md transition-all duration-200 rounded-lg border-l-4 $colorBorder"
+            'class' => match($column->getTitle()){
+                'Estado' => 'text-center align-middle',
+                'Acción' => 'text-center align-middle',
+                default => 'text-left align-middle'
+            }
         ];
     });
 
-    $this->setTdAttributes(fn() => ['class' => 'py-4 px-4 align-middle']);
+    // Filas con borde lateral dinámico
+    $this->setTrAttributes(function($row, $index){
+        return [
+            'style' => $index % 2 === 0
+            ? 'background-color: #FFFFFF'
+            : 'background-color: #F3F4F6'
+        ];
+    });
+
     }
 
     
@@ -120,13 +129,15 @@ class AutorizacionesTable extends DataTableComponent
                 </div>
             ")->html(),
 
+       
+
         
             Column::make("Estado", "estado.nombre")
     ->format(function($value) {
-        // Mapeo de colores hexadecimales
+        
         $color = match (trim($value)) {
             'Pendiente'        => '#FACC15',
-            'Visita asignada'  => '#EAB308',
+            'Visita asignada'  => '#D97706',
             'Visita realizada' => '#8B5CF6',
             'Por autorizar'    => '#3B82F6',
             'Por emitir'       => '#06B6D4',

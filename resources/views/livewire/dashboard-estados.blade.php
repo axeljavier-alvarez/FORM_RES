@@ -20,7 +20,7 @@
    @php
        $color = match($estado->nombre){
                 'Pendiente'        => '#FACC15',
-                'Visita asignada'  => '#EAB308',
+                'Visita asignada'  => '#D97706',
                 'Visita realizada' => '#8B5CF6',
                 'Por autorizar'    => '#3B82F6',
                 'Por emitir'    => '#06B6D4',
