@@ -207,7 +207,8 @@ class AnalisisDocumentosTable extends DataTableComponent
             'detalles.dependiente',
             'requisitosTramites.requisito',
             'requisitosTramites.tramite',
-            'requisitosTramites.detalles'
+            'requisitosTramites.detalles',
+            'bitacoras.user'
         ])->find($id);
 
 
@@ -264,6 +265,13 @@ class AnalisisDocumentosTable extends DataTableComponent
                 'dependientes' => $dependientes->toArray()
             ];
 
+
+            // poder ver la bitacora
+
+            $solicitud->bitacoras->each(function ($item) {
+                $item->fecha_formateada = Carbon::parse($item->created_at)
+                    ->translatedFormat('d F Y H:i');
+            });
 
             $solicitud->documentos = $arrayFinal;
 
