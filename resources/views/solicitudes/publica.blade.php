@@ -27,13 +27,13 @@
         @livewireStyles
 </head>
 
-<body>
+<body class="bg-[#F8FAFC]">
 <div class="px-4 md:px-8">
 <div class="max-w-6xl mx-auto mt-16 mb-6 text-center">
         
 
 
-        <!-- titulo -->
+        {{-- <!-- titulo -->
         <div class="flex flex-col items-center gap-3">
                 <div class="block md:hidden w-full h-1 bg-[#83BD3F]"> </div>
 
@@ -67,7 +67,7 @@
 
        
 
-     
+      --}}
 
 
 
