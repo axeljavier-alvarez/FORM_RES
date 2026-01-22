@@ -13,7 +13,7 @@
    <!-- modal para ver acciones -->
 
     <div x-data="{ 
-    open: true, 
+    open: false, 
     solicitud: {} 
     }" 
 
@@ -31,14 +31,14 @@
     x-transition:enter="ease-out duration-300"
     x-transition:enter-start="opacity-0"
     x-transition:enter-end="opacity-100"
-    class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity z-50"
-    @click="open = true">
+    class="fixed inset-0 bg-gray-900/35 backdrop-blur-sm transition-opacity z-50"
+    @click="open = false">
     </div>          
 
-      <div x-show="open" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
+        <div x-show="open" 
+        class="fixed inset-0 z-50 overflow-y-auto">
 
-
-        <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" 
+        <div class="fixed inset-0 bg-gray-900/35 backdrop-blur-sm transition-opacity" 
          @click="open = false">
     </div>
 
@@ -75,6 +75,7 @@
 
                 <div class="p-6">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- recuadro izquierdo -->
                         <div class="space-y-6">
                             <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
                             <span class="text-blue-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></span>
@@ -107,8 +108,108 @@
 
                                 </div>
                             </div>
+
+                            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl border border-blue-100">
+                                <span class="text-xs font-bold text-blue-700 uppercase">Tipo de Trámite</span>
+                                <span class="px-3 py-1 bg-blue-600 text-white text-[10px] font-black rounded-full shadow-sm uppercase" x-text="solicitud.requisitos_tramites?.[0]?.tramite?.nombre || 'General'"></span>
+                            </div>
                         </div>
+
+                        <!-- recuadro derecho -->
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
+                            <span class="text-green-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
+                                <h4 class="font-bold text-gray-800 uppercase text-xs tracking-widest">
+                                    Historial de Movimientos
+                                </h4>                                
+                            </div>
+
+                            <div class="max-h-[300px] overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+                                <template x-if="solicitud.bitacoras && solicitud.bitacoras.length > 0">
+                                    <template x-for="item in solicitud.bitacoras" :key="item.id">
+                                        
+                                        <div class="relative pl-4 border-l-2 border-blue-200 py-1">
+                                            <div class="absolute -left-[9px] top-2 w-4 h-4 rounded-full bg-blue-500 border-2 border-white">
+                                            </div>
+
+                                            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                                                <div class="flex justify-between items-start mb-1">
+                                                    <span class="text-xs font-bold text-gray-900 uppercase" x-text="item.evento"></span>
+                                                    <span class="text-[10px] text-gray-400 font-medium"  x-text="item.fecha_formateada"></span>
+                                                </div>
+
+                                                <p class="text-xs text-gray-600 italic" x-text="item.descripcion"></p>
+                                                <p class="text-[10px] mt-2 font-bold text-blue-500 uppercase tracking-tighter" x-text="'Por: ' + (item.user?.name || 'Sistema')"></p>
+                                            </div>
+
+                                        </div>
+                                    </template>
+                                </template>
+
+
+                            </template>   
+                            <template x-if="!solicitud.bitacoras || solicitud.bitacoras.length === 0">
+                                <div class="text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                                    <p class="text-xs font-bold text-gray-400">Sin movimientos registrados</p>
+                                </div>
+                            </template>
+                            </div>
+
+
+                             <!-- Recuadro dependientes -->
+
+
+                                <div class="bg-gray-900 rounded-2xl p-4 shadow-inner">
+                                        <h4 class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Personas Dependientes</h4>
+                                        
+                                        <div class="flex flex-wrap gap-2">
+                                            <template x-if="solicitud.documentos && solicitud.documentos.find(d => d.tipo === 'carga')">
+                                                
+                                                <div class="flex flex-wrap gap-2">
+                                                    <template x-for="dep in solicitud.documentos.find(d => d.tipo === 'carga').dependientes" :key="dep.id">
+                                                        <span
+                                                            @click="documentoActual = dep; openDocumento = true;"
+                                                            class="inline-flex items-center px-3 py-1 rounded-lg bg-gray-800 text-gray-200 hover:text-green-400 text-xs border border-gray-700 cursor-pointer transition-colors duration-200">
+                                                            <span x-text="dep.nombre"></span>
+                                                        </span>
+                                                    </template>
+
+                                                    <template x-if="solicitud.documentos.find(d => d.tipo === 'carga').dependientes.length === 0">
+                                                        <span class="text-xs text-orange-400/80 italic flex items-center">
+                                                            <i class="fas fa-info-circle mr-1.5"></i> El usuario no ingresó dependientes
+                                                        </span>
+                                                    </template>
+                                                </div>
+                                                
+                                            </template>
+                                        </div>
+                                    </div>
+                                                                
+                           
+
+
+                        </div>
+
+
+                       
+
                     </div>
+
+
+
+                    <div class="mt-10 flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-100">
+                    
+                    
+                    <button type="button" 
+                            @click="open = false"
+                            class="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-green-600 px-10 py-3 text-sm font-bold text-white shadow-lg shadow-green-200 hover:bg-green-700 hover:shadow-green-300 transition-all transform active:scale-95">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Aceptar
+                    </button>
+                </div>
+
+
+
                 </div>
 
 
