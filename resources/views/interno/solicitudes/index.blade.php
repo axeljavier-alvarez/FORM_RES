@@ -161,32 +161,30 @@
                              <!-- Recuadro dependientes -->
 
 
-                                <div class="bg-gray-900 rounded-2xl p-4 shadow-inner">
-                                        <h4 class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Personas Dependientes</h4>
-                                        
-                                        <div class="flex flex-wrap gap-2">
-                                            <template x-if="solicitud.documentos && solicitud.documentos.find(d => d.tipo === 'carga')">
-                                                
-                                                <div class="flex flex-wrap gap-2">
-                                                    <template x-for="dep in solicitud.documentos.find(d => d.tipo === 'carga').dependientes" :key="dep.id">
-                                                        <span
-                                                            @click="documentoActual = dep; openDocumento = true;"
-                                                            class="inline-flex items-center px-3 py-1 rounded-lg bg-gray-800 text-gray-200 hover:text-green-400 text-xs border border-gray-700 cursor-pointer transition-colors duration-200">
-                                                            <span x-text="dep.nombre"></span>
-                                                        </span>
-                                                    </template>
-
-                                                    <template x-if="solicitud.documentos.find(d => d.tipo === 'carga').dependientes.length === 0">
-                                                        <span class="text-xs text-orange-400/80 italic flex items-center">
-                                                            <i class="fas fa-info-circle mr-1.5"></i> El usuario no ingresó dependientes
-                                                        </span>
-                                                    </template>
-                                                </div>
-                                                
+                            <div class="bg-gray-900 rounded-2xl p-4 shadow-2xl border border-gray-800">
+                            <h4 class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span>
+                                Personas Dependientes
+                            </h4>
+                            <div class="flex flex-wrap gap-2">
+                                <template x-if="solicitud.documentos && solicitud.documentos.find(d => d.tipo === 'carga')">
+                                    <div class="flex flex-wrap gap-2">
+                                        <template x-for="dep in solicitud.documentos.find(d => d.tipo === 'carga').dependientes" :key="dep.id">
+                                            <button @click="documentoActual = dep; openDocumento = true;"
+                                                class="inline-flex items-center px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 hover:text-green-400 text-xs border border-gray-700 hover:border-green-500/40 transition-all cursor-pointer">
+                                                <span x-text="dep.nombre"></span>
+                                                </button>
+                                            </template>
+                                            <template x-if="solicitud.documentos.find(d => d.tipo === 'carga').dependientes.length === 0">
+                                                <span class="text-[11px] text-orange-400/80 italic flex items-center gap-1.5">
+                                                    <i class="fas fa-info-circle"></i> No se ingresaron dependientes
+                                                </span>
                                             </template>
                                         </div>
-                                    </div>
-                                                                
+                                    </template>
+                                </div>
+                            </div>
+                                                                    
                            
 
 
