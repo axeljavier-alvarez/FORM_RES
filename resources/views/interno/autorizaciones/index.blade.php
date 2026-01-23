@@ -43,25 +43,25 @@
 
 
 
-<div x-show="open" 
-     x-transition:enter="ease-out duration-300" 
-     x-transition:enter-start="opacity-0" 
-     x-transition:enter-end="opacity-100" 
-     class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity z-50" 
+<div x-show="open"
+     x-transition:enter="ease-out duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity z-50"
      @click="open = false">
 </div>
 
-<div x-show="open" 
+<div x-show="open"
      class="fixed inset-0 z-50 overflow-y-auto">
     <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-        
+
         <div x-show="open"
              x-cloak
              x-transition:enter="ease-out duration-300"
              x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
              x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
              class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl">
-            
+
             <div class="bg-gradient-to-r from-blue-600 to-blue-500 px-6 py-4 flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="bg-white/20 p-2 rounded-lg">
@@ -84,7 +84,7 @@
 
             <div class="p-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    
+
                     <div class="space-y-6">
                         <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
                             <span class="text-blue-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></span>
@@ -176,12 +176,12 @@
                 </div>
 
                 <div class="mt-10 flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-100">
-                    <button type="button" 
+                    <button type="button"
                             class="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-8 py-3 text-sm font-bold text-red-600 border-2 border-red-100 hover:bg-red-50 hover:border-red-200 transition-all shadow-sm">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         No autorizar
                     </button>
-                    
+
                      <button
                         type="button"
                         @click="openPorEmitir = true"
@@ -201,20 +201,20 @@
 
 
    <!-- MODAL DE COMPLETAR LA SOLICITUD -->
-   <div x-show="openPorEmitir" 
-     x-cloak 
+   <div x-show="openPorEmitir"
+     x-cloak
      class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-    
-    <div class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm" 
+
+    <div class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm"
          @click="openPorEmitir = false">
     </div>
 
-    <div x-show="openPorEmitir" 
+    <div x-show="openPorEmitir"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 scale-95"
          x-transition:enter-end="opacity-100 scale-100"
          class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-0 relative overflow-hidden">
-        
+
         <div class="h-2 w-full" style="background-color:#06B6D4;"></div>
 
         <div class="p-6">
@@ -235,7 +235,7 @@
                     </div>
                 </div>
 
-                <button @click="openPorEmitir = false" 
+                <button @click="openPorEmitir = false"
                         class="text-gray-400 hover:text-gray-600 transition-colors p-1">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -277,8 +277,8 @@
         </div>
     </div>
 </div>
-   
 
-   
+
+
    </div>
 </x-interno-layout>

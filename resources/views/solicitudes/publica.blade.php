@@ -3,7 +3,7 @@
 <head>
         <meta charset="utf-8">
         <title>Consulta de solicitud</title>
-        
+
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -29,8 +29,8 @@
 
 <body class="bg-[#F8FAFC]">
 <div class="px-4 md:px-8">
-<div class="max-w-6xl mx-auto mt-16 mb-6 text-center">
-        
+<div class="max-w-6xl mx-auto text-center">
+
 
 
         {{-- <!-- titulo -->
@@ -41,21 +41,21 @@
                         <div class="flex items-center w-full">
                                 <div class="hidden md:block flex-grow h-1 bg-[#83BD3F]"> </div>
                                 <h1 class="
-                                tracking-widest 
-                                text-2xl md:text-3xl 
-                                text-[#030EA7] 
-                                text-center 
+                                tracking-widest
+                                text-2xl md:text-3xl
+                                text-[#030EA7]
+                                text-center
                                 mx-auto
                                 px-16
                                 whitespace-normal md:whitespace-nowrap">
-                                        CONSTANCIA DE RESIDENCIA 
+                                        CONSTANCIA DE RESIDENCIA
                                 </h1>
 
                                 <div class="hidden md:block flex-grow h-1 bg-[#83BD3F]"></div>
 
                         </div>
 
-                </div> 
+                </div>
 
                     <div class="block md:hidden w-full h-1 bg-[#83BD3F]"></div>
 
@@ -65,18 +65,18 @@
                             Acá podrá verificar el estado de la solicitud de residencia que solicitó.
         </p>
 
-       
+
 
       --}}
 
 
 
 
-        
+
         </div>
 </div>
-        
-        
+
+
 
                 <livewire:consultar-solicitud />
 

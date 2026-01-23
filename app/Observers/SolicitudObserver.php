@@ -39,16 +39,18 @@ class SolicitudObserver
             $nuevoEstado = Estado::find($solicitud->estado_id);
             $nombreEstadoNuevo  = $nuevoEstado?->nombre ?? 'DESCONOCIDO';
 
-            
+
 
             $comentario = $solicitud->observacion_bitacora;
-            
+
             $descripcion = $comentario ?: match (true) {
 
             // SOLICITUD DESPUES DE PASAR POR VISITA DE CAMPO, CASO ESPECIAL
             $nombreEstadoNuevo === 'Por autorizar'
             && $nombreEstadoAnterior === 'Visita realizada'
             => 'La visita de campo fue aceptada y ahora ya está autorizado y se puede emitir',
+
+            
 
                 $nombreEstadoNuevo === 'Cancelado' => 'La solicitud se canceló.',
                 $nombreEstadoNuevo === 'Por autorizar' => 'La solicitud está pendiente de autorizar',
@@ -65,7 +67,7 @@ class SolicitudObserver
                 'evento' => 'CAMBIO DE ESTADO: ' . $nombreEstadoNuevo,
                 'descripcion' => $descripcion
             ]);
-        
+
     }
 
     /**

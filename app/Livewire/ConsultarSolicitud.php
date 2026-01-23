@@ -9,7 +9,7 @@ use App\Models\Estado;
 
 class ConsultarSolicitud extends Component
 {
-    
+
 
     public $cui;
 
@@ -38,13 +38,13 @@ class ConsultarSolicitud extends Component
                     $this->error = 'Debe completar ambos campos para poder consultar su solicitud.';
                     return;
         }
-        // validar campos 
+        // validar campos
         $this->validate([
             'cui' => 'required',
             'no_solicitud' => 'required'
         ]);
 
-        // solicitud con estado 
+        // solicitud con estado
         $this->solicitud = Solicitud::with
         ([
             'estado',
@@ -66,8 +66,19 @@ class ConsultarSolicitud extends Component
 
     public function limpiar()
     {
-        $this->reset();
+        $this->cui = null;
+        $this->no_solicitud = null;
+        $this->error = null;
+        $this->solicitud = null;
     }
+
+
+    public function limpiarSolicitud()
+{
+    $this->solicitud = null;
+}
+
+
 
     public function render()
     {

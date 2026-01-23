@@ -1,95 +1,80 @@
-<div class="px-4 md:px-8">
-<div class="max-w-2xl mx-auto bg-[#C0C0C0] rounded-xl px-6 md:px-10 py-8">
+<div
+    x-data="{
+        openModal: false
+    }"
+    x-effect="
+        if (@js($solicitud)) {
+            openModal = true
+        }
+    "
+    class="px-4 py-12 -mt-5 bg-slate-50 min-h-screen"
+>
 
-        {{-- CONTENEDOR SUPERIOR --}}
-        <div class="bg-white border border-b-0 p-8 rounded-t-xl">
+    {{-- CONTENEDOR PRINCIPAL --}}
+    <div class="max-w-3xl mx-auto p-4 md:p-8">
 
-            {{-- TÍTULO --}}
-            <h2
-                class="text-center text-2xl font-bold mt-6 mb-2"
-                style="color: #03192B"
-            >
-                Ver estado de mi constancia
-            </h2>
+        {{-- FORMULARIO --}}
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+            <div class="p-8 md:p-10">
 
-             <p class="mb-5 text-red-600 text-center text-sm mt-1 bg-yellow-100 p-2 rounded">
+                {{-- TÍTULO --}}
+                <h1 class="tracking-widest text-2xl md:text-3xl text-[#030EA7] text-center mb-4">
+                    VER ESTADO DE MI CONSTANCIA
+                </h1>
+
+                {{-- ALERTA --}}
+                <p class="mb-8 text-red-600 text-center text-sm bg-yellow-100 p-2 rounded">
                     Debe ingresar los datos que colocó en su solicitud
-            </p>
-
-            {{-- ICONO --}}
-            <img
-                src="{{ asset('imagenes/icono_muni.png') }}"
-                alt="Icono"
-                class="w-20 md:w-32 mx-auto block"
-            >
-
-            {{-- INPUT DPI / CUI --}}
-            <div class="max-w-xl mx-auto mt-10">
-
-
-                <label class="block font-bold text-center text-green-600">
-                    Número de DPI/CUI
-                </label>
-                <input
-                    type="text"
-                    wire:model.defer="cui"
-                    placeholder="Ingrese su número de DPI/CUI"
-                    class="w-full bg-transparent
-                        border-0 border-b-2 border-[#757575]
-                        hover:border-[#030EA7]
-                        focus:border-[#030EA7]
-                        text-center text-[#757575]
-                        px-1 py-2
-                        focus:outline-none focus:ring-0
-                        transition-colors duration-300"
-                >
-                
-            </div>
-
-            {{-- INPUT NÚMERO DE SOLICITUD --}}
-            <div class="max-w-xl mx-auto mt-10">
-
-                <label class="block text-center font-bold text-green-600">
-                    Número de solicitud
-                </label>
-
-                <input
-                    type="text"
-                    wire:model.defer="no_solicitud"
-                    placeholder="Ingrese su número de solicitud"
-                    class="w-full bg-transparent
-                        border-0 border-b-2 border-[#757575]
-                        hover:border-[#030EA7]
-                        focus:border-[#030EA7]
-                        text-center text-[#757575]
-                        px-1 py-2
-                        focus:outline-none focus:ring-0
-                        transition-colors duration-300"
-                >
-            </div>
-
-            {{-- ERROR --}}
-            @if ($error)
-                <p class="mt-6 text-center text-red-600 font-semibold">
-                    {{ $error }}
                 </p>
-            @endif
 
-            {{-- BOTONES --}}
-            <div class="max-w-xl mx-auto mt-10">
-                <div class="flex flex-col md:flex-row gap-4">
+                {{-- ICONO --}}
+                <img
+                    src="{{ asset('imagenes/icono_muni.png') }}"
+                    alt="Icono"
+                    class="w-24 md:w-32 mx-auto block mb-10 drop-shadow-md"
+                >
 
+                {{-- INPUTS --}}
+                <div class="max-w-xl mx-auto space-y-8">
+
+                    <div>
+                        <label class="block font-bold text-center text-green-600">
+                            Número de DPI/CUI
+                        </label>
+                        <input
+                            type="text"
+                            wire:model.defer="cui"
+                            placeholder="Ingrese su número de DPI/CUI"
+                            class="w-full bg-slate-50 border-b-2 border-slate-200 px-1 py-3 text-center text-slate-700 font-bold focus:border-[#030EA7] focus:bg-white transition-all outline-none"
+                        >
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-center text-green-600">
+                            Número de solicitud
+                        </label>
+                        <input
+                            type="text"
+                            wire:model.defer="no_solicitud"
+                            placeholder="Ingrese su número de solicitud"
+                            class="w-full bg-slate-50 border-b-2 border-slate-200 px-1 py-3 text-center text-slate-700 font-bold focus:border-[#030EA7] focus:bg-white transition-all outline-none"
+                        >
+                    </div>
+
+                </div>
+
+                {{-- ERROR --}}
+                @if ($error)
+                    <p class="mt-8 text-center text-red-600 font-black text-sm bg-red-50 p-3 rounded-xl border border-red-100 uppercase">
+                        {{ $error }}
+                    </p>
+                @endif
+
+                {{-- BOTONES --}}
+                <div class="max-w-xl mx-auto mt-12 flex flex-col md:flex-row gap-4">
                     <button
                         wire:click="consultar"
-                        class="w-full md:w-1/2
-                            bg-[#03192B]
-                            hover:bg-[#03192B]/90
-                            active:bg-[#03192B]/80
-                            transition
-                            rounded-lg
-                            py-3
-                            text-white text-xl font-bold
-                            focus:outline-none focus:ring-0"
+                        class="w-full md:w-1/2 bg-[#03192B] hover:bg-[#03192B]/90 text-white font-black py-4 rounded-xl shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm"
                     >
                         Consultar
                     </button>
@@ -97,131 +82,113 @@
                     <button
                         wire:click="limpiar"
                         type="button"
-                        class="w-full md:w-1/2
-                            bg-[#757575]
-                            hover:bg-[#757575]/90
-                            active:bg-[#757575]/80
-                            transition
-                            rounded-lg
-                            py-3
-                            text-white text-xl font-bold
-                            focus:outline-none focus:ring-0"
+                        class="w-full md:w-1/2 bg-[#F1F5F9] hover:bg-[#757575]/90 text-black font-black py-4 rounded-xl transition-all active:scale-95 uppercase tracking-widest text-sm"
                     >
                         Limpiar
                     </button>
-
                 </div>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- MODAL --}}
+    <div
+        x-show="openModal"
+        x-cloak
+        class="fixed inset-0 z-50 flex items-center justify-center px-4"
+    >
+
+        {{-- OVERLAY --}}
+        <div
+            class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+           @click="
+                openModal = false;
+                $wire.limpiarSolicitud();
+            "
+        ></div>
+
+        {{-- CONTENIDO --}}
+        <div class="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden">
+
+            {{-- HEADER --}}
+            <div class="flex justify-between items-center px-6 py-4 border-b">
+                <h3 class="font-black text-[#03192B] uppercase tracking-widest text-sm">
+                    Resultado de la consulta
+                </h3>
+                <button
+                    @click="
+                        openModal = false;
+                        $wire.limpiarSolicitud();
+                    "
+                    class="text-slate-400 hover:text-black text-xl font-black"
+                >
+                    ×
+                </button>
             </div>
 
-        </div>
+            {{-- BODY --}}
+            @if ($solicitud)
+                <div class="p-6 space-y-6">
 
-        {{-- RESULTADO --}}
-        @if ($solicitud)
-            @php
-                $tramite = $solicitud->requisitosTramites->first()?->tramite;
-            @endphp
+                    {{-- ESTADO ACTUAL --}}
+                    <div class="bg-white rounded-2xl shadow border border-slate-100">
+                        <h3 class="text-center text-sm font-black bg-[#83BD3F] text-white py-4 uppercase tracking-[0.2em]">
+                            Estado actual de su constancia
+                        </h3>
 
-            <div class="bg-white p-8">
+                        <div class="p-6 space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-xs font-black text-slate-400 uppercase">Solicitante</span>
+                                <span class="font-bold uppercase">
+                                    {{ $solicitud->nombres }} {{ $solicitud->apellidos }}
+                                </span>
+                            </div>
 
-                <h3
-                    class="text-center text-xl md:text-2xl font-bold
-                    bg-[#83BD3F] text-white
-                    py-3 rounded-t-lg"
-                >
-                    Estado actual de su constancia
-                </h3>
-
-                <div class="border border-t-0 rounded-b-lg p-6">
-
-                    @if ($tramite)
-                        <div class="flex flex-col sm:flex-row justify-between text-sm md:text-base">
-                            <span class="text-gray-700 font-semibold ">Trámite:</span>
-                            <span class="text-[#03192B] uppercase text-left md:text-right">
-                                {{ strtoupper($tramite->nombre) }}
-                            </span>
+                            <div class="flex justify-between">
+                                <span class="text-xs font-black text-slate-400 uppercase">Estado</span>
+                                <span class="font-black uppercase text-blue-600">
+                                    {{ $solicitud->estado->nombre }}
+                                </span>
+                            </div>
                         </div>
-                        <hr class="my-3 border-gray-300">
-                    @endif
-
-                    <div class="flex flex-col sm:flex-row justify-between text-sm md:text-base">
-                        <span class="text-gray-700 font-semibold">Fecha de creación:</span>
-                        <span class="text-[#03192B] uppercase">
-                            {{ $solicitud->created_at->translatedFormat('d \\d\\e F \\d\\e Y \\a \\l\\a\\s H:i') }}
-                        </span>
                     </div>
 
-                    <hr class="my-3 border-gray-300">
+                    {{-- PROCESO --}}
+                    <div class="bg-slate-900 rounded-2xl shadow-2xl p-8 text-white">
+                        <h3 class="text-center text-[10px] font-black uppercase tracking-[0.3em] mb-10 text-slate-500">
+                            Progreso del proceso
+                        </h3>
 
-                    <div class="flex flex-col sm:flex-row justify-between text-sm md:text-base">
-                        <span class="text-gray-700 font-semibold">Nombres completos:</span>
-                        <span class="text-[#03192B] uppercase">
-                            {{ $solicitud->nombres }} {{ $solicitud->apellidos }}
-                        </span>
+                        <div class="flex flex-col md:flex-row justify-between gap-8">
+                            @foreach($estados as $index => $estado)
+                                @php
+                                    $completado = $estado->id <= $solicitud->estado_id;
+                                @endphp
+
+                                <div class="flex flex-col items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center
+                                        {{ $completado ? 'bg-[#83BD3F]' : 'bg-slate-700' }}">
+                                        @if($completado)
+                                            ✓
+                                        @else
+                                            {{ $index + 1 }}
+                                        @endif
+                                    </div>
+
+                                    <span class="text-[10px] font-black uppercase text-center
+                                        {{ $completado ? 'text-white' : 'text-slate-500' }}">
+                                        {{ $estado->nombre }}
+                                    </span>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
 
-                    <hr class="my-3 border-gray-300">
-
-                    <div class="flex flex-col sm:flex-row justify-between text-sm md:text-base">
-                        <span class="text-gray-700 font-semibold">Documento personal de identificación:</span>
-                        <span class="text-[#03192B] uppercase">
-                            {{ $solicitud->cui }}
-                        </span>
-                    </div>
-
-                    <hr class="my-3 border-gray-300">
-
-                    <div class="flex flex-col sm:flex-row justify-between text-sm md:text-base">
-                        <span class="text-gray-700 font-semibold">Estado actual:</span>
-                        <span class="text-[#03192B] uppercase">
-                            {{ $solicitud->estado->nombre }}
-                        </span>
-                    </div>
                 </div>
+            @endif
+
         </div>
-
-
-
-               <div class="bg-white p-8">
-
-    <h3
-        class="text-center text-xl md:text-2xl font-bold
-        bg-[#070F9E] text-white
-        py-3 rounded-t-lg"
-    >
-        Estado de su proceso
-    </h3>
-
-    <div class="border border-t-0 rounded-b-lg p-6">
-
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 text-center">
-            @foreach($estados as $estado)
-
-                @php
-                    $completado = $estado->id <= $solicitud->estado_id;
-                @endphp
-
-                <div class="flex flex-col items-center gap-2">
-                    <div class="text-3xl">
-                        @if($completado)
-                            <i class="fas fa-check-circle text-green-400"></i>
-                        @else
-                            <i class="fas fa-times-circle text-red-400"></i>
-                        @endif
-                    </div>
-
-                    <span class="text-sm font-semibold uppercase">
-                        {{ $estado->nombre }}
-                    </span>
-                </div>
-
-            @endforeach
-        </div>
-
     </div>
-</div>
 
-
-        @endif
-
-    </div>
 </div>

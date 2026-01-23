@@ -28,7 +28,7 @@
 @livewire('visita-campo-table')
 <div
     x-data="{
-       
+
         openPreview: false,
         imgSource: '',
         imagenActiva:null,
@@ -131,8 +131,8 @@
 >
 
 
-     
-  
+
+
 <!-- MODAL PARA ABRIR FOTO EN GRANDE -->
     <div
     x-show="openPreview"
@@ -231,229 +231,691 @@
 
 
 <!-- ABRIR MODAL PARA VISITA-->
-<div x-show="open" x-cloak class="fixed inset-0 z-50 overflow-y-auto">
-    <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-md transition-opacity" @click="open = false"></div>
+<div x-show="open" x-cloak class="fixed inset-0 z-50
+overflow-y-auto">
 
-    <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-        <div x-show="open" 
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-             class="relative transform overflow-hidden rounded-3xl bg-slate-50 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl p-0 border border-white">
-            
-            <div class="bg-gradient-to-r from-white via-blue-50/30 to-white px-8 py-6 border-b border-blue-100 flex items-center justify-between sticky top-0 z-30">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-black text-slate-800 leading-tight">
-                            Solicitud <span class="text-blue-600">#<span x-text="solicitud.no_solicitud"></span></span>
-                        </h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200 uppercase tracking-wider">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5 animate-pulse"></span>
-                                <span x-text="solicitud.estado?.nombre || 'Estado pendiente'"></span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
 
-                <button @click="open = false" class="group p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                    <svg class="w-6 h-6 transform group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
+<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+@click="open = false">
+</div>
 
-            <div class="bg-white/60 py-8 border-b border-blue-50">
-                <div class="flex items-center justify-center max-w-md mx-auto relative">
-                    <div class="flex flex-col items-center z-10">
-                        <button @click="step = 1" 
-                            :class="step >= 1 ? 'bg-blue-600 text-white shadow-blue-200 ring-4 ring-blue-50' : 'bg-slate-200 text-slate-500'" 
-                            class="w-11 h-11 rounded-2xl font-black transition-all shadow-xl flex items-center justify-center text-lg">1</button>
-                        <span class="mt-3 text-[11px] font-black uppercase tracking-widest" :class="step >= 1 ? 'text-blue-600' : 'text-slate-400'">Datos</span>
-                    </div>
-                    <div class="w-24 h-1.5 -mt-7 mx-1 rounded-full transition-colors overflow-hidden bg-slate-100">
-                        <div class="h-full transition-all duration-500" :class="step > 1 ? 'w-full bg-blue-500' : 'w-0 bg-transparent'"></div>
-                    </div>
-                    <div class="flex flex-col items-center z-10">
-                        <button @click="step = 2" 
-                            :class="step >= 2 ? 'bg-blue-600 text-white shadow-blue-200 ring-4 ring-blue-50' : 'bg-white text-slate-400 border-2 border-slate-100'" 
-                            class="w-11 h-11 rounded-2xl font-black transition-all shadow-lg flex items-center justify-center text-lg">2</button>
-                        <span class="mt-3 text-[11px] font-black uppercase tracking-widest" :class="step >= 2 ? 'text-blue-600' : 'text-slate-400'">Visita</span>
-                    </div>
-                    <div class="w-24 h-1.5 -mt-7 mx-1 rounded-full transition-colors overflow-hidden bg-slate-100">
-                        <div class="h-full transition-all duration-500" :class="step > 2 ? 'w-full bg-blue-500' : 'w-0 bg-transparent'"></div>
-                    </div>
-                    <div class="flex flex-col items-center z-10">
-                        <button @click="step = 3" 
-                            :class="step >= 3 ? 'bg-blue-600 text-white shadow-blue-200 ring-4 ring-blue-50' : 'bg-white text-slate-400 border-2 border-slate-100'" 
-                            class="w-11 h-11 rounded-2xl font-black transition-all shadow-lg flex items-center justify-center text-lg">3</button>
-                        <span class="mt-3 text-[11px] font-black uppercase tracking-widest" :class="step >= 3 ? 'text-blue-600' : 'text-slate-400'">Historial</span>
-                    </div>
-                </div>
-            </div>
+<div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+   <div x-show="open"
+                x-cloak
+                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl p-6">
+   <div class="bg-blue-200 text-gray-900 shadow-inner flex items-center justify-between relative
+   -mx-6 -mt-6 mb-6 px-6 py-4 border-b">
 
-            <div class="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar bg-white/40">
-                
-                <div x-show="step === 1" x-transition class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gradient-to-br from-slate-50 to-blue-50/30 rounded-[2rem] p-8 border border-blue-100/50 shadow-inner">
-                        <div class="space-y-6">
-                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-blue-50">
-                                <label class="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] block mb-1">Nombre Completo</label>
-                                <p class="text-lg font-bold text-slate-800" x-text="solicitud.nombres + ' ' + (solicitud.apellidos || '')"></p>
-                            </div>
-                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-blue-50">
-                                <label class="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] block mb-1">DPI / CUI</label>
-                                <p class="font-bold text-slate-700" x-text="solicitud.cui"></p>
-                            </div>
-                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-blue-50">
-                                <label class="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] block mb-1">Email de contacto</label>
-                                <p class="font-bold text-blue-600 underline decoration-blue-200" x-text="solicitud.email"></p>
-                            </div>
-                        </div>
-                        <div class="space-y-6">
-                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-blue-50">
-                                <label class="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] block mb-1">Dirección Exacta</label>
-                                <p class="font-bold text-slate-700" x-text="solicitud.domicilio"></p>
-                            </div>
-                            <div class="flex gap-4">
-                                <div class="flex-1 bg-white p-4 rounded-2xl shadow-sm border border-blue-50">
-                                    <label class="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] block mb-1">Zona</label>
-                                    <span class="px-3 py-1 bg-blue-600 text-white rounded-lg text-xs font-black shadow-md shadow-blue-100" x-text="solicitud.zona?.nombre"></span>
-                                </div>
-                                <div class="flex-1 bg-white p-4 rounded-2xl shadow-sm border border-blue-50">
-                                    <label class="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] block mb-1">Trámite</label>
-                                    <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-lg text-[10px] font-black border border-amber-200 uppercase" x-text="solicitud.requisitos_tramites?.[0]?.tramite?.nombre || 'General'"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+   <h3 class="text-2xl font-bold" id="modal-title">
+               Solicitud No. <span x-text="solicitud.no_solicitud"></span>
+   </h3>
 
-                <div x-show="step === 2" x-transition class="space-y-6">
-                    <template x-if="solicitud.estado?.nombre === 'Visita asignada'">
-                        <div class="space-y-6">
-                            <div class="bg-white border-2 border-dashed border-blue-100 rounded-[2rem] p-8 shadow-sm">
-                                <label class="flex items-center gap-3 font-black text-slate-800 mb-4 uppercase text-xs tracking-[0.2em]">
-                                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                                    </div>
-                                    Observaciones de Campo
-                                </label>
-                                <textarea id="editor" rows="4" 
-                                    class="w-full bg-slate-50 rounded-2xl border-0 p-5 text-sm focus:ring-2 focus:ring-blue-500 transition-all shadow-inner placeholder:text-slate-400" 
-                                    placeholder="Escriba aquí los hallazgos detallados de la visita..."></textarea>
-                            </div>
+   <button @click="open = false"
+                            type="button"
+                            class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200 focus:outline-none"
+                            aria-label="Cerrar modal">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+   </button>
 
-                            <div class="bg-blue-50/50 rounded-[2rem] p-8 border border-blue-100 text-center">
-                                <div x-show="mostrarInput" class="mb-6">
-                                    <input type="file" accept=".jpg,.jpeg,.png,.webp" class="hidden" id="fileInput"
-                                           @change="if (!livewireId) return; const file = $event.target.files[0]; Livewire.find(livewireId).upload('fotos', file, ()=> { fotosSeleccionadas.push({ url: URL.createObjectURL(file) }); }); mostrarInput = false;">
-                                    <label for="fileInput" class="cursor-pointer inline-flex items-center gap-3 px-8 py-4 bg-blue-600 text-white rounded-2xl font-black shadow-xl shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" /></svg> SUBIR EVIDENCIA FOTOGRÁFICA
-                                    </label>
-                                </div>
-                                <button x-show="!mostrarInput" @click="mostrarInput = true" class="text-blue-600 font-black hover:text-blue-800 text-xs uppercase tracking-widest">+ Agregar otra fotografía</button>
+   </div>
 
-                                <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mt-8">
-                                    <template x-for="(foto, index) in fotosSeleccionadas" :key="index">
-                                        <div class="relative group aspect-square rounded-[1.5rem] overflow-hidden border-4 border-white shadow-lg">
-                                            <img :src="foto.url" class="w-full h-full object-cover">
-                                            <button @click="fotosSeleccionadas.splice(index, 1)" class="absolute top-3 right-3 p-2 bg-red-500 text-white rounded-xl opacity-0 group-hover:opacity-100 transition-all shadow-lg">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
-                                            </button>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
+   <!-- DATOS DEL STEP -->
 
-                    <template x-if="solicitud.estado?.nombre === 'Visita realizada'">
-                        <div class="space-y-8">
-                            <div class="bg-white rounded-[2rem] p-8 border border-blue-50 shadow-sm">
-                                <h4 class="font-black text-slate-800 uppercase text-xs tracking-[0.2em] mb-6 flex items-center gap-2">
-                                    <span class="w-2 h-6 bg-blue-600 rounded-full"></span>
-                                    Resultado Detallado de Inspección
-                                </h4>
-                                <div class="space-y-4">
-                                    <template x-for="bitacora in solicitud.bitacoras?.filter(b=> b.evento.includes('Visita realizada'))" :key="bitacora.id">
-                                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                                            <div x-html="bitacora.descripcion" class="text-sm text-slate-600 leading-relaxed italic"></div>
-                                            <div class="flex items-center justify-between mt-4">
-                                                <p class="text-[10px] text-blue-400 font-black uppercase tracking-widest" x-text="bitacora.fecha_formateada"></p>
-                                                <span class="text-[10px] bg-white px-2 py-1 rounded-md text-slate-400 font-bold border border-slate-100">REPORTE OFICIAL</span>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
-                                <template x-for="foto in solicitud.fotos" :key="foto.id">
-                                    <div class="group relative aspect-video rounded-[1.5rem] overflow-hidden cursor-zoom-in border-4 border-white shadow-md hover:shadow-2xl transition-all" 
-                                         @click="$dispatch('preview-foto', { url: '/storage/' + foto.ruta })">
-                                        <img :src="'/storage/' + foto.ruta" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </template>
-                </div>
+   <!-- STEPPER -->
+<div class="flex items-center justify-center mb-8">
 
-                <div x-show="step === 3" x-transition>
-                    <div class="relative pl-10 space-y-8 before:content-[''] before:absolute before:left-[15px] before:top-2 before:bottom-2 before:w-1 before:bg-gradient-to-b before:from-blue-200 before:to-transparent">
-                        <template x-for="item in solicitud.bitacoras" :key="item.id">
-                            <div class="relative group">
-                                <div class="absolute -left-[32px] top-1 w-6 h-6 rounded-full border-4 border-white shadow-md z-10 transition-transform group-hover:scale-125" 
-                                     :class="item.evento.includes('Aceptada') ? 'bg-green-500' : 'bg-blue-500'"></div>
-                                <div class="bg-white border border-blue-50 rounded-[1.5rem] p-5 shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-300">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <span class="px-3 py-1 bg-slate-50 text-blue-700 rounded-lg text-[11px] font-black uppercase tracking-tighter border border-blue-50" x-text="item.evento"></span>
-                                        <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded" x-text="item.fecha_formateada"></span>
-                                    </div>
-                                    <p class="text-sm text-slate-600 leading-relaxed" x-text="item.descripcion"></p>
-                                    <div class="flex items-center mt-4 pt-4 border-t border-slate-50">
-                                        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-xs font-black text-slate-600 mr-3 shadow-inner" x-text="item.user.name.charAt(0)"></div>
-                                        <span class="text-[11px] font-black text-slate-500 uppercase tracking-widest" x-text="item.user.name"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
+    <!-- Paso 1 -->
+    <div class="flex items-center">
+        <button
+            @click="step = 1"
+            class="w-10 h-10 rounded-full border-2 font-bold transition
+                   flex items-center justify-center"
+            :class="step >= 1
+               ? 'bg-[#FFAA0D] border-amber-500 text-white'
+               : 'border-gray-300 text-gray-400'"
+            >
+            1
+        </button>
 
-            <div class="px-8 py-6 bg-white border-t border-slate-100 flex items-center justify-between">
-                <button x-show="step > 1" @click="step--" class="flex items-center gap-2 px-6 py-3 text-sm font-black text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-2xl transition-all">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg> VOLVER
-                </button>
-                <div class="flex-1"></div>
-                
-                <button x-show="step < 3" @click="step++" class="group flex items-center gap-3 px-10 py-3 bg-slate-800 text-white text-sm font-black rounded-2xl hover:bg-slate-900 transition-all shadow-xl shadow-slate-200">
-                    SIGUIENTE <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-                </button>
-
-                <div class="flex gap-4">
-                    <button x-show="step === 3 && solicitud.estado?.nombre === 'Visita asignada'" @click="openVisitaAsignada = true" 
-                            class="px-10 py-3 bg-teal-500 text-white text-sm font-black rounded-2xl hover:bg-teal-600 shadow-xl shadow-teal-200 transition-all active:scale-95">
-                        ENVIAR VISITA DE CAMPO
-                    </button>
-
-                    <button x-show="step === 3 && solicitud.estado?.nombre === 'Visita realizada'" @click="openAceptar = true"
-                            class="px-10 py-3 bg-blue-600 text-white text-sm font-black rounded-2xl hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all active:scale-95">
-                        FINALIZAR Y ACEPTAR
-                    </button>
-                </div>
-            </div>
-        </div>
+        <div class="w-16 h-1"
+             :class="step > 1 ? 'bg-amber-500' : 'bg-gray-300'"></div>
     </div>
+
+    <!-- Paso 2 -->
+    <div class="flex items-center">
+        <button
+            @click="step = 2"
+            class="w-10 h-10 rounded-full border-2 font-bold transition
+                   flex items-center justify-center"
+            :class="step >= 2
+                ? 'bg-[#FFAA0D] border-amber-500 text-white'
+                : 'border-gray-300 text-gray-400'">
+            2
+        </button>
+
+        <div class="w-16 h-1"
+             :class="step > 2 ? 'bg-amber-500' : 'bg-gray-300'"></div>
+    </div>
+
+    <!-- Paso 3 -->
+    <button
+        @click="step = 3"
+        class="w-10 h-10 rounded-full border-2 font-bold transition
+               flex items-center justify-center"
+        :class="step >= 3
+            ? 'bg-[#FFAA0D] border-amber-500 text-white'
+            : 'border-gray-300 text-gray-400'">
+        3
+    </button>
+
 </div>
 
 
 
-   
+      <!-- 1. DATOS DE SOLICITUD -->
+
+      <div class="grid grid-cols-1 gap-6">
+
+         <div x-show="step === 1" x-transition>
+
+            <div class="bg-gray-50 border border-gray-200
+         rounded-xl p-5 shadow-sm">
+         <div class="flex items-center mb-3">
+            <span class="p-2 bg-blue-100 rounded-lg mr-2 text-blue-600">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            </span>
+            <h4 class="font-bold text-gray-800 uppercase text-sm tracking-wider">
+                    Datos generales del solicitante
+            </h4>
+         </div>
+
+         <div class="space-y-3 text-sm text-gray-600">
+             <p>
+                    <span class="font-semibold text-gray-900">
+                      Nombre Completo
+                    </span>
+
+                    <span x-text="solicitud.nombres + ' ' +
+                    (solicitud.apellidos || '')">
+
+                    </span>
+            </p>
+
+            <p>
+                    <span class="font-semibold text-gray-900">
+                                    Email:
+                    </span>
+
+                    <span x-text="solicitud.email">
+
+                    </span>
+
+            </p>
+
+
+            <p>
+                    <span class="font-semibold text-gray-900">
+                      Teléfono
+                    </span>
+                    <span x-text="solicitud.telefono">
+
+                    </span>
+                  </p>
+
+
+                  <p>
+                    <span class="font-semibold text-gray-900">
+                      DPI/Cui
+                    </span>
+
+
+                    <span x-text="solicitud.cui">
+
+                    </span>
+                  </p>
+
+                  <p>
+                    <span class="font-semibold text-gray-900">
+                                    No. Solicitud
+                    </span>
+
+                    <span x-text="solicitud.no_solicitud">
+
+                    </span>
+                  </p>
+
+                  <p>
+                    <span class="font-semibold text-gray-900">
+                        Fecha de registro
+                      </span>
+                      <span x-text="solicitud.fecha_registro_traducida">
+
+                      </span>
+                  </p>
+
+
+                  <p>
+                      <span class="font-semibold text-gray-900">
+                        Domicilio
+                      </span>
+                      <span x-text="solicitud.domicilio">
+                      </span>
+                    </p>
+
+                     <p>
+                      <span class="font-semibold text-gray-900">
+                        Observaciones:
+                      </span>
+
+                      <span
+                      x-text="solicitud.observaciones ? solicitud.observaciones : 'N/A'"
+                      :class="!solicitud.observaciones
+                      ? 'px-2 py-1 rounded-full text-xs font-bold bg-white border'
+                      : 'text-gray-600 font-normal ml-1'">
+                      </span>
+                    </p>
+
+
+
+                     <p>
+                        <span class="font-semibold text-gray-900">
+                            Estado Actual:
+                        </span>
+
+                        <span
+                                    x-text="solicitud.estado ? solicitud.estado.nombre : 'N/A'"
+                                    :class="!solicitud.estado
+                                        ? 'px-2 py-1 rounded-full text-xs font-bold bg-white border'
+                                        : 'text-gray-600 font-normal ml-1'"
+                        >
+                        </span>
+                      </p>
+
+
+
+                      <p>
+                        <span class="font-semibold text-gray-900">
+                          Zona:
+                        </span>
+
+                        <span x-text="solicitud.zona?.nombre"></span>
+                      </p>
+
+                      <!-- DEPENDIENTES -->
+                      <div class="mt-4">
+                        <h4 class="font-semibold text-gray-900">
+                            Dependientes
+                        </h4>
+                        <div class="flex flex-wrap gap-2">
+                            <template x-if="solicitud.documentos &&
+                            solicitud.documentos.find(d => d.tipo === 'carga')">
+                            <div class="flex flex-wrap gap-2">
+                                <template x-for="dep in solicitud.documentos.find(d => d.tipo === 'carga').dependientes" :key="dep.id">
+
+
+                                    <button
+                                    @click="documentoActual = dep; openDocumento = true;"
+                                    class="px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-full
+                                    text-xs font-medium hover:bg-green-100 transition"
+                                    >
+
+                                    <span x-text="dep.nombre"></span>
+
+                                    </button>
+
+                                </template>
+
+                                <template x-if="solicitud.documentos.find(d=> d.tipo === 'carga').dependientes.length === 0">
+
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 border border-orange-200 text-orange-600 shadow-sm">
+                                        <i class="fas fa-info-circle mr-1"></i> El usuario no ingresó dependientes
+                                    </span>
+
+                                </template>
+                            </div>
+                            </template>
+                        </div>
+                      </div>
+
+
+
+
+
+
+                            <p>
+                                <span class="font-semibold text-gray-900">
+                                    Trámite:
+                                </span>
+
+                                <span
+                                    class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold uppercase"
+                                    x-text="solicitud.requisitos_tramites?.[0]?.tramite?.nombre || 'General'"
+                                >
+                                </span>
+
+                            </p>
+
+
+
+                </div>
+
+
+         </div>
+
+
+         </div>
+
+
+         <!-- 2. BITACORA DE ESTA SOLICITUD -->
+
+         <div x-show="step === 2" x-transition>
+
+            <!-- MOSTRAR SOLO CUANDO ESTADO SEA VISITA ASIGNADA-->
+           <div x-show="solicitud.estado?.nombre === 'Visita asignada'">
+
+            <div class="bg-gray-50 border border-gray-200
+                rounded-xl p-5 shadow-sm">
+                    <div class="mb-6">
+                            <div class="flex items-center mb-3">
+                                <span class="p-2 bg-gray-100 rounded-lg mr-2 text-gray-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 10h8M8 14h6m-2 6l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                                </svg>
+                                </span>
+
+                                <h4 class="font-bold text-gray-800
+                                uppercase text-sm tracking-wider">
+                                Observaciones de Visita de campo
+                                </h4>
+                        </div>
+
+
+                            <textarea
+                                id="editor"
+                                rows="4"
+                                placeholder="Ingrese observaciones..."
+                                class="w-full rounded-lg border border-gray-300 p-3 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400">
+                            </textarea>
+
+
+
+
+
+
+                    </div>
+
+
+
+
+                        <div>
+
+                   <div class="flex items-center mb-2">
+                     <span class="p-2 bg-gray-100 rounded-lg mr-2 text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                 d="M3 7h3l2-3h8l2 3h3v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                     </span>
+
+                     <h4 class="font-bold text-gray-800
+                     uppercase text-sm tracking-wider">
+                     Fotografías
+                     </h4>
+                     </div>
+
+                     {{-- <input
+                           type="file"
+                           multiple
+                           accept="image/*"
+                           class="block w-full text-sm text-gray-600
+                                 file:mr-4 file:py-2 file:px-4
+                                 file:rounded-lg file:border-0
+                                 file:text-sm file:font-semibold
+                                 file:bg-gray-200 file:text-gray-700
+                                 hover:file:bg-gray-300"
+                     /> --}}
+
+                   <!-- INPUT FILE -->
+                   <div x-show="mostrarInput">
+                    <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.webp"
+                    class="block w-full text-sm text-gray-600
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-lg file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-gray-200 file:text-gray-700
+                    hover:file:bg-gray-300"
+
+                    @change="
+                    if (!livewireId) return;
+                    // toma el primer archivo
+                    const file = $event.target.files[0];
+                    // busca componente livewire correcto
+                    {{-- Livewire.find(livewireId)
+                    .upload('fotos', file, ()=>{
+                        // agrega nombre para mostrarlo
+                        fotosSeleccionadas.push(file.name);
+                        // ocultar input de subida
+                        mostrarInput = false;
+                        // resetear input para volver a usarlo
+                        $event.target.value = '';
+                    }); --}}
+
+                    Livewire.find(livewireId)
+                    .upload('fotos', file, ()=> {
+                        fotosSeleccionadas.push({
+                            {{-- name: file.name, --}}
+                            url: URL.createObjectURL(file)
+                            {{-- mostrar: false --}}
+                        });
+
+
+                    });
+                    mostrarInput = false;
+                    $event.target.value = '';
+                    "
+                    >
+
+                    </input>
+                   </div>
+
+
+                   <!-- BOTON PARA AGREGAR OTRA FOTO -->
+                   <button
+                   x-show="!mostrarInput"
+                   @click="mostrarInput = true"
+                   class="mt-3 px-4 py-2 bg-blue-600
+                   text-white rounded-lg font-semibold hover:bg-blue-700">
+                   Agregar otra foto
+                   </button>
+
+                   <!-- mostrar el listado de fotos -->
+
+                   <!-- GALERÍA DE FOTOS (PASO 2) -->
+                   <div class="grid grid-cols-1 sm:grid-cols-2
+                   md:grid-cols-3 gap-4 mt-4">
+                   <template x-for="(foto, index) in fotosSeleccionadas" :key="index">
+                    <div class="relative bg-gray-100 rounded-lg
+                    overflow-hidden border shadow-sm group">
+                    <!-- imagen -->
+                      <img :src="foto.url"
+     @click="$dispatch('preview-foto', { url: foto.url })"
+
+     class="w-full h-48 object-contain bg-white cursor-zoom-in hover:opacity-90 transition">
+
+                    <!-- eliminar -->
+                    <button
+                    @click="fotosSeleccionadas.splice(index, 1)"
+                    class="absolute top-2 right-2 bg-white/90 hover:bg-red-600
+                    text-red-600 text-red-600 hover:text-white rounded-full p-1.5
+                    shadow transition-all" title="Eliminar foto">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+
+                    </button>
+                    </div>
+                   </template>
+                   </div>
+
+
+
+
+
+
+
+
+
+
+
+               </div>
+
+
+
+
+            </div>
+
+           </div>
+           <!-- MOSTRAR CUANDO YA SE COMPLETO LA VISITA -->
+           <div x-show="solicitud.estado?.nombre === 'Visita realizada'">
+            <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm space-y-6">
+                <div>
+                    <div class="flex items-center mb-3">
+                        <span class="p-2 bg-blue-50 rounded-lg mr-2 text-blue-600">
+                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        </span>
+                        <h4 class="font-bold text-gray-800 uppercase text-sm tracking-wider">
+                            Resultado de la Visita
+                        </h4>
+                    </div>
+
+                    <!-- mostrar la descripcion de la visita -->
+                    <div class="prose prose-sm max-w-none text-gray-700
+                    bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
+
+                    <template x-for="bitacora in solicitud.bitacoras?.filter(b=>
+                        b.evento.includes('Visita realizada'))" :key="bitacora.id">
+
+                       <div class="mb-2">
+                        <div x-html="bitacora.descripcion">
+
+                        </div>
+                        <span class="text-xs text-gray-400" x-text="bitacora.fecha_formateada">
+
+                        </span>
+                        </div>
+
+
+                    </template>
+
+
+                    <template
+                    x-show="!(solicitud.bitacoras?.some(b=>
+                    b.evento.includes('Visita de campo realizada')
+                    ))">
+                        <p class="italic text-gray-400">
+                            No se encontraron observaciones detalladas
+                        </p>
+                    </template>
+
+
+                    </div>
+                </div>
+
+                <!-- CARGAR IMAGENES -->
+                <div>
+                    <div class="flex items-center mb-3">
+                        <span class="p-2 bg-teal-50 rounded-lg mr-2 text-teal-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        </span>
+
+                        <h4 class="font-bold text-gray-800 uppercase
+                        text-sm tracking-wider">
+                        Evidencia Fotográfica
+                        </h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <template x-if="solicitud.fotos && solicitud.fotos.length > 0">
+                            <template x-for="foto in solicitud.fotos" :key="foto.id">
+                                <div class="group relative aspect-video bg-gray-100
+                                rounded-lg overflow-hidden border hover:ring-2
+                                hover:ring-teal-500 transition-all cursor-pointer"
+                                @click="$dispatch('preview-foto', { url: '/storage/' + foto.ruta })">
+
+                                <img :src="'/storage/' + foto.ruta"
+                                class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20
+                                flex items-center justify-center transition-all">
+
+                                <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
+
+                                </div>
+                                </div>
+                            </template>
+                        </template>
+
+                        <template x-if="!solicitud.fotos || solicitud.fotos.length === 0">
+                            <p class="col-span-full text-sm text-gray-500 italic">
+                                No se adjuntaron fotografías en esta visita
+                            </p>
+                        </template>
+                    </div>
+
+                </div>
+            </div>
+
+           </div>
+
+
+         </div>
+
+
+                  <!-- 3. OBSERVACIONES Y FOTOS -->
+         <div x-show="step === 3" x-transition>
+
+             <div class="bg-gray-50 border border-gray-200
+         rounded-xl p-5 shadow-sm">
+         <div class="flex items-center mb-3">
+
+            <span class="p-2 bg-green-100 rounded-lg mr-2 text-green-600">
+
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+
+            </span>
+
+            <h4 class="font-bold text-gray-800 uppercase text-sm
+            tracking-wider">
+            Historial de la solicitud
+            </h4>
+
+         </div>
+
+
+         <div class="space-y-3 text-sm text-gray-600">
+            <template x-if="solicitud.bitacoras && solicitud.bitacoras.length > 0">
+               <template x-for="item in solicitud.bitacoras" :key="item.id">
+                  <div class="bg-white border rounded-lg p-3">
+
+                     <p x-show="item.evento">
+                            <span class="font-semibold text-gray-900">
+                                Evento
+                            </span>
+                            <span x-text="item.evento">
+
+                            </span>
+                     </p>
+
+
+                      <template x-if="item.user">
+                            <p>
+                                <span class="font-semibold text-gray-900">
+                                    Usuario
+                                </span>
+                                {{-- <span
+                                    x-text="item.user ? item.user.name + ' ' + (item.user.lastname || '') : 'Sistema'"
+                                    class="italic text-gray-500">
+                                </span> --}}
+                                <span
+                                x-text="item.user.name"
+                                class="italic text-gray-500"
+                                >
+                                </span>
+
+                            </p>
+                     </template>
+
+
+                      <p>
+                            <span class="font-semibold text-gray-900">
+                                Fecha:
+                            </span>
+                            <span x-text="item.fecha_formateada">
+
+                            </span>
+                        </p>
+
+                        <p>
+
+                            <span class="font-semibold text-gray-900">
+                                Detalle
+                            </span>
+
+                            <span x-text="item.descripcion">
+
+                            </span>
+                        </p>
+
+
+
+                  </div>
+               </template>
+            </template>
+         </div>
+
+
+
+         </div>
+
+         </div>
+         <div class="flex justify-between mt-6">
+
+            <button
+               x-show="step > 1"
+               @click="step--"
+               class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold">
+               ← Anterior
+            </button>
+
+            <button
+               x-show="step < 3"
+               @click="step++"
+               class="ml-auto px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 font-semibold shadow-md hover:shadow-lg transition-colors duration-200">
+               Siguiente →
+            </button>
+
+
+
+            <button
+                x-show="step === 3 && solicitud.estado?.nombre === 'Visita asignada'"
+               @click="openVisitaAsignada = true"
+               x-show="step === 3"
+               class="ml-auto px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 font-semibold">
+               Enviar visita de campo
+            </button>
+
+
+            <button
+            @click="openAceptar = true"
+            x-show="step === 3 && solicitud.estado?.nombre === 'Visita realizada'"
+            x-show="step === 3"
+            class="ml-auto px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 font-semibold">
+
+            Aceptar visita de campo
+            </button>
+
+         </div>
+
+
+
+
+         </div>
+      </div>
+
+
+   </div>
+
+
+
+
 <!-- MODAL DE ACEPTAR -->
 
   <div x-show="openAceptar" x-cloak class="fixed inset-0 z-60
@@ -538,7 +1000,7 @@
     </div>
 
     </div>
-    
+
 </div>
 
 
@@ -550,7 +1012,7 @@
 
 
 <!-- NUEVO MODAL -->
-  
+
 
 
 </div>
@@ -558,7 +1020,3 @@
 
 
 </x-interno-layout>
-
-
-
-

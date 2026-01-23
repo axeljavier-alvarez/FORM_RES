@@ -35,7 +35,7 @@ this.archivoAEliminar = null
 },
 
 eliminarArchivoCarga() {
-    $wire.eliminarArchivoCarga(this.archivoAEliminar); 
+    $wire.eliminarArchivoCarga(this.archivoAEliminar);
     this.mostrarConfirmacionEliminar = false;
     this.archivoAEliminar = null;
 },
@@ -55,25 +55,25 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
 >
 
-<img src="{{ asset('imagenes/icono_muni.png') }}" 
-     alt="Icono" 
+<img src="{{ asset('imagenes/icono_muni.png') }}"
+     alt="Icono"
      class="w-20 md:w-32 mx-auto block">
 
 
   <h1 class="
-                                tracking-widest 
-                                text-2xl md:text-3xl 
-                                text-[#030EA7] 
-                                text-center 
+                                tracking-widest
+                                text-2xl md:text-3xl
+                                text-[#030EA7]
+                                text-center
                                 mx-auto
                                 px-16
                                 whitespace-normal md:whitespace-nowrap">
-                                        CONSTANCIA DE RESIDENCIA 
+                                        CONSTANCIA DE RESIDENCIA
                                 </h1>
 
 
 
-    
+
 <p class="mt-3 text-[#4B5563] text-base text-center md:text-lg font-bold" >
                             Complete la información requerida para registrar su solicitud
         </p>
@@ -154,19 +154,19 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                         <!-- Comprobar el error -->
                         @if($message === 'validation.max.file')
                            @if (str_starts_with($field, 'requisitos.'))
-                           @php 
+                           @php
                            // tomar posicion 2 del array, sino sera null
                            $index = explode('.', $field)[1] ?? null;
                            // tomar el nombre del requisito
                            $nombre = $requisitos[$index]['nombre'] ?? 'Requisito';
-                           @endphp                               
+                           @endphp
 
                            @elseif (str_starts_with($field, 'cargas.'))
                            @php
                             $index = explode('.', $field)[1] ?? null;
                             $nombre = 'Carga familiar ' . ($index + 1);
 
-                               
+
                            @endphp
                            @endif
 
@@ -176,7 +176,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                            @else
                            El archivo no debe superar 2MB.
                            @endif
-                        @else 
+                        @else
                         {{ $message }}
                         @endif
                     </li>
@@ -202,11 +202,11 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                 ¿Está seguro de que desea eliminar este archivo?
             </p>
 
-            
+
 
             <div class="flex justify-end gap-3 mt-4">
                 <button @click="mostrarConfirmacionEliminarRequisito = false"
-                class="px-4 py-2 rounded bg-gray-200 text-[#03192B] hover:bg-gray-300" 
+                class="px-4 py-2 rounded bg-gray-200 text-[#03192B] hover:bg-gray-300"
                 >
                 Cancelar
                 </button>
@@ -217,7 +217,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                 </button>
 
 
-               
+
             </div>
         </div>
 
@@ -250,7 +250,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
 
         <!-- Modal de error de archivo -->
-           
+
 
 
 
@@ -378,7 +378,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                     Ingrese los nombres y apellidos tal como aparecen en el DPI
             </p>
 
-        
+
 
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -563,7 +563,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
             <!-- Requisitos por tramite -->
              @if(!empty($requisitos) && count($requisitos) > 0)
-   @if ($tramites->firstWhere('id', $tramite_id)?->slug 
+   @if ($tramites->firstWhere('id', $tramite_id)?->slug
                 !== 'tramites-legales-en-materia-penal-si-una-persona-se-encuentra-privada-de-libertad')
                 <!-- titulo centrado -->
                 <h2 class="text-center text-2xl font-bold mt-6 mb-2" style="color:#10069F">
@@ -576,7 +576,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
 
 
-                
+
 {{--
                 <div class="mt-4" wire:key="reqs-{{ $tramite_id }}">
                 <ul class="list-disc list-inside text-[#03192B]">
@@ -585,10 +585,10 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                     @endforeach
                 </ul>
                 </div> --}}
-                
 
-             
-                    
+
+
+
                 <div class="overflow-x-auto mt-4 border-t-4 border-b-4" style="border-color:#83BD3F;">
                     <table class="w-full table-fixed text-left">
                         <thead>
@@ -604,7 +604,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                             @if($requisito['slug'] && $requisito['slug'] !== 'cargas-familiares')
                                                         <!-- md table-row se arregla -->
                             <tr class="border-b-2 flex flex-col md:table-row" style="border-color:#83BD3F;">
-                                
+
                                 <!-- celda nombre movil -->
                                 <td class="px-4 py-3 block md:table-cell">
                                     <span class="text-[#03192B] font-medium md:font-normal">
@@ -615,7 +615,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                                     </span>
                                 </td>
 
-                            <!-- celda movil acción -->         
+                            <!-- celda movil acción -->
                             <td class="px-4 py-3 block md:table-cell text-left md:text-right">
     <div class="flex flex-col md:flex-row items-start md:items-center justify-end gap-2 md:gap-3">
 
@@ -648,7 +648,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
         </button>
         </div>
-        
+
         @endif
 
     </div>
@@ -666,12 +666,12 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
                 </div>
                 @endif
-                
+
 
                     {{-- @if(
                         $tramites->firstWhere('id', $tramite_id)?->slug
                         === 'tramites-legales-en-materia-penal-si-una-persona-se-encuentra-privada-de-libertad'
-                    )                
+                    )
                     <!-- tramite legal en materia penal -->
                     <div x-data="{ edad: '' }" class="mb-4 text-center">
                         <p class="mt-2 mb-2 font-semibold text-[#03192B]">Seleccione su edad</p>
@@ -687,7 +687,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                         </div>
 
                         <p class="text-sm text-red-600 font-semibold" x-text="edad === 'menor' ? 'Adolescentes en conflicto con la ley penal' : (edad === 'mayor' ? 'Privados de libertad por encontrarse en un proceso penal' : '')"></p>
-                    </div>  
+                    </div>
                          @endif
                     --}}
 
@@ -752,22 +752,22 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
                             <div class="overflow-x-auto mt-4 border-t-4 border-b-4" style="border-color:#83BD3F;">
 
-                                        
-                            
-                            
+
+
+
                                 <table class="w-full text-left">
                                     <thead>
                                         <tr class="border-b-4" style="border-color:#83BD3F;">
                                             <th class="px-4 py-3 font-bold text-[#03192B]">Requisitos</th>
-                                            <th class="px-4 py-3 font-bold text-[#03192B] text-center">Acción</th>                                         
+                                            <th class="px-4 py-3 font-bold text-[#03192B] text-center">Acción</th>
                                         </tr>
                                     </thead>
-                                    <tbody> 
+                                    <tbody>
                                         @foreach($requisitos as $index => $requisito)
-                                        
+
                                         <tr
                                         x-show="
-                                        requisitosComunes.includes('{{ $requisito['slug']}}') || 
+                                        requisitosComunes.includes('{{ $requisito['slug']}}') ||
                                         (edad === 'mayor' && requisitosMayor.includes('{{ $requisito['slug'] }}'))
                                         || (edad === 'menor' && requisitosMenor.includes('{{ $requisito['slug'] }}'))
                                         "
@@ -797,7 +797,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                                                 <span>
                                                     Subir archivo
                                                 </span>
-                                                    
+
 
                                                     <input type="file"
                                                     wire:model="requisitos.{{ $index }}.archivo"
@@ -828,9 +828,9 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                         </div>
 
                     </div>
-                        
+
                     @endif
-           
+
 
 
                 @if($tieneCargasFamiliares)
@@ -862,7 +862,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
 
 
-                    
+
 
                      <div class="mt-6 mb-2 text-center text-sm text-[#03192B]">
                     Puede agregar hasta <strong> 4 cargas familiares </strong> .
@@ -882,11 +882,11 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
 
 
-            
 
-                   
 
-              
+
+
+
 
 
                 <div class="mt-6 mb-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
@@ -897,11 +897,11 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
 
                     <!-- barra de desplazamiento -->
                     <div class="overflow-x-auto">
-                        
+
 
                         <div class="space-y-4">
                             @foreach ($cargas as $index => $carga )
-                                    <div class="p-4 bg-white rounded shadow flex flex-col md:flex-row 
+                                    <div class="p-4 bg-white rounded shadow flex flex-col md:flex-row
                                     md:items-center md:gap-4">
 
                                         <!-- Número de carga -->
@@ -910,7 +910,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                                         </div>
 
                                         <!-- Nombres -->
-                                        <div class="flex-1 mb-2 md:mb-0"> 
+                                        <div class="flex-1 mb-2 md:mb-0">
                                             <input type="text" placeholder="Nombres"
                                             wire:model.live="cargas.{{$index}}.nombres"
                                             class="border rounded px-3 py-2 w-full">
@@ -921,7 +921,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                                             <input type="text" placeholder="Apellidos"
                                             wire:model.live="cargas.{{ $index }}.apellidos"
                                             class="border rounded px-3 py-2 w-full">
-                                        
+
                                         </div>
                                         <!-- Subir archivo -->
 
@@ -978,16 +978,16 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                                         </div>
 
                                         <td class="px-4 py-3 text-center"> @if($index > 0) <button type="button" wire:click="eliminarCarga({{ $index }})" class="text-red-600 font-bold text-lg hover:text-red-800" title="Eliminar carga" > ✕ </button> @endif </td>
-                                        
+
 
                                     </div>
                                 @endforeach
-                                
+
                         </div>
 
-                                
-                                
-                                
+
+
+
                     </div>
                 </div>
 

@@ -16,6 +16,9 @@
 
 
     x-data="{
+            openPreview: false,
+                    imgSource: '',
+
     open:false,
     solicitud: {},
 
@@ -41,6 +44,9 @@
 
 
     }"
+
+        @preview-foto.window="openPreview = true; imgSource = $event.detail.url"
+
 
     x-on:error-rechazo.window="
     errorRechazo = $event.detail.mensaje
@@ -75,7 +81,7 @@
     role="dialog"
     aria-modal="true"
 
-    
+
     {{-- x-show="open"
     x-cloak
     class="fixed inset-0 z-50 overflow-y-auto"
@@ -84,13 +90,38 @@
     aria-modal="true" --}}
 >
 
-<div x-show="open" 
-     x-transition:enter="ease-out duration-300" 
-     x-transition:enter-start="opacity-0" 
-     x-transition:enter-end="opacity-100" 
-     class="fixed inset-0 bg-gray-900/35 backdrop-blur-sm transition-opacity z-50" 
+
+
+
+<!-- MODAL PARA ABRIR FOTO EN GRANDE -->
+    <div
+    x-show="openPreview"
+    x-cloak
+    @click="openPreview = false"
+    class="fixed inset-0 z-[200] flex items-center justify-center
+    bg-black bg-opacity-90 backdrop-blur-sm"
+    @keydown.escape.window="openPreview = false"
+    >
+    <button @click="openPreview = false" class="absolute top-5
+    right-5 text-white hover:text-red-400 transition-colors">
+        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+    </button>
+
+    <img :src="imgSource"
+     class="max-w-[95vw] max-h-[95vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+>
+    </div>
+
+
+<div x-show="open"
+     x-transition:enter="ease-out duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     class="fixed inset-0 bg-gray-900/35 backdrop-blur-sm transition-opacity z-50"
      @click="open = true">
-     
+
 </div>
 
 <!-- MODAL PARA ABRIR DOCUMENTO -->
@@ -164,14 +195,14 @@
     class="fixed inset-0 bg-gray-900/30 backdrop-blur-sm
  transition-opacity z-50"
     @click="open = false">
-    </div>          
+    </div>
 
-    
 
-     <div x-show="open" 
+
+     <div x-show="open"
         class="fixed inset-0 z-50 overflow-y-auto">
 
-       <div class="fixed inset-0 bg-gray-900/20 backdrop-blur-sm transition-opacity" 
+       <div class="fixed inset-0 bg-gray-900/20 backdrop-blur-sm transition-opacity"
          @click="open = false">
     </div>
 
@@ -202,13 +233,13 @@
 
             <div class="p-6 lg:p-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    
+
                     <div class="space-y-6">
                         <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
                             <span class="text-blue-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></span>
                             <h4 class="font-bold text-gray-800 uppercase text-xs tracking-widest">Información del Solicitante</h4>
                         </div>
-                        
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="sm:col-span-2 bg-gray-50 p-3.5 rounded-xl border border-gray-100">
                                 <label class="block text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-1">Nombre Completo</label>
@@ -290,7 +321,7 @@
                     </div>
                 </div>
 
-               
+
 
 
                 <!-- VER LOS DOCUMENTOS -->
@@ -320,9 +351,149 @@
                     </div>
                 </div>
 
+
+                <!-- VISITA DE CAMPO RESULTADO -->
+<div
+    class="mt-10"
+    x-show="solicitud.estado?.nombre === 'Visita realizada'"
+    x-transition
+>
+
+    <!-- ENCABEZADO -->
+    <div class="flex items-center gap-2 pb-2 border-b border-gray-100 mb-6">
+        <span class="text-emerald-500">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </span>
+
+        <h4 class="font-bold text-gray-800 uppercase text-xs tracking-widest">
+            Resultados de la visita de campo
+        </h4>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+            <div class="p-2 bg-emerald-600 text-white rounded-lg">✔</div>
+            <div>
+                <p class="text-[10px] uppercase font-bold text-emerald-700">Estado</p>
+                <p class="font-black text-emerald-900">Visita realizada</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-blue-50 border border-blue-200">
+            <div class="p-2 bg-blue-600 text-white rounded-lg">📍</div>
+            <div>
+                <p class="text-[10px] uppercase font-bold text-blue-700">Domicilio verificado</p>
+                <p class="text-xs font-semibold text-blue-900" x-text="solicitud.domicilio"></p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-gray-50 border">
+            <div class="p-2 bg-gray-700 text-white rounded-lg">🕒</div>
+            <div>
+                <p class="text-[10px] uppercase font-bold text-gray-600">Fecha</p>
+                <p class="text-xs font-semibold text-gray-900">
+                    <template
+                        x-for="bit in solicitud.bitacoras?.filter(b => b.evento.includes('Visita realizada')).slice(0,1)">
+                        <span x-text="bit.fecha_formateada"></span>
+                    </template>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mb-8">
+        <div class="flex items-center mb-3">
+            <span class="p-2 bg-amber-50 rounded-lg mr-2 text-amber-600">
+                📝
+            </span>
+            <h4 class="font-bold text-gray-800 uppercase text-sm tracking-wider">
+                Observaciones de la visita
+            </h4>
+        </div>
+
+        <template
+            x-if="solicitud.bitacoras && solicitud.bitacoras.filter(b => b.evento.includes('Visita realizada')).length > 0">
+
+            <div class="space-y-4">
+                <template
+                    x-for="bitacora in solicitud.bitacoras.filter(b => b.evento.includes('Visita realizada'))"
+                    :key="bitacora.id">
+
+                    <div class="relative pl-6 border-l-2 border-amber-300">
+                        <span class="absolute -left-2 top-2 w-4 h-4 bg-amber-500 rounded-full"></span>
+
+                        <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                            <div class="text-sm text-gray-800 leading-relaxed" x-html="bitacora.descripcion"></div>
+                            <span class="block mt-2 text-xs text-gray-500 font-mono"
+                                  x-text="bitacora.fecha_formateada"></span>
+                        </div>
+                    </div>
+
+                </template>
+            </div>
+
+        </template>
+
+        <template
+            x-if="!solicitud.bitacoras || solicitud.bitacoras.filter(b => b.evento.includes('Visita realizada')).length === 0">
+            <div class="text-sm text-gray-500 italic bg-gray-50 p-4 rounded-lg border border-dashed">
+                No se registraron observaciones para esta visita
+            </div>
+        </template>
+    </div>
+
+    <div>
+        <div class="flex items-center mb-3">
+            <span class="p-2 bg-teal-50 rounded-lg mr-2 text-teal-600">📸</span>
+            <h4 class="font-bold text-gray-800 uppercase text-sm tracking-wider">
+                Evidencia fotográfica
+            </h4>
+        </div>
+
+        <template x-if="solicitud.fotos && solicitud.fotos.length > 0">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <template x-for="foto in solicitud.fotos" :key="foto.id">
+                    <div
+                        class="group relative aspect-video rounded-xl overflow-hidden border shadow-sm cursor-pointer"
+                        @click="$dispatch('preview-foto', { url: '/storage/' + foto.path })">
+
+                        <img
+                            :src="'/storage/' + foto.path"
+                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                            loading="lazy"
+                        >
+
+                        <div
+                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100
+                                   flex items-center justify-center transition">
+                            <span class="text-white text-xs font-bold uppercase tracking-widest">
+                                Ver evidencia
+                            </span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template x-if="!solicitud.fotos || solicitud.fotos.length === 0">
+            <p class="text-sm text-gray-500 italic bg-gray-50 p-4 rounded-lg border border-dashed">
+                No se adjuntaron fotografías en esta visita
+            </p>
+        </template>
+    </div>
+
+</div>
+
+
+                <!-- BOTONES FINALES -->
                 <div class="mt-12 pt-6 border-t border-gray-100">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                        
+
                         <button type="button" @click="openRechazo = true"
                             class="w-full md:w-auto inline-flex items-center justify-center rounded-xl bg-red-50 px-6 py-3.5 text-sm font-black text-red-600 border border-red-100 hover:bg-red-600 hover:text-white transition-all transform active:scale-95 group">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -331,6 +502,7 @@
 
                         <div class="flex flex-col sm:flex-row w-full md:w-auto gap-3">
                             <button type="button" @click="openVisitaCampo = true"
+                                x-show="solicitud.estado?.nombre !== 'Visita realizada'"
                                 class="inline-flex items-center justify-center rounded-xl bg-amber-50 px-6 py-3.5 text-sm font-black text-amber-700 border border-amber-200 hover:bg-amber-500 hover:text-white transition-all transform active:scale-95">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                                 INSPECCIÓN DE CAMPO
@@ -359,10 +531,10 @@
                     </div>
                 </div>
 
-                  
 
-                                          
-               
+
+
+
 
             </div>
         </div>
@@ -377,7 +549,7 @@
 <div x-show="openRechazo" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4">
     <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm" @click="openRechazo = false"></div>
 
-    <div x-show="openRechazo" 
+    <div x-show="openRechazo"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 scale-95"
          x-transition:enter-end="opacity-100 scale-100"
@@ -402,7 +574,7 @@
                     </div>
                 </div>
 
-                <button @click="openRechazo = false" 
+                <button @click="openRechazo = false"
                         class="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all p-1">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -415,7 +587,7 @@
                     ¿Está seguro que desea rechazar la solicitud <span class="font-bold text-[#3B82F6]" x-text="solicitud.no_solicitud"></span>?
                 </p>
 
-                <div x-show="errorRechazo" x-cloak 
+                <div x-show="errorRechazo" x-cloak
                      class="mt-3 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg flex items-center gap-2">
                     <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
@@ -454,20 +626,20 @@
 
 
   <!-- MODAL DE VISITA DE CAMPO -->
-<div x-show="openVisitaCampo" 
-     x-cloak 
+<div x-show="openVisitaCampo"
+     x-cloak
      class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-    
-    <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm" 
+
+    <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm"
          @click="openVisitaCampo = false">
     </div>
 
-    <div x-show="openVisitaCampo" 
+    <div x-show="openVisitaCampo"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 scale-95"
          x-transition:enter-end="opacity-100 scale-100"
          class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-0 relative overflow-hidden">
-        
+
         <div class="h-2 bg-[#FFAA0D] w-full"></div>
 
         <div class="p-6">
@@ -488,7 +660,7 @@
                     </div>
                 </div>
 
-                <button @click="openVisitaCampo = false" 
+                <button @click="openVisitaCampo = false"
                         class="text-gray-400 hover:text-gray-600 transition-colors p-1">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -500,7 +672,7 @@
                 <p class="text-gray-700 text-base">
                     ¿Está seguro que desea actualizar esta solicitud <span class="font-bold text-gray-900" x-text="solicitud.no_solicitud"></span>?
                 </p>
-                
+
                 <div class="mt-3 bg-amber-50 border-l-4 border-[#FFAA0D] p-3 rounded-r-lg">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -525,32 +697,32 @@
 
 
                 <button @click="Livewire.dispatch('peticionCampo', { id: solicitud.id });"
-                
+
                         class="w-full sm:w-auto px-5 py-2.5 text-sm font-bold text-white bg-[#FFAA0D] hover:bg-[#E6990C] rounded-xl shadow-lg shadow-amber-200 transition-all transform active:scale-95 order-1 sm:order-2">
                     Sí, asignar visita
                 </button>
 
-                
+
             </div>
         </div>
     </div>
 </div>
-  
+
    <!-- MODAL PARA ACEPTAR LA SOLICITUD-->
-   <div x-show="openAceptar" 
-     x-cloak 
+   <div x-show="openAceptar"
+     x-cloak
      class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-    
-    <div class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm" 
+
+    <div class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm"
          @click="openAceptar = false">
     </div>
 
-    <div x-show="openAceptar" 
+    <div x-show="openAceptar"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 scale-95"
          x-transition:enter-end="opacity-100 scale-100"
          class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-0 relative overflow-hidden">
-        
+
         <div class="h-2 bg-[#3B82F6] w-full"></div>
 
         <div class="p-6">
@@ -572,7 +744,7 @@
                     </div>
                 </div>
 
-                <button @click="openAceptar = false" 
+                <button @click="openAceptar = false"
                         class="text-gray-400 hover:text-gray-600 transition-colors p-1">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -615,7 +787,7 @@
 
                 {{-- <button @click.prevent="$wire.dispatch('peticionPorAutorizar', { id: solicitud.id });"
                   class="px-5 py-2.5 text-sm font-bold text-white bg-[#3B82F6] hover:bg-[#2563EB] rounded-xl shadow-lg shadow-blue-200 hover:shadow-blue-200 transition-all duration-300 transform active:scale-95 order-1 sm:order-2 flex items-center gap-2">
-                 
+
                   Sí, validar ahora
               </button> --}}
             </div>

@@ -15,6 +15,8 @@ use App\Models\Bitacora;
 class AnalisisDocumentosTable extends DataTableComponent
 {
     protected $model = Solicitud::class;
+        public array $fotos = [];
+
 
     // imprimir los errores
     // public ?string $errorObservaciones = null;
@@ -26,7 +28,7 @@ class AnalisisDocumentosTable extends DataTableComponent
     {
         // Cargando las relaciones
         return Solicitud::query()
-            ->with(['estado', 'requisitosTramites.tramite']) 
+            ->with(['estado', 'requisitosTramites.tramite'])
             ->whereHas('estado', function ($query) {
                 $query->whereIn('nombre', ['Pendiente', 'Visita asignada', 'Visita realizada']);
             })
@@ -39,13 +41,13 @@ class AnalisisDocumentosTable extends DataTableComponent
      public function configure(): void
     {
        $this->setPrimaryKey('id');
-    
+
     // Diseño de la tabla con espacio entre filas
     $this->setTableAttributes(['class' => 'border-separate border-spacing-y-3 px-4']);
 
     // Títulos de la tabla (Encabezados) - ¡AHORA MÁS COLORIDOS!
     $this->setThAttributes(fn() => [
-      
+
         'class' => 'bg-blue-600 text-white uppercase text-xs tracking-widest py-4 px-4 font-black border-none first:rounded-l-lg last:rounded-r-lg shadow-sm'
     ]);
 
@@ -71,14 +73,14 @@ class AnalisisDocumentosTable extends DataTableComponent
 
     }
 
-   
-    
+
+
       public function columns(): array
         {
             return [
 
             Column::make("Telefono", "telefono")->hideIf(true),
-            
+
                 Column::make('ID', 'id')->hideIf(true),
 
                 Column::make("Solicitud", "no_solicitud")
@@ -120,7 +122,7 @@ class AnalisisDocumentosTable extends DataTableComponent
                                     </div>
                                     <span class='text-xs font-medium text-slate-600'>{$email}</span>
                                 </div>
-                                
+
                                 <div class='flex items-center'>
                                     <div class='w-6 h-6 flex items-center justify-center bg-green-100 text-green-600 rounded-md mr-2 shadow-sm'>
                                         <svg class='w-3.5 h-3.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
@@ -141,12 +143,12 @@ class AnalisisDocumentosTable extends DataTableComponent
                         </div>
                     ")->html(),
 
-            
 
-                
+
+
                     Column::make("Estado", "estado.nombre")
             ->format(function($value) {
-                
+
                 $color = match (trim($value)) {
                     'Pendiente'        => '#FACC15',
                     'Visita asignada'  => '#D97706',
@@ -155,15 +157,15 @@ class AnalisisDocumentosTable extends DataTableComponent
                     'Por emitir'       => '#06B6D4',
                     'Completado'       => '#22C55E',
                     'Cancelado'        => '#EF4444',
-                    default            => '#6B7280', 
+                    default            => '#6B7280',
                 };
 
-                $bgColor = $color . '26'; 
+                $bgColor = $color . '26';
 
                 return "
                     <span style='
-                        background-color: {$bgColor}; 
-                        color: {$color}; 
+                        background-color: {$bgColor};
+                        color: {$color};
                         border: 1px solid {$color};
                         display: inline-block;
                         padding: 4px 12px;
@@ -182,7 +184,7 @@ class AnalisisDocumentosTable extends DataTableComponent
 
                 Column::make("Acción")
                     ->label(fn($row) => "
-                        <button wire:click='verSolicitud({$row->id})' 
+                        <button wire:click='verSolicitud({$row->id})'
                                 class='inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm'>
                             <span>Ver Solicitud</span>
                             <svg class='w-4 h-4 ml-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
@@ -193,7 +195,7 @@ class AnalisisDocumentosTable extends DataTableComponent
                 ")->html(),
 
 
-                
+
             ];
         }
 
@@ -214,7 +216,7 @@ class AnalisisDocumentosTable extends DataTableComponent
 
         if ($solicitud) {
         $solicitud->fecha_registro_traducida = $solicitud->created_at
-            ? Carbon::parse($solicitud->created_at)->translatedFormat('d F Y H:i') 
+            ? Carbon::parse($solicitud->created_at)->translatedFormat('d F Y H:i')
             : 'N/A';
 
             // documentos de tipo normal
@@ -276,10 +278,30 @@ class AnalisisDocumentosTable extends DataTableComponent
             $solicitud->documentos = $arrayFinal;
 
 
+            // parte de las fotos
+            $fotos = $solicitud->detalles
+            ->filter(function ($detalle) {
+                return !empty($detalle->path)
+                    && is_null($detalle->requisito_tramite_id);
+            })
+            ->map(function ($detalle) {
+                return [
+                    'id'         => $detalle->id,
+                    'path'       => $detalle->path,
+                    'visitador'  => optional($detalle->user)->name,
+                    'fecha'      => $detalle->created_at
+                        ? Carbon::parse($detalle->created_at)->translatedFormat('d F Y H:i')
+                        : null,
+                ];
+            })
+            ->values();
+
+            $solicitud->fotos = $fotos;
+
             $this->dispatch('open-modal-solicitud', solicitud: $solicitud->toArray());
         }
     }
-  
+
 
   #[On('peticionRechazar')]
 public function rechazarSolicitud(int $id, string $descripcion)
