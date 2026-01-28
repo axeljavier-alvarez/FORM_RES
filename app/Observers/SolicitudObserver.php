@@ -46,17 +46,17 @@ class SolicitudObserver
             $descripcion = $comentario ?: match (true) {
 
             // SOLICITUD DESPUES DE PASAR POR VISITA DE CAMPO, CASO ESPECIAL
-            $nombreEstadoNuevo === 'Por autorizar'
+            $nombreEstadoNuevo === 'Por emitir'
             && $nombreEstadoAnterior === 'Visita realizada'
-            => 'La visita de campo fue aceptada y ahora ya está autorizado y se puede emitir',
+            => 'La visita de campo fue aceptada y la solicitud está lista para ser emitida.',
 
             
 
                 $nombreEstadoNuevo === 'Cancelado' => 'La solicitud se canceló.',
-                $nombreEstadoNuevo === 'Por autorizar' => 'La solicitud está pendiente de autorizar',
                 $nombreEstadoNuevo === 'Visita asignada'  => 'La solicitud fue asignada a visita de campo.',
                 $nombreEstadoNuevo === 'Visita realizada' => 'El visitador de campo no ingreso observaciones',
-                $nombreEstadoNuevo === 'Por emitir'       => 'La solicitud está autorizada y ya se puede emitir',
+                $nombreEstadoNuevo === 'Por emitir'       => 'La solicitud fue aceptada y está lista para ser emitida',
+                $nombreEstadoNuevo === 'Por autorizar' => 'La solicitud está pendiente de autorizar',
                 $nombreEstadoNuevo === 'Completado' => 'La solicitud fue emitida y completada',
                 default            => 'Cambio de estado.',
             };

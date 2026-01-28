@@ -346,22 +346,22 @@ public function rechazarSolicitud(int $id, string $descripcion)
 
 
     // peticion en proceso
-    #[On('peticionPorAutorizar')]
+    #[On('peticionPorEmitir')]
 
-    public function procesarSolicitud($id)
+    public function solicitudPorEmitir($id)
     {
-        $estadoPorAutorizar = Estado::where('nombre', 'Por autorizar')->first();
+        $estadoPorEmitir = Estado::where('nombre', 'Por emitir')->first();
 
-        if(!$estadoPorAutorizar) return;
+        if(!$estadoPorEmitir) return;
 
         $solicitud = Solicitud::find($id);
 
         if($solicitud){
             $solicitud->update([
-                'estado_id' =>  $estadoPorAutorizar->id
+                'estado_id' =>  $estadoPorEmitir->id
             ]);
 
-            $this->dispatch('solicitud-por-autorizar');
+            $this->dispatch('solicitud-por-emitir');
                 /*
             $this->dispatch('refreshDatatable');
             $this->dispatch('refreshComponent'); */

@@ -21,12 +21,13 @@ class EstadoSeeder extends Seeder
     $estados = [
     'Pendiente',               
     'Visita asignada',    
-    'Visita realizada',  
+    'Visita realizada', 
+    'Por emitir', 
     'Por autorizar',
-    'Por emitir',
-    'Completado',         
+    'Completado',  
+    'Previo', 
     'Cancelado',
-    'Previo'
+   
     ];
 
 

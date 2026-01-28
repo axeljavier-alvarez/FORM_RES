@@ -18,7 +18,7 @@
     }
 </style> 
 
-<div class="py-8 px-4 sm:px-6 lg:px-8 bg-gray-50 min-h-screen">
+<div class="py-8 px-4 sm:px-6 lg:px-8 min-h-screen">
     
     <div class="mb-10">
         @livewire('dashboard-estados')
@@ -300,7 +300,25 @@
                     fontFamily: 'Inter, sans-serif',
                     fontWeight: 500
                 }
-            }
+            },
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    options: {
+                        noData: {
+                            style: { fontSize: '14px' }
+                        }
+                    }
+                }, 
+                {
+                    breakpoint: 640,
+                    options: {
+                        noData: {
+                            style: { fontSize: '12px' }
+                        }
+                    }
+                }
+            ]
         });
     } else {
         // Si hay datos, actualizamos normalmente

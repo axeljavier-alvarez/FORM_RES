@@ -271,7 +271,7 @@
 
                 <button @click="Livewire.dispatch('peticionPorEmitir', { id: solicitud.id });"
                         class="px-5 py-2.5 text-sm font-bold text-white bg-[#06B6D4] hover:bg-[#0891B2] rounded-xl shadow-lg shadow-cyan-200 transition-all transform active:scale-95 order-1 sm:order-2">
-                    Sí, autorizar ahora
+                    Sí, cambiar a por emitir
                 </button>
             </div>
         </div>

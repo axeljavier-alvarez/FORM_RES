@@ -23,7 +23,7 @@
     solicitud: {},
 
     openRechazo: false,
-    openAceptar: false,
+    openEmitir: false,
     openVisitaCampo: false,
         openDocs: false,
 
@@ -59,8 +59,8 @@
         errorRechazo = null;
     "
 
-    x-on:solicitud-por-autorizar.window="
-        openAceptar = false;
+    x-on:solicitud-por-emitir.window="
+        openEmitir = false;
         open = false;
     "
 
@@ -519,31 +519,47 @@
                         </button>
 
                         <div class="flex flex-col sm:flex-row w-full md:w-auto gap-3">
-                            <button type="button" 
+                            <button 
+                            type="button" 
                                 @click="openVisitaCampo = true"
                                 x-show="!['Visita realizada', 'Visita asignada'].includes(solicitud.estado?.nombre)"
-                                class="inline-flex items-center justify-center rounded-xl bg-amber-50 px-6 py-3.5 text-sm font-black text-amber-700 border border-amber-200 hover:bg-amber-500 hover:text-white transition-all transform active:scale-95">
+
+                                class="w-full sm:w-auto inline-flex gap-2 items-center justify-center rounded-xl bg-amber-50 px-6 py-3.5 text-sm font-black text-amber-700 border border-amber-200 hover:bg-amber-500 hover:text-white transition-all transform active:scale-95">
+
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-4 h-4"
+                                        viewBox="0 0 512 512"
+                                        fill="currentColor">
+                                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7l91.3 91.3c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.1-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208zm-208 128c70.7 0 128-57.3 128-128S278.7 80 208 80 80 137.3 80 208s57.3 128 128 128zm0-208c-44.2 0-80 35.8-80 80 0 17.7-14.3 32-32 32s-32-14.3-32-32c0-79.5 64.5-144 144-144 17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
+                                    </svg>
+
                                 INSPECCIÓN DE CAMPO
                             </button>
 
                             <button
                                 type="button"
-                                @click="openAceptar = true"
+                                @click="openEmitir = true"
                                 x-show="!['Visita asignada'].includes(solicitud.estado?.nombre)"
-                                class="inline-flex items-center justify-center rounded-xl
-                                      bg-[#3B82F6]
-                                      px-10 py-3.5 text-sm font-black text-white
-                                      shadow-xl shadow-[#3B82F6]/30
-                                      hover:bg-[#2563EB]
-                                      hover:shadow-[#2563EB]/40
-                                      transition-all transform active:scale-95">
+                                  class="w-full sm:w-auto inline-flex items-center justify-center rounded-xl
+                                    bg-[#06B6D4] hover:bg-[#0891B2]
+                                    px-10 py-3 text-sm font-bold text-white
+                                    shadow-lg shadow-cyan-200
+                                    transition-all transform active:scale-95">
 
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M5 13l4 4L19 7"></path>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-4 h-4 mr-2"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 12h6m-6 4h6M7 8h10M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H9l-4 4v10a2 2 0 002 2z"/>
                                 </svg>
 
-                                VALIDAR SOLICITUD
+
+                                ENVIAR A EMISIÓN
                             </button>
 
                         </div>
@@ -727,43 +743,42 @@
     </div>
 </div>
 
-   <!-- MODAL PARA ACEPTAR LA SOLICITUD-->
-   <div x-show="openAceptar"
+   <!-- MODAL PARA EMITIR LA SOLICITUD-->
+ <div x-show="openEmitir"
      x-cloak
      class="fixed inset-0 z-[100] flex items-center justify-center p-4">
 
     <div class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm"
-         @click="openAceptar = false">
+         @click="openEmitir = false">
     </div>
 
-    <div x-show="openAceptar"
+    <div x-show="openEmitir"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 scale-95"
          x-transition:enter-end="opacity-100 scale-100"
          class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-0 relative overflow-hidden">
 
-        <div class="h-2 bg-[#3B82F6] w-full"></div>
+        <div class="h-2 w-full" style="background-color:#06B6D4;"></div>
 
         <div class="p-6">
             <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
-                   <div class="relative flex items-center justify-center w-12 h-12">
-                        <div class="absolute inset-0 bg-[#3B82F6] rounded-full opacity-20 animate-pulse"></div>
-                        <div class="relative w-10 h-10 bg-[#3B82F6] rounded-full flex items-center justify-center shadow-lg shadow-blue-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
+                   <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
+                        style="background-color:#CFFAFE;">
+                        <svg class="h-6 w-6" style="color:#25CCFF" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-gray-900">
-                            Validar solicitud
+                            Cambiar estado de la solicitud
                         </h3>
-                        <p class="text-sm text-gray-500 leading-tight">La solicitud quedará lista para autorizarse</p>
+                        {{-- <p class="text-sm text-gray-500 leading-tight">    Autorización para marcar la solicitud como pendiente de emisión</p> --}}
                     </div>
                 </div>
 
-                <button @click="openAceptar = false"
+                <button @click="openEmitir = false"
                         class="text-gray-400 hover:text-gray-600 transition-colors p-1">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -773,8 +788,11 @@
 
             <div class="mt-5">
                 <p class="text-gray-700 text-base">
-                    ¿Está seguro que desea validar está solicitud <span class="font-bold text-gray-900" x-text="solicitud.no_solicitud"></span>?
+                    ¿Está seguro que desea cambiar el estado de la solicitud
+                    <span class="font-bold text-gray-900" x-text="solicitud.no_solicitud"></span>
+                    a <strong>“Por emitir”</strong>?
                 </p>
+
                 <div class="mt-3 bg-blue-50 border-l-4 border-blue-400 p-3">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -783,40 +801,34 @@
                             </svg>
                         </div>
                         <div class="ml-3">
+                            
                             <p class="text-sm text-blue-700">
-                                Una vez emitida, el estado cambiará a <strong>"Por autorizar"</strong> y el trámite continuará
+                                Esta acción <strong>no emite el documento</strong>.
+                                Únicamente cambia el estado a <strong>“Por emitir”</strong>,
+                                indicando que la solicitud queda lista para su emisión posterior.
                             </p>
+
+
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row justify-end gap-3 mt-8">
-                <button @click="openAceptar = false"
+                <button @click="openEmitir = false"
                         class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all order-2 sm:order-1">
                     No, cancelar
                 </button>
 
-
-                <button @click="Livewire.dispatch('peticionPorAutorizar', { id: solicitud.id });"
-                        class="px-5 py-2.5 text-sm font-bold text-white bg-[#3B82F6] hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-200 transition-all transform active:scale-95 order-1 sm:order-2">
-                    Sí, validar ahora
+                <button @click="Livewire.dispatch('peticionPorEmitir', { id: solicitud.id });"
+                        class="px-5 py-2.5 text-sm font-bold text-white bg-[#06B6D4] hover:bg-[#0891B2] rounded-xl shadow-lg shadow-cyan-200 transition-all transform active:scale-95 order-1 sm:order-2">
+                    Enviar a emisión
                 </button>
-
-
-                {{-- <button @click.prevent="$wire.dispatch('peticionPorAutorizar', { id: solicitud.id });"
-                  class="px-5 py-2.5 text-sm font-bold text-white bg-[#3B82F6] hover:bg-[#2563EB] rounded-xl shadow-lg shadow-blue-200 hover:shadow-blue-200 transition-all duration-300 transform active:scale-95 order-1 sm:order-2 flex items-center gap-2">
-
-                  Sí, validar ahora
-              </button> --}}
             </div>
         </div>
     </div>
 </div>
 
-
-
-</div>
 
 
 
