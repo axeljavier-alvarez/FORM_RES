@@ -551,7 +551,7 @@ public function updated($property)
                         'comunes' => [
                             'fotocopia-simple-de-su-documento-personal-de-identificacion',
                             'fotocopia-de-recibo-agua-luz-o-telefono-del-lugar-de-su-residencia',
-                            'fotocopia-simple-del-documento-personal-de-identificacion-de-quien-se-encuentra-privado-de-libertad'
+                            // 'fotocopia-simple-del-documento-personal-de-identificacion-de-quien-se-encuentra-privado-de-libertad'
                         ],
                         'mayor' => [
                             'resolucion-judicial-que-conste-la-detencion-de-una-persona-prevencion-policial-auto-de-procesamiento-etc',

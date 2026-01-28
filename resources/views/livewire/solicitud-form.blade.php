@@ -614,6 +614,49 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                     @endif
                     
 
+
+                    @if($tramite_id && in_array($tramites->firstWhere('id', $tramite_id)?->slug,
+                        ['tramites-legales-en-materia-civil']))
+
+                        
+                     <div class="mt-4 p-4" 
+                                x-data="{ 
+                                valor: ''}"
+                                x-on:form-reset.window="
+                                valor = ''
+                                
+                                "
+                                >
+                                <div class="flex justify-center items-center gap-2 mb-2">
+                                        <h2 class="text-[#03192B] text-[18px]  font-semibold">
+                                            Ingrese la razón de la solicitud
+                                        </h2>        
+                                                  
+                                        <span class="text-red-600" x-show="valor === ''">*</span>
+                                    </div>
+                              
+                                <x-input
+                                    x-model="valor"
+                                    placeholder="Ej: Solicitud de actualización de datos"
+                                    wire:model.live="razon"
+                                    class="
+                                        w-full
+                                        border-2
+                                        border-[#D1D5DB]
+                                        hover
+                                        text-gray-600
+                                        font-normal
+                                        placeholder:text-gray-400
+                                        focus:ring-0
+                                        focus:border-[#000000]
+                                        focus:outline-none
+                                    "
+                                />
+                            </label>
+
+                            </div>
+                    @endif
+
                 <!-- titulo centrado -->
                 <h2 class="text-center text-2xl font-bold mt-6 mb-2" style="color:#10069F">
                     REQUISITOS
@@ -644,45 +687,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                     
 
 
-                    @if($tramite_id && in_array($tramites->firstWhere('id', $tramite_id)?->slug,
-                        ['tramites-legales-en-materia-civil']))
-
-                        
-                     <div class="mt-4 p-4" 
-                                x-data="{ 
-                                valor: ''}"
-                                x-on:form-reset.window="
-                                valor = ''
-                                
-                                "
-                                >
-                                <div class="flex justify-center items-center gap-2 mb-2">
-                                        <h2 class="text-[#03192B] text-[18px]  font-semibold">
-                                            Ingrese la razón de la solicitud
-                                        </h2>                          
-                                        <span class="text-red-600" x-show="valor === ''">*</span>
-                                    </div>
-                              
-                                <x-input
-                                    x-model="valor"
-                                    placeholder="Ej: Solicitud de actualización de datos"
-                                    class="
-                                        w-full
-                                        border-2
-                                        border-[#D1D5DB]
-                                        hover
-                                        text-gray-600
-                                        font-normal
-                                        placeholder:text-gray-400
-                                        focus:ring-0
-                                        focus:border-[#000000]
-                                        focus:outline-none
-                                    "
-                                />
-                            </label>
-
-                            </div>
-                    @endif
+                    
                 
 
 
@@ -867,6 +872,7 @@ class="max-w-4xl mx-auto my-20 bg-white border rounded-xl p-8 shadow-[0_0_10px_#
                               
                                 <x-input
                                     x-model="valor"
+                                    wire:model.live="razon"
                                     placeholder="Ej: Solicitud de actualización de datos"
                                     class="
                                         w-full
