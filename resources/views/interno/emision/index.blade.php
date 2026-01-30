@@ -16,21 +16,30 @@
 
     <div
     x-data="{
-        open: false,
-        solicitud: {},
-        openCompletado: false
-    }"
+    open: false,
+    openCompletado: false,
+    solicitud: {},
+    constanciaGenerada: false,
+    constanciaFile: null
+}"
+
+x-on:constancia-generada.window="
+    constanciaGenerada = true;
+    constanciaFile = $event.detail.path;
+"
 
     x-on:solicitud-emitir-constancia.window="
         openCompletado = false;
         open = false;
     "
 
-    @open-modal-detalle.window="
-        open = true;
-        solicitud = $event.detail.solicitud
-    "
-
+  @open-modal-detalle.window="
+    open = true;
+    solicitud = $event.detail.solicitud;
+    constanciaGenerada = solicitud.constancia_generada === true; 
+    {{-- puedo dejarlo en null para mientras --}}
+     constanciaFile = solicitud.constancia_path ?? null;
+"
     x-show="open"
     x-cloak
     class="fixed inset-0 z-50 overflow-y-auto"
@@ -183,39 +192,75 @@
                         No autorizar
                     </button>
 
-         <button
-            type="button"
-            x-on:click="
-                Livewire.dispatch('generar-constancia', {
-                    id: solicitud.id
-                })
-            "
-            class="w-full sm:w-auto rounded-xl bg-emerald-600 px-8 py-3
-                text-sm font-black text-white shadow-lg
-                hover:bg-emerald-700 transition-all">
-
-            Generar constancia
-        </button>
-
-
-
+                    <button
+                        x-show="!constanciaGenerada"
+                        @click="
+                            if(confirm('¿Desea generar la constancia?')){
+                                Livewire.dispatch('generar-constancia')
+                            }
+                        "
+                        class="w-full sm:w-auto rounded-xl bg-emerald-600 px-8 py-3
+                            text-sm font-black text-white shadow-lg hover:bg-emerald-700 transition-all">
+                        Generar constancia
+                    </button>
                     
 
                     
-                <button type="button" 
-                            x-show="solicitud.estado?.nombre === 'Por emitir'"
-                            @click="openCompletado = true"
-                             class="inline-flex items-center justify-center rounded-xl
-                                      bg-[#3B82F6]
-                                      px-10 py-3.5 text-sm font-black text-white
-                                      shadow-xl shadow-[#3B82F6]/30
-                                      hover:bg-[#2563EB]
-                                      hover:shadow-[#2563EB]/40
-                                      transition-all transform">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <button
+                        x-show="constanciaGenerada"
+                        @click="openCompletado = true"
+                        class="inline-flex items-center justify-center rounded-xl
+                            bg-blue-600 px-10 py-3.5 text-sm font-black text-white
+                            shadow-xl hover:bg-blue-700 transition-all">
                         Autorizar Solicitud
-                </button>
+                    </button>
                 </div>
+
+
+                <!-- aca mostrare los documentos de la persona -->
+                <div x-show="constanciaGenerada" x-transition class="mt-6 w-full">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                            <div class="flex items-center gap-2 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-6 h-6 text-emerald-600"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 12h6m-6 4h6M7 20h10a2 2 0 002-2V8l-6-6H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+
+                                <h4 class="text-lg font-bold text-gray-800">
+                                    Constancia generada
+                                </h4>
+                            </div>
+
+
+
+                            <template x-if="constanciaFile">
+                                <a
+                                    :href="`/storage/${constanciaFile}`"
+                                    target="_blank"
+                                    class="inline-flex items-center gap-2 text-emerald-700 font-bold text-sm hover:underline"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 16v-4m0 0V8m0 4h4m-4 0H8m8 4H8a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v7a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    Ver / Descargar constancia
+                                </a>
+                            </template>
+
+                            <template x-if="!constanciaFile">
+                                <p class="text-xs text-emerald-600 italic">
+                                    Constancia generada correctamente.
+                                </p>
+                            </template>
+
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

@@ -237,6 +237,21 @@ protected $model = Solicitud::class;
                     // }
             });
 
+
+           
+            $constancia = $solicitud->detalles()
+                ->where('tipo', 'constancia')
+                ->latest()
+                ->first();
+
+
+                            // agregando la path
+
+                            
+            $solicitud->constancia_generada = (bool) $constancia;
+            $solicitud->constancia_path = $constancia?->path;
+
+
             $this->dispatch('open-modal-detalle', solicitud: $solicitud->toArray());
         }
 
@@ -289,12 +304,10 @@ public function generarConstancia()
     $archivosExistentes = glob($pattern);
 
     if (!empty($archivosExistentes)) {
-        // Ya hay alguna constancia generada no_solicitud, no hacer nada
         return;
     }
 
 
-    // Generar nombre único con hash
     $fileName = $solicitud->no_solicitud 
                 . '-constancia-' 
                 . Str::random(20) 
@@ -322,8 +335,9 @@ public function generarConstancia()
         ]);
 
         $this->dispatch('constancia-generada', [
-            'fileName' => $fileName
+            'path' => 'constancias/' . $fileName
         ]);
+
 
     } catch (\Exception $e) {
         return;
