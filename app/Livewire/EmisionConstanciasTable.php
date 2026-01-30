@@ -27,7 +27,7 @@ protected $model = Solicitud::class;
             return Solicitud::query()
                 ->with(['estado', 'requisitosTramites.tramite'])
                 ->whereHas('estado', function($query){
-                    $query->whereIn('nombre', ['Por emitir', 'Completado']);
+                    $query->whereIn('nombre', ['Por emitir']);
                 })
                 ->orderByDesc('id');
         }
@@ -247,7 +247,7 @@ protected $model = Solicitud::class;
 
                             // agregando la path
 
-                            
+
             $solicitud->constancia_generada = (bool) $constancia;
             $solicitud->constancia_path = $constancia?->path;
 
@@ -261,21 +261,21 @@ protected $model = Solicitud::class;
 
 
     // emitir constancia
-    #[On('emitirConstancia')]
-    public function emitirConstancia($id)
+    #[On('constanciaAutorizar')]
+    public function constanciaAutorizar($id)
     {
-        $estadoCompletado = Estado::where('nombre', 'Completado')->first();
+        $estadoPorAutorizar = Estado::where('nombre', 'Por autorizar')->first();
 
-        if(!$estadoCompletado) return;
+        if(!$estadoPorAutorizar) return;
 
         $solicitud = Solicitud::find($id);
 
         if($solicitud){
             $solicitud->update([
-                'estado_id' => $estadoCompletado->id
+                'estado_id' => $estadoPorAutorizar->id
             ]);
 
-            $this->dispatch('solicitud-emitir-constancia');
+            $this->dispatch('solicitud-por-autorizar');
 
         }
     }

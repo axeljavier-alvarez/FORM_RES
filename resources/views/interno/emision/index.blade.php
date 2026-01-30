@@ -17,7 +17,7 @@
     <div
     x-data="{
     open: false,
-    openCompletado: false,
+    openPorAutorizar: false,
     solicitud: {},
     constanciaGenerada: false,
     constanciaFile: null
@@ -28,8 +28,8 @@ x-on:constancia-generada.window="
     constanciaFile = $event.detail.path;
 "
 
-    x-on:solicitud-emitir-constancia.window="
-        openCompletado = false;
+    x-on:solicitud-por-autorizar.window="
+        openPorAutorizar = false;
         open = false;
     "
 
@@ -208,7 +208,7 @@ x-on:constancia-generada.window="
                     
                         <button
                         x-show="constanciaGenerada"
-                        @click="openCompletado = true"
+                        @click="openPorAutorizar = true"
                         class="inline-flex items-center justify-center rounded-xl
                             bg-blue-600 px-10 py-3.5 text-sm font-black text-white
                             shadow-xl hover:bg-blue-700 transition-all">
@@ -268,81 +268,128 @@ x-on:constancia-generada.window="
 
 
    <!-- MODAL DE EMITIR LA SOLICITUD -->
-   <div x-show="openCompletado" 
-     x-cloak 
-     class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-    
-    <div class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm" 
-         @click="openCompletado = false">
-    </div>
+  
+   <div 
+  x-show="openPorAutorizar"
+  x-on:solicitud-autorizada.window="openPorAutorizar = false"
+  x-cloak
+  class="fixed inset-0 z-[100] flex items-center justify-center p-4">
 
-    <div x-show="openCompletado" 
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-0 relative overflow-hidden">
-        
-        <div class="h-2 bg-green-500 w-full"></div>
+  <!-- Overlay -->
+  <div 
+    class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm"
+    @click="openPorAutorizar = false">
+  </div>
 
-        <div class="p-6">
-            <div class="flex items-start justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900">
-                            Completar Solicitud
-                        </h3>
-                        <p class="text-sm text-gray-500 leading-tight">Acción de emisión</p>
-                    </div>
-                </div>
+  <!-- Modal -->
+  <div 
+    x-show="openPorAutorizar"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 scale-95"
+    x-transition:enter-end="opacity-100 scale-100"
+    class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-0 relative overflow-hidden">
 
-                <button @click="openCompletado = false" 
-                        class="text-gray-400 hover:text-gray-600 transition-colors p-1">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
+    <!-- Barra superior -->
+    <div class="h-2 bg-[#3E88FF] w-full"></div>
 
-            <div class="mt-5">
-                <p class="text-gray-700 text-base">
-                    ¿Está seguro que desea emitir está solicitud <span class="font-bold text-gray-900" x-text="solicitud.no_solicitud"></span>?
-                </p>
-                <div class="mt-3 bg-blue-50 border-l-4 border-blue-400 p-3">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                            </svg>
+    <div class="p-6">
+      <!-- Header -->
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class="flex-shrink-0 w-10 h-10 bg-[#3E88FF]/10 rounded-full flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-[#3E88FF]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+
+            <!-- Sobre -->
+            <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16v10H4z" />
+            <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6l8 6 8-6" />
+
+            <!-- Flecha enviar (ajustada) -->
+            <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14 14l3 2-3 2" />
+            </svg>
                         </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-blue-700">
-                                Una vez emitida, el estado cambiará a <strong>"Completado"</strong> y el trámite finalizará
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row justify-end gap-3 mt-8">
-                <button @click="openCompletado = false"
-                        class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all order-2 sm:order-1">
-                    No, cancelar
-                </button>
-
-                <button @click="Livewire.dispatch('emitirConstancia', { id: solicitud.id });"
-                        class="px-5 py-2.5 text-sm font-bold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-lg shadow-green-200 transition-all transform active:scale-95 order-1 sm:order-2">
-                    Sí, emitir ahora
-                </button>
-            </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">
+              Mandar a autorizar
+            </h3>
+          </div>
         </div>
+
+        <button
+          @click="openPorAutorizar = false"
+          class="text-gray-400 hover:text-gray-600 transition-colors p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Contenido -->
+      <div class="mt-5">
+        <p class="text-gray-700 text-base">
+          ¿Está seguro que desea enviar para autorizar la solicitud no.
+          <span class="font-bold text-gray-900" x-text="solicitud.no_solicitud"></span>?
+        </p>
+
+        <div class="mt-3 bg-blue-50 border-l-4 border-[#3E88FF] p-3">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              {{-- <svg class="h-5 w-5 text-[#3E88FF]" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clip-rule="evenodd" />
+              </svg> --}}
+             
+              
+
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-blue-700">
+                Una vez enviado, el estado cambiará a
+                <strong>"Por Autorizar"</strong> y el trámite continuará
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div class="flex flex-col sm:flex-row justify-end gap-3 mt-8">
+        <button
+          @click="openPorAutorizar = false"
+          class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all order-2 sm:order-1">
+          No, cancelar
+        </button>
+
+        <button
+          @click="Livewire.dispatch('constanciaAutorizar', { id: solicitud.id })"
+          class="px-5 py-2.5 text-sm font-bold text-white 
+                 bg-[#3E88FF] hover:bg-[#2F74E6]
+                 rounded-xl shadow-lg shadow-[#3E88FF]/30
+                 transition-all transform active:scale-95
+                 order-1 sm:order-2">
+          Sí, enviar
+        </button>
+      </div>
     </div>
+  </div>
 </div>
-   
+
   
 
  
